@@ -1,11 +1,7 @@
 import "./style.css";
-import bufferASource from "./bufferA.frag?raw";
-import bufferBSource from "./bufferB.frag?raw";
-import bufferCSource from "./bufferC.frag?raw";
-import bufferDSource from "./bufferD.frag?raw";
-import imageSource from "./shader.frag?raw";
 import { createRendererApp } from "./app/createRendererApp.js";
 import { PASS_CONFIG } from "./pipeline/passes.config.js";
+import { SHADER_SOURCES } from "./shaders/index.js";
 
 const canvas = document.getElementById("gl-canvas");
 
@@ -16,13 +12,7 @@ if (!canvas) {
 const app = createRendererApp({
   canvas,
   passes: PASS_CONFIG,
-  shaderSources: {
-    bufferA: bufferASource,
-    bufferB: bufferBSource,
-    bufferC: bufferCSource,
-    bufferD: bufferDSource,
-    image: imageSource
-  }
+  shaderSources: SHADER_SOURCES
 });
 
 app.start();

@@ -1,4 +1,35 @@
-(function(){const r=document.createElement("link").relList;if(r&&r.supports&&r.supports("modulepreload"))return;for(const a of document.querySelectorAll('link[rel="modulepreload"]'))e(a);new MutationObserver(a=>{for(const l of a)if(l.type==="childList")for(const u of l.addedNodes)u.tagName==="LINK"&&u.rel==="modulepreload"&&e(u)}).observe(document,{childList:!0,subtree:!0});function t(a){const l={};return a.integrity&&(l.integrity=a.integrity),a.referrerPolicy&&(l.referrerPolicy=a.referrerPolicy),a.crossOrigin==="use-credentials"?l.credentials="include":a.crossOrigin==="anonymous"?l.credentials="omit":l.credentials="same-origin",l}function e(a){if(a.ep)return;a.ep=!0;const l=t(a);fetch(a.href,l)}})();const A=`//#version 450\r
+(function(){const r=document.createElement("link").relList;if(r&&r.supports&&r.supports("modulepreload"))return;for(const a of document.querySelectorAll('link[rel="modulepreload"]'))e(a);new MutationObserver(a=>{for(const i of a)if(i.type==="childList")for(const c of i.addedNodes)c.tagName==="LINK"&&c.rel==="modulepreload"&&e(c)}).observe(document,{childList:!0,subtree:!0});function t(a){const i={};return a.integrity&&(i.integrity=a.integrity),a.referrerPolicy&&(i.referrerPolicy=a.referrerPolicy),a.crossOrigin==="use-credentials"?i.credentials="include":a.crossOrigin==="anonymous"?i.credentials="omit":i.credentials="same-origin",i}function e(a){if(a.ep)return;a.ep=!0;const i=t(a);fetch(a.href,i)}})();const w=`
+// Shadertoy uniforms
+uniform vec3 iResolution;           // viewport resolution (in pixels)
+uniform float iTime;                // shader playback time (in seconds)
+uniform float iTimeDelta;           // render time (in seconds)
+uniform int iFrame;                 // shader playback frame
+uniform vec4 iMouse;                // mouse pixel coords. xy: current, zw: click
+uniform sampler2D iChannel0;        // input channel 0
+uniform sampler2D iChannel1;        // input channel 1
+uniform sampler2D iChannel2;        // input channel 2
+uniform sampler2D iChannel3;        // input channel 3
+uniform vec3 iChannelResolution[4]; // channel resolution (in pixels)
+`,k=`#version 300 es
+in vec2 aPosition;
+void main() {
+  gl_Position = vec4(aPosition, 0.0, 1.0);
+}
+`;function I(n){let r=n;r=r.replace(/^\/\/#version\s+\d+.*$/gm,""),r=r.replace(/^#version\s+\d+.*$/gm,""),r=r.replace(/^\/\/#pragma.*$/gm,""),r=r.replace(/^\/\/#extension.*$/gm,""),r=r.replace(/^#pragma.*$/gm,""),r=r.replace(/^#extension.*$/gm,"");const t=r.match(/void\s+mainImage\s*\(\s*out\s+vec4\s+(\w+)\s*,\s*in\s+vec2\s+(\w+)\s*\)\s*\{/i);if(t){const e=t[1],i=`out vec4 fragColor;
+void main()
+{
+    // Shadertoy parameter mapping
+    vec2 ${t[2]} = gl_FragCoord.xy;
+    #define ${e} fragColor
+`;r=r.replace(/void\s+mainImage\s*\(\s*out\s+vec4\s+\w+\s*,\s*in\s+vec2\s+\w+\s*\)\s*\{/i,i)}return r=r.replace(/(\d+)U\b/g,"$1u"),`#version 300 es
+precision highp float;
+precision highp int;
+precision highp sampler2D;
+
+${w}
+${r}`}function x(n,r,t){const e=n.createShader(r),a=I(t);if(n.shaderSource(e,a),n.compileShader(e),!n.getShaderParameter(e,n.COMPILE_STATUS)){const i=n.getShaderInfoLog(e)||"Shader compile failed.",d=a.split(`
+`).slice(0,100).map((f,m)=>`${m+1}: ${f}`).join(`
+`);throw console.error("=== SHADER COMPILATION ERROR ==="),console.error(i),console.error("=== First 100 lines of processed source ==="),console.error(d),n.deleteShader(e),new Error(i)}return e}function B(n,r,t){const e=n.createProgram();if(n.attachShader(e,r),n.attachShader(e,t),n.linkProgram(e),!n.getProgramParameter(e,n.LINK_STATUS)){const a=n.getProgramInfoLog(e)||"Program link failed.";throw n.deleteProgram(e),new Error(a)}return e}function H(n,r){return{iResolution:n.getUniformLocation(r,"iResolution"),iTime:n.getUniformLocation(r,"iTime"),iTimeDelta:n.getUniformLocation(r,"iTimeDelta"),iFrame:n.getUniformLocation(r,"iFrame"),iMouse:n.getUniformLocation(r,"iMouse"),iChannel0:n.getUniformLocation(r,"iChannel0"),iChannel1:n.getUniformLocation(r,"iChannel1"),iChannel2:n.getUniformLocation(r,"iChannel2"),iChannel3:n.getUniformLocation(r,"iChannel3")}}function L(n){const r=n.createBuffer();return n.bindBuffer(n.ARRAY_BUFFER,r),n.bufferData(n.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),n.STATIC_DRAW),r}function G(n,r,t){const e=n.getAttribLocation(r,"aPosition");n.bindBuffer(n.ARRAY_BUFFER,t),n.enableVertexAttribArray(e),n.vertexAttribPointer(e,2,n.FLOAT,!1,0,0)}class F{constructor(r){this.gl=r,this.keys=new Uint8Array(256*4),this.texture=r.createTexture(),r.bindTexture(r.TEXTURE_2D,this.texture),r.texImage2D(r.TEXTURE_2D,0,r.RGBA,256,1,0,r.RGBA,r.UNSIGNED_BYTE,this.keys),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MIN_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MAG_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_S,r.CLAMP_TO_EDGE),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_T,r.CLAMP_TO_EDGE),this.setupListeners()}setupListeners(){window.addEventListener("keydown",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=255)}),window.addEventListener("keyup",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=0)})}update(){this.gl.bindTexture(this.gl.TEXTURE_2D,this.texture),this.gl.texSubImage2D(this.gl.TEXTURE_2D,0,0,0,256,1,this.gl.RGBA,this.gl.UNSIGNED_BYTE,this.keys)}getTexture(){return this.texture}}function O(n){const r={x:0,y:0,clickX:0,clickY:0,isDown:!1};function t(e){const a=n.getBoundingClientRect(),i=window.devicePixelRatio||1,c=(e.clientX-a.left)*i,d=(a.height-(e.clientY-a.top))*i;return{x:c,y:d}}return n.addEventListener("mousemove",e=>{const a=t(e);r.x=a.x,r.y=a.y}),n.addEventListener("mousedown",e=>{r.isDown=!0;const a=t(e);r.clickX=a.x,r.clickY=a.y}),n.addEventListener("mouseup",()=>{r.isDown=!1}),n.addEventListener("mouseleave",()=>{r.isDown=!1}),r}class M{constructor(r,t,e,a=!1){this.gl=r,this.width=t,this.height=e,this.doubleBuffered=a,this.textureA=this.createTexture(t,e),this.framebufferA=this.createFramebuffer(this.textureA),a&&(this.textureB=this.createTexture(t,e),this.framebufferB=this.createFramebuffer(this.textureB),this.currentBuffer=0)}createTexture(r,t){const e=this.gl.createTexture();return this.gl.bindTexture(this.gl.TEXTURE_2D,e),this.gl.texImage2D(this.gl.TEXTURE_2D,0,this.gl.RGBA16F,r,t,0,this.gl.RGBA,this.gl.FLOAT,null),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MIN_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MAG_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_S,this.gl.CLAMP_TO_EDGE),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_T,this.gl.CLAMP_TO_EDGE),e}createFramebuffer(r){const t=this.gl.createFramebuffer();this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,t),this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER,this.gl.COLOR_ATTACHMENT0,this.gl.TEXTURE_2D,r,0);const e=this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);if(e!==this.gl.FRAMEBUFFER_COMPLETE)throw new Error(`Framebuffer not complete: ${e}`);return this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null),t}getReadTexture(){return this.doubleBuffered?this.currentBuffer===0?this.textureA:this.textureB:this.textureA}getWriteFramebuffer(){return this.doubleBuffered?this.currentBuffer===0?this.framebufferB:this.framebufferA:this.framebufferA}swap(){this.doubleBuffered&&(this.currentBuffer=1-this.currentBuffer)}resize(r,t){this.width===r&&this.height===t||(this.width=r,this.height=t,this.gl.deleteTexture(this.textureA),this.gl.deleteFramebuffer(this.framebufferA),this.textureA=this.createTexture(r,t),this.framebufferA=this.createFramebuffer(this.textureA),this.doubleBuffered&&(this.gl.deleteTexture(this.textureB),this.gl.deleteFramebuffer(this.framebufferB),this.textureB=this.createTexture(r,t),this.framebufferB=this.createFramebuffer(this.textureB)))}}function C(n){const r=window.devicePixelRatio||1,t=Math.floor(n.clientWidth*r),e=Math.floor(n.clientHeight*r);return n.width!==t||n.height!==e?(n.width=t,n.height=e,!0):!1}function U({canvas:n,shaderSources:r,passes:t}){const e=n.getContext("webgl2");if(!e)throw new Error("WebGL2 not supported in this browser.");e.getExtension("EXT_color_buffer_float")||console.warn("EXT_color_buffer_float not supported, falling back to RGBA16F");const i=x(e,e.VERTEX_SHADER,k),c=L(e),d=new F(e),f=O(n),m={},_={};Object.entries(r).forEach(([o,s])=>{const u=x(e,e.FRAGMENT_SHADER,s);m[o]=B(e,i,u),_[o]=H(e,m[o])});const b=Array.from(new Map(t.filter(o=>o.targetId).map(o=>[o.targetId,{id:o.targetId,doubleBuffered:o.doubleBuffered}])).values());C(n);const g={};b.forEach(({id:o,doubleBuffered:s})=>{g[o]=new M(e,n.width,n.height,s)});function D(o,s){o.iResolution&&e.uniform3f(o.iResolution,n.width,n.height,1),o.iTime&&e.uniform1f(o.iTime,s.time),o.iTimeDelta&&e.uniform1f(o.iTimeDelta,s.timeDelta),o.iFrame&&e.uniform1i(o.iFrame,s.frameCount),o.iMouse&&e.uniform4f(o.iMouse,f.x,f.y,f.isDown?f.clickX:0,f.isDown?f.clickY:0)}function E(o){if(!o)return null;if(o==="keyboard")return d.getTexture();if(o.endsWith(".read")){const s=o.replace(".read","");return g[s].getReadTexture()}throw new Error(`Unknown channel ref: ${o}`)}function A(o,s){const u=m[o.id],v=_[o.id],l=o.targetId?g[o.targetId]:null,z=l?l.getWriteFramebuffer():null;e.bindFramebuffer(e.FRAMEBUFFER,z),e.viewport(0,0,n.width,n.height),e.useProgram(u),G(e,u,c),D(v,s);for(let h=0;h<4;h++){const y=E(o.channels[h]),P=v[`iChannel${h}`];y&&P&&(e.activeTexture(e.TEXTURE0+h),e.bindTexture(e.TEXTURE_2D,y),e.uniform1i(P,h))}e.drawArrays(e.TRIANGLES,0,3),l&&l.doubleBuffered&&l.swap()}let R=0,p=0;function S(o){const s=o*.001,u=p>0?s-p:.016;p=s,C(n)&&Object.values(g).forEach(l=>{l.resize(n.width,n.height)}),d.update();const v={time:s,timeDelta:u,frameCount:R};t.forEach(l=>{A(l,v)}),R+=1,requestAnimationFrame(S)}return{start(){requestAnimationFrame(S)}}}const N=[{id:"bufferA",targetId:"bufferA",doubleBuffered:!0,channels:[null,null,"bufferB.read","bufferA.read"]},{id:"bufferB",targetId:"bufferB",doubleBuffered:!0,channels:["bufferA.read","bufferB.read",null,"keyboard"]},{id:"bufferC",targetId:"bufferC",doubleBuffered:!1,channels:["bufferB.read",null,null,null]},{id:"bufferD",targetId:"bufferD",doubleBuffered:!1,channels:["bufferC.read",null,null,null]},{id:"image",targetId:null,doubleBuffered:!1,channels:["bufferA.read",null,null,"bufferD.read"]}],X=`//#version 450\r
 //#pragma shader_stage(fragment)\r
 //#extension GL_EXT_samplerless_texture_functions : enable\r
 /*\r
@@ -2914,7 +2945,7 @@ void mainImage( out vec4 FragColor, in vec2 FragCoord )\r
     }\r
     \r
     FragColor = (iBlendWeight) * FinalColor + (1.0 - iBlendWeight) * PrevColor;\r
-}`,w=`// =============================================================================\r
+}`,W=`// =============================================================================\r
 // Settings & Input Definitions\r
 // =============================================================================\r
 #define iSpin 0.99   //必须与BufferA中iSpin一致！It must be modified synchronously with iSpin in BufferA！\r
@@ -3171,7 +3202,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
         fragColor = vec4(color, 1.0);\r
     }\r
 }\r
-`,z=`//Horizontal gaussian blur leveraging hardware filtering for fewer texture lookups.\r
+`,q=`//Horizontal gaussian blur leveraging hardware filtering for fewer texture lookups.\r
 \r
 vec3 ColorFetch(vec2 coord)\r
 {\r
@@ -3219,7 +3250,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
     }\r
 \r
     fragColor = vec4(color,1.0);\r
-}`,k=`//Vertical gaussian blur leveraging hardware filtering for fewer texture lookups.\r
+}`,Q=`//Vertical gaussian blur leveraging hardware filtering for fewer texture lookups.\r
 \r
 vec3 ColorFetch(vec2 coord)\r
 {\r
@@ -3267,7 +3298,7 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
     }\r
 \r
     fragColor = vec4(color,1.0);\r
-}`,B=`// 核心渲染逻辑请查看Buffer A。\r
+}`,K=`// 核心渲染逻辑请查看Buffer A。\r
 // Please check Buffer A for the core rendering logic.\r
 \r
 // Buffer B/C/D 与 Image 来自 sonicether 的作品 "Gargantua With HDR Bloom"。\r
@@ -3399,34 +3430,4 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
     fragColor = vec4(color, 1.0);\r
 \r
 }\r
-`,i=document.getElementById("gl-canvas"),n=i.getContext("webgl2");if(!n)throw new Error("WebGL2 not supported in this browser.");const I=n.getExtension("EXT_color_buffer_float");I||console.warn("EXT_color_buffer_float not supported, falling back to RGBA16F");const H=`#version 300 es
-  in vec2 aPosition;
-  void main() {
-    gl_Position = vec4(aPosition, 0.0, 1.0);
-  }
-`;function h(o,r){const t=n.createShader(o);let e=r;e=e.replace(/^\/\/#version\s+\d+.*$/gm,""),e=e.replace(/^#version\s+\d+.*$/gm,""),e=e.replace(/^\/\/#pragma.*$/gm,""),e=e.replace(/^\/\/#extension.*$/gm,""),e=e.replace(/^#pragma.*$/gm,""),e=e.replace(/^#extension.*$/gm,"");const a=e.match(/void\s+mainImage\s*\(\s*out\s+vec4\s+(\w+)\s*,\s*in\s+vec2\s+(\w+)\s*\)\s*\{/i);if(a){console.log("✓ Found mainImage function, replacing with main()");const c=a[1],S=`out vec4 fragColor;
-void main()
-{
-    // Shadertoy parameter mapping
-    vec2 ${a[2]} = gl_FragCoord.xy;
-    #define ${c} fragColor
-`;e=e.replace(/void\s+mainImage\s*\(\s*out\s+vec4\s+\w+\s*,\s*in\s+vec2\s+\w+\s*\)\s*\{/i,S)}else console.warn("⚠ No mainImage function found - shader may already have main() or be vertex shader");e=e.replace(/(\d+)U\b/g,"$1u");const u=`#version 300 es
-precision highp float;
-precision highp int;
-precision highp sampler2D;
-
-
-// Shadertoy uniforms
-uniform vec3 iResolution;           // viewport resolution (in pixels)
-uniform float iTime;                // shader playback time (in seconds)
-uniform float iTimeDelta;           // render time (in seconds)
-uniform int iFrame;                 // shader playback frame
-uniform vec4 iMouse;                // mouse pixel coords. xy: current, zw: click
-uniform sampler2D iChannel0;        // input channel 0
-uniform sampler2D iChannel1;        // input channel 1
-uniform sampler2D iChannel2;        // input channel 2
-uniform sampler2D iChannel3;        // input channel 3
-uniform vec3 iChannelResolution[4]; // channel resolution (in pixels)
-
-${e}`;if(n.shaderSource(t,u),n.compileShader(t),!n.getShaderParameter(t,n.COMPILE_STATUS)){const c=n.getShaderInfoLog(t)||"Shader compile failed.";throw console.error("=== SHADER COMPILATION ERROR ==="),console.error(c),console.error("=== First 100 lines of processed source ==="),u.split(`
-`).slice(0,100).forEach((S,E)=>{console.error(`${E+1}: ${S}`)}),n.deleteShader(t),new Error(c)}return t}function m(o,r){const t=n.createProgram();if(n.attachShader(t,o),n.attachShader(t,r),n.linkProgram(t),!n.getProgramParameter(t,n.LINK_STATUS)){const e=n.getProgramInfoLog(t)||"Program link failed.";throw n.deleteProgram(t),new Error(e)}return t}class R{constructor(r,t,e,a=!1){this.gl=r,this.width=t,this.height=e,this.doubleBuffered=a,this.textureA=this.createTexture(t,e),this.framebufferA=this.createFramebuffer(this.textureA),a&&(this.textureB=this.createTexture(t,e),this.framebufferB=this.createFramebuffer(this.textureB),this.currentBuffer=0)}createTexture(r,t){const e=this.gl,a=e.createTexture();return e.bindTexture(e.TEXTURE_2D,a),e.texImage2D(e.TEXTURE_2D,0,e.RGBA16F,r,t,0,e.RGBA,e.FLOAT,null),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MIN_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_MAG_FILTER,e.LINEAR),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_S,e.CLAMP_TO_EDGE),e.texParameteri(e.TEXTURE_2D,e.TEXTURE_WRAP_T,e.CLAMP_TO_EDGE),a}createFramebuffer(r){const t=this.gl,e=t.createFramebuffer();t.bindFramebuffer(t.FRAMEBUFFER,e),t.framebufferTexture2D(t.FRAMEBUFFER,t.COLOR_ATTACHMENT0,t.TEXTURE_2D,r,0);const a=t.checkFramebufferStatus(t.FRAMEBUFFER);if(a!==t.FRAMEBUFFER_COMPLETE)throw new Error("Framebuffer not complete: "+a);return t.bindFramebuffer(t.FRAMEBUFFER,null),e}getReadTexture(){return this.doubleBuffered?this.currentBuffer===0?this.textureA:this.textureB:this.textureA}getWriteFramebuffer(){return this.doubleBuffered?this.currentBuffer===0?this.framebufferB:this.framebufferA:this.framebufferA}swap(){this.doubleBuffered&&(this.currentBuffer=1-this.currentBuffer)}resize(r,t){this.width===r&&this.height===t||(this.width=r,this.height=t,this.gl.deleteTexture(this.textureA),this.gl.deleteFramebuffer(this.framebufferA),this.textureA=this.createTexture(r,t),this.framebufferA=this.createFramebuffer(this.textureA),this.doubleBuffered&&(this.gl.deleteTexture(this.textureB),this.gl.deleteFramebuffer(this.framebufferB),this.textureB=this.createTexture(r,t),this.framebufferB=this.createFramebuffer(this.textureB)))}}class L{constructor(r){this.gl=r,this.keys=new Uint8Array(256*4),this.texture=r.createTexture(),r.bindTexture(r.TEXTURE_2D,this.texture),r.texImage2D(r.TEXTURE_2D,0,r.RGBA,256,1,0,r.RGBA,r.UNSIGNED_BYTE,this.keys),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MIN_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MAG_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_S,r.CLAMP_TO_EDGE),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_T,r.CLAMP_TO_EDGE),this.setupListeners()}setupListeners(){window.addEventListener("keydown",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=255)}),window.addEventListener("keyup",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=0)})}update(){const r=this.gl;r.bindTexture(r.TEXTURE_2D,this.texture),r.texSubImage2D(r.TEXTURE_2D,0,0,0,256,1,r.RGBA,r.UNSIGNED_BYTE,this.keys)}getTexture(){return this.texture}}const f={x:0,y:0,clickX:0,clickY:0,isDown:!1};i.addEventListener("mousemove",o=>{const r=i.getBoundingClientRect(),t=window.devicePixelRatio||1,e=(o.clientX-r.left)*t,a=(r.height-(o.clientY-r.top))*t;f.x=e,f.y=a});i.addEventListener("mousedown",o=>{f.isDown=!0;const r=i.getBoundingClientRect(),t=window.devicePixelRatio||1,e=(o.clientX-r.left)*t,a=(r.height-(o.clientY-r.top))*t;f.clickX=e,f.clickY=a});i.addEventListener("mouseup",()=>{f.isDown=!1});i.addEventListener("mouseleave",()=>{f.isDown=!1});const g=h(n.VERTEX_SHADER,H),d={bufferA:m(g,h(n.FRAGMENT_SHADER,A)),bufferB:m(g,h(n.FRAGMENT_SHADER,w)),bufferC:m(g,h(n.FRAGMENT_SHADER,z)),bufferD:m(g,h(n.FRAGMENT_SHADER,k)),image:m(g,h(n.FRAGMENT_SHADER,B))};console.log("✓ All shaders compiled successfully");function v(o){return{iResolution:n.getUniformLocation(o,"iResolution"),iTime:n.getUniformLocation(o,"iTime"),iTimeDelta:n.getUniformLocation(o,"iTimeDelta"),iFrame:n.getUniformLocation(o,"iFrame"),iMouse:n.getUniformLocation(o,"iMouse"),iChannel0:n.getUniformLocation(o,"iChannel0"),iChannel1:n.getUniformLocation(o,"iChannel1"),iChannel2:n.getUniformLocation(o,"iChannel2"),iChannel3:n.getUniformLocation(o,"iChannel3")}}const p={bufferA:v(d.bufferA),bufferB:v(d.bufferB),bufferC:v(d.bufferC),bufferD:v(d.bufferD),image:v(d.image)},x=n.createBuffer();n.bindBuffer(n.ARRAY_BUFFER,x);n.bufferData(n.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),n.STATIC_DRAW);function C(){const o=window.devicePixelRatio||1,r=Math.floor(i.clientWidth*o),t=Math.floor(i.clientHeight*o);return i.width!==r||i.height!==t?(i.width=r,i.height=t,!0):!1}C();let s={bufferA:new R(n,i.width,i.height,!0),bufferB:new R(n,i.width,i.height,!0),bufferC:new R(n,i.width,i.height,!1),bufferD:new R(n,i.width,i.height,!1)};const P=new L(n);let T=0,y=0;function G(o,r,t){o.iResolution&&n.uniform3f(o.iResolution,i.width,i.height,1),o.iTime&&n.uniform1f(o.iTime,r),o.iTimeDelta&&n.uniform1f(o.iTimeDelta,t),o.iFrame&&n.uniform1i(o.iFrame,T),o.iMouse&&n.uniform4f(o.iMouse,f.x,f.y,f.isDown?f.clickX:0,f.isDown?f.clickY:0)}function _(o,r,t,e,a,l){n.bindFramebuffer(n.FRAMEBUFFER,t),n.viewport(0,0,i.width,i.height),n.useProgram(o);const u=n.getAttribLocation(o,"aPosition");n.bindBuffer(n.ARRAY_BUFFER,x),n.enableVertexAttribArray(u),n.vertexAttribPointer(u,2,n.FLOAT,!1,0,0),G(r,a,l);for(let c=0;c<4;c++)e[c]&&r[`iChannel${c}`]&&(n.activeTexture(n.TEXTURE0+c),n.bindTexture(n.TEXTURE_2D,e[c]),n.uniform1i(r[`iChannel${c}`],c));n.drawArrays(n.TRIANGLES,0,3)}function b(o){o*=.001;const r=y>0?o-y:.016;y=o,C()&&(s.bufferA.resize(i.width,i.height),s.bufferB.resize(i.width,i.height),s.bufferC.resize(i.width,i.height),s.bufferD.resize(i.width,i.height)),P.update(),_(d.bufferA,p.bufferA,s.bufferA.getWriteFramebuffer(),[null,null,s.bufferB.getReadTexture(),s.bufferA.getReadTexture()],o,r),s.bufferA.swap(),_(d.bufferB,p.bufferB,s.bufferB.getWriteFramebuffer(),[s.bufferA.getReadTexture(),s.bufferB.getReadTexture(),null,P.getTexture()],o,r),s.bufferB.swap(),_(d.bufferC,p.bufferC,s.bufferC.getWriteFramebuffer(),[s.bufferB.getReadTexture(),null,null,null],o,r),_(d.bufferD,p.bufferD,s.bufferD.getWriteFramebuffer(),[s.bufferC.getReadTexture(),null,null,null],o,r),_(d.image,p.image,null,[s.bufferA.getReadTexture(),null,null,s.bufferD.getReadTexture()],o,r),T++,requestAnimationFrame(b)}requestAnimationFrame(b);console.log("✓ Multi-buffer rendering system initialized");console.log("Controls: WASD = Move, Mouse = Look, Q/E = Roll, R/F = Up/Down");
+`,V={bufferA:X,bufferB:W,bufferC:q,bufferD:Q,image:K},T=document.getElementById("gl-canvas");if(!T)throw new Error("Canvas element '#gl-canvas' not found.");const Y=U({canvas:T,passes:N,shaderSources:V});Y.start();console.log("✓ Multi-buffer rendering system initialized");console.log("Controls: WASD = Move, Mouse = Look, Q/E = Roll, R/F = Up/Down");
