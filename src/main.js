@@ -70,10 +70,8 @@ void main()
     console.warn("⚠ No mainImage function found - shader may already have main() or be vertex shader");
   }
 
-  // Fix unsigned integer suffixes (WebGL2 needs explicit type)
   processedSource = processedSource.replace(/(\d+)U\b/g, "$1u");
 
-  // Add Shadertoy uniforms
   const shadertoyUniforms = `
 // Shadertoy uniforms
 uniform vec3 iResolution;           // viewport resolution (in pixels)
