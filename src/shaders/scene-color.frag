@@ -41,8 +41,8 @@ Kerr-Newman Black Hole Real-time General Relativity Renderer
      [Q] / [E] : 镜头翻滚 (Camera Roll)
      [鼠标/Mouse] : 旋转视角 (Look Around - Pitch/Yaw)
      
-     移动速度与鼠标灵敏度调节见bufferB
-     Adjustment of movement speed and mouse sensitivity is detailed in bufferB.
+     移动速度与鼠标灵敏度调节见 camera-state pass
+     Adjustment of movement speed and mouse sensitivity is detailed in the camera-state pass.
 --------------------------------------------------------------------------------
 
 [ 性能与建议 / Performance & Advice ]

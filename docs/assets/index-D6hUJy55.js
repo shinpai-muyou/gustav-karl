@@ -1,4 +1,4 @@
-(function(){const r=document.createElement("link").relList;if(r&&r.supports&&r.supports("modulepreload"))return;for(const a of document.querySelectorAll('link[rel="modulepreload"]'))e(a);new MutationObserver(a=>{for(const i of a)if(i.type==="childList")for(const c of i.addedNodes)c.tagName==="LINK"&&c.rel==="modulepreload"&&e(c)}).observe(document,{childList:!0,subtree:!0});function t(a){const i={};return a.integrity&&(i.integrity=a.integrity),a.referrerPolicy&&(i.referrerPolicy=a.referrerPolicy),a.crossOrigin==="use-credentials"?i.credentials="include":a.crossOrigin==="anonymous"?i.credentials="omit":i.credentials="same-origin",i}function e(a){if(a.ep)return;a.ep=!0;const i=t(a);fetch(a.href,i)}})();const w=`
+(function(){const r=document.createElement("link").relList;if(r&&r.supports&&r.supports("modulepreload"))return;for(const o of document.querySelectorAll('link[rel="modulepreload"]'))e(o);new MutationObserver(o=>{for(const i of o)if(i.type==="childList")for(const s of i.addedNodes)s.tagName==="LINK"&&s.rel==="modulepreload"&&e(s)}).observe(document,{childList:!0,subtree:!0});function t(o){const i={};return o.integrity&&(i.integrity=o.integrity),o.referrerPolicy&&(i.referrerPolicy=o.referrerPolicy),o.crossOrigin==="use-credentials"?i.credentials="include":o.crossOrigin==="anonymous"?i.credentials="omit":i.credentials="same-origin",i}function e(o){if(o.ep)return;o.ep=!0;const i=t(o);fetch(o.href,i)}})();const H=`
 // Shadertoy uniforms
 uniform vec3 iResolution;           // viewport resolution (in pixels)
 uniform float iTime;                // shader playback time (in seconds)
@@ -10,12 +10,12 @@ uniform sampler2D iChannel1;        // input channel 1
 uniform sampler2D iChannel2;        // input channel 2
 uniform sampler2D iChannel3;        // input channel 3
 uniform vec3 iChannelResolution[4]; // channel resolution (in pixels)
-`,k=`#version 300 es
+`,L=`#version 300 es
 in vec2 aPosition;
 void main() {
   gl_Position = vec4(aPosition, 0.0, 1.0);
 }
-`;function I(n){let r=n;r=r.replace(/^\/\/#version\s+\d+.*$/gm,""),r=r.replace(/^#version\s+\d+.*$/gm,""),r=r.replace(/^\/\/#pragma.*$/gm,""),r=r.replace(/^\/\/#extension.*$/gm,""),r=r.replace(/^#pragma.*$/gm,""),r=r.replace(/^#extension.*$/gm,"");const t=r.match(/void\s+mainImage\s*\(\s*out\s+vec4\s+(\w+)\s*,\s*in\s+vec2\s+(\w+)\s*\)\s*\{/i);if(t){const e=t[1],i=`out vec4 fragColor;
+`;function G(n){let r=n;r=r.replace(/^\/\/#version\s+\d+.*$/gm,""),r=r.replace(/^#version\s+\d+.*$/gm,""),r=r.replace(/^\/\/#pragma.*$/gm,""),r=r.replace(/^\/\/#extension.*$/gm,""),r=r.replace(/^#pragma.*$/gm,""),r=r.replace(/^#extension.*$/gm,"");const t=r.match(/void\s+mainImage\s*\(\s*out\s+vec4\s+(\w+)\s*,\s*in\s+vec2\s+(\w+)\s*\)\s*\{/i);if(t){const e=t[1],i=`out vec4 fragColor;
 void main()
 {
     // Shadertoy parameter mapping
@@ -26,10 +26,380 @@ precision highp float;
 precision highp int;
 precision highp sampler2D;
 
-${w}
-${r}`}function x(n,r,t){const e=n.createShader(r),a=I(t);if(n.shaderSource(e,a),n.compileShader(e),!n.getShaderParameter(e,n.COMPILE_STATUS)){const i=n.getShaderInfoLog(e)||"Shader compile failed.",d=a.split(`
-`).slice(0,100).map((f,m)=>`${m+1}: ${f}`).join(`
-`);throw console.error("=== SHADER COMPILATION ERROR ==="),console.error(i),console.error("=== First 100 lines of processed source ==="),console.error(d),n.deleteShader(e),new Error(i)}return e}function B(n,r,t){const e=n.createProgram();if(n.attachShader(e,r),n.attachShader(e,t),n.linkProgram(e),!n.getProgramParameter(e,n.LINK_STATUS)){const a=n.getProgramInfoLog(e)||"Program link failed.";throw n.deleteProgram(e),new Error(a)}return e}function H(n,r){return{iResolution:n.getUniformLocation(r,"iResolution"),iTime:n.getUniformLocation(r,"iTime"),iTimeDelta:n.getUniformLocation(r,"iTimeDelta"),iFrame:n.getUniformLocation(r,"iFrame"),iMouse:n.getUniformLocation(r,"iMouse"),iChannel0:n.getUniformLocation(r,"iChannel0"),iChannel1:n.getUniformLocation(r,"iChannel1"),iChannel2:n.getUniformLocation(r,"iChannel2"),iChannel3:n.getUniformLocation(r,"iChannel3")}}function L(n){const r=n.createBuffer();return n.bindBuffer(n.ARRAY_BUFFER,r),n.bufferData(n.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),n.STATIC_DRAW),r}function G(n,r,t){const e=n.getAttribLocation(r,"aPosition");n.bindBuffer(n.ARRAY_BUFFER,t),n.enableVertexAttribArray(e),n.vertexAttribPointer(e,2,n.FLOAT,!1,0,0)}class F{constructor(r){this.gl=r,this.keys=new Uint8Array(256*4),this.texture=r.createTexture(),r.bindTexture(r.TEXTURE_2D,this.texture),r.texImage2D(r.TEXTURE_2D,0,r.RGBA,256,1,0,r.RGBA,r.UNSIGNED_BYTE,this.keys),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MIN_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MAG_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_S,r.CLAMP_TO_EDGE),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_T,r.CLAMP_TO_EDGE),this.setupListeners()}setupListeners(){window.addEventListener("keydown",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=255)}),window.addEventListener("keyup",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=0)})}update(){this.gl.bindTexture(this.gl.TEXTURE_2D,this.texture),this.gl.texSubImage2D(this.gl.TEXTURE_2D,0,0,0,256,1,this.gl.RGBA,this.gl.UNSIGNED_BYTE,this.keys)}getTexture(){return this.texture}}function O(n){const r={x:0,y:0,clickX:0,clickY:0,isDown:!1};function t(e){const a=n.getBoundingClientRect(),i=window.devicePixelRatio||1,c=(e.clientX-a.left)*i,d=(a.height-(e.clientY-a.top))*i;return{x:c,y:d}}return n.addEventListener("mousemove",e=>{const a=t(e);r.x=a.x,r.y=a.y}),n.addEventListener("mousedown",e=>{r.isDown=!0;const a=t(e);r.clickX=a.x,r.clickY=a.y}),n.addEventListener("mouseup",()=>{r.isDown=!1}),n.addEventListener("mouseleave",()=>{r.isDown=!1}),r}class M{constructor(r,t,e,a=!1){this.gl=r,this.width=t,this.height=e,this.doubleBuffered=a,this.textureA=this.createTexture(t,e),this.framebufferA=this.createFramebuffer(this.textureA),a&&(this.textureB=this.createTexture(t,e),this.framebufferB=this.createFramebuffer(this.textureB),this.currentBuffer=0)}createTexture(r,t){const e=this.gl.createTexture();return this.gl.bindTexture(this.gl.TEXTURE_2D,e),this.gl.texImage2D(this.gl.TEXTURE_2D,0,this.gl.RGBA16F,r,t,0,this.gl.RGBA,this.gl.FLOAT,null),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MIN_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MAG_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_S,this.gl.CLAMP_TO_EDGE),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_T,this.gl.CLAMP_TO_EDGE),e}createFramebuffer(r){const t=this.gl.createFramebuffer();this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,t),this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER,this.gl.COLOR_ATTACHMENT0,this.gl.TEXTURE_2D,r,0);const e=this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);if(e!==this.gl.FRAMEBUFFER_COMPLETE)throw new Error(`Framebuffer not complete: ${e}`);return this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null),t}getReadTexture(){return this.doubleBuffered?this.currentBuffer===0?this.textureA:this.textureB:this.textureA}getWriteFramebuffer(){return this.doubleBuffered?this.currentBuffer===0?this.framebufferB:this.framebufferA:this.framebufferA}swap(){this.doubleBuffered&&(this.currentBuffer=1-this.currentBuffer)}resize(r,t){this.width===r&&this.height===t||(this.width=r,this.height=t,this.gl.deleteTexture(this.textureA),this.gl.deleteFramebuffer(this.framebufferA),this.textureA=this.createTexture(r,t),this.framebufferA=this.createFramebuffer(this.textureA),this.doubleBuffered&&(this.gl.deleteTexture(this.textureB),this.gl.deleteFramebuffer(this.framebufferB),this.textureB=this.createTexture(r,t),this.framebufferB=this.createFramebuffer(this.textureB)))}}function C(n){const r=window.devicePixelRatio||1,t=Math.floor(n.clientWidth*r),e=Math.floor(n.clientHeight*r);return n.width!==t||n.height!==e?(n.width=t,n.height=e,!0):!1}function U({canvas:n,shaderSources:r,passes:t}){const e=n.getContext("webgl2");if(!e)throw new Error("WebGL2 not supported in this browser.");e.getExtension("EXT_color_buffer_float")||console.warn("EXT_color_buffer_float not supported, falling back to RGBA16F");const i=x(e,e.VERTEX_SHADER,k),c=L(e),d=new F(e),f=O(n),m={},_={};Object.entries(r).forEach(([o,s])=>{const u=x(e,e.FRAGMENT_SHADER,s);m[o]=B(e,i,u),_[o]=H(e,m[o])});const b=Array.from(new Map(t.filter(o=>o.targetId).map(o=>[o.targetId,{id:o.targetId,doubleBuffered:o.doubleBuffered}])).values());C(n);const g={};b.forEach(({id:o,doubleBuffered:s})=>{g[o]=new M(e,n.width,n.height,s)});function D(o,s){o.iResolution&&e.uniform3f(o.iResolution,n.width,n.height,1),o.iTime&&e.uniform1f(o.iTime,s.time),o.iTimeDelta&&e.uniform1f(o.iTimeDelta,s.timeDelta),o.iFrame&&e.uniform1i(o.iFrame,s.frameCount),o.iMouse&&e.uniform4f(o.iMouse,f.x,f.y,f.isDown?f.clickX:0,f.isDown?f.clickY:0)}function E(o){if(!o)return null;if(o==="keyboard")return d.getTexture();if(o.endsWith(".read")){const s=o.replace(".read","");return g[s].getReadTexture()}throw new Error(`Unknown channel ref: ${o}`)}function A(o,s){const u=m[o.id],v=_[o.id],l=o.targetId?g[o.targetId]:null,z=l?l.getWriteFramebuffer():null;e.bindFramebuffer(e.FRAMEBUFFER,z),e.viewport(0,0,n.width,n.height),e.useProgram(u),G(e,u,c),D(v,s);for(let h=0;h<4;h++){const y=E(o.channels[h]),P=v[`iChannel${h}`];y&&P&&(e.activeTexture(e.TEXTURE0+h),e.bindTexture(e.TEXTURE_2D,y),e.uniform1i(P,h))}e.drawArrays(e.TRIANGLES,0,3),l&&l.doubleBuffered&&l.swap()}let R=0,p=0;function S(o){const s=o*.001,u=p>0?s-p:.016;p=s,C(n)&&Object.values(g).forEach(l=>{l.resize(n.width,n.height)}),d.update();const v={time:s,timeDelta:u,frameCount:R};t.forEach(l=>{A(l,v)}),R+=1,requestAnimationFrame(S)}return{start(){requestAnimationFrame(S)}}}const N=[{id:"bufferA",targetId:"bufferA",doubleBuffered:!0,channels:[null,null,"bufferB.read","bufferA.read"]},{id:"bufferB",targetId:"bufferB",doubleBuffered:!0,channels:["bufferA.read","bufferB.read",null,"keyboard"]},{id:"bufferC",targetId:"bufferC",doubleBuffered:!1,channels:["bufferB.read",null,null,null]},{id:"bufferD",targetId:"bufferD",doubleBuffered:!1,channels:["bufferC.read",null,null,null]},{id:"image",targetId:null,doubleBuffered:!1,channels:["bufferA.read",null,null,"bufferD.read"]}],X=`//#version 450\r
+${H}
+${r}`}function T(n,r,t){const e=n.createShader(r),o=G(t);if(n.shaderSource(e,o),n.compileShader(e),!n.getShaderParameter(e,n.COMPILE_STATUS)){const i=n.getShaderInfoLog(e)||"Shader compile failed.",d=o.split(`
+`).slice(0,100).map((f,h)=>`${h+1}: ${f}`).join(`
+`);throw console.error("=== SHADER COMPILATION ERROR ==="),console.error(i),console.error("=== First 100 lines of processed source ==="),console.error(d),n.deleteShader(e),new Error(i)}return e}function F(n,r,t){const e=n.createProgram();if(n.attachShader(e,r),n.attachShader(e,t),n.linkProgram(e),!n.getProgramParameter(e,n.LINK_STATUS)){const o=n.getProgramInfoLog(e)||"Program link failed.";throw n.deleteProgram(e),new Error(o)}return e}function O(n,r){return{iResolution:n.getUniformLocation(r,"iResolution"),iTime:n.getUniformLocation(r,"iTime"),iTimeDelta:n.getUniformLocation(r,"iTimeDelta"),iFrame:n.getUniformLocation(r,"iFrame"),iMouse:n.getUniformLocation(r,"iMouse"),iChannel0:n.getUniformLocation(r,"iChannel0"),iChannel1:n.getUniformLocation(r,"iChannel1"),iChannel2:n.getUniformLocation(r,"iChannel2"),iChannel3:n.getUniformLocation(r,"iChannel3")}}function M(n){const r=n.createBuffer();return n.bindBuffer(n.ARRAY_BUFFER,r),n.bufferData(n.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),n.STATIC_DRAW),r}function U(n,r,t){const e=n.getAttribLocation(r,"aPosition");n.bindBuffer(n.ARRAY_BUFFER,t),n.enableVertexAttribArray(e),n.vertexAttribPointer(e,2,n.FLOAT,!1,0,0)}class N{constructor(r){this.gl=r,this.keys=new Uint8Array(256*4),this.texture=r.createTexture(),r.bindTexture(r.TEXTURE_2D,this.texture),r.texImage2D(r.TEXTURE_2D,0,r.RGBA,256,1,0,r.RGBA,r.UNSIGNED_BYTE,this.keys),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MIN_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MAG_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_S,r.CLAMP_TO_EDGE),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_T,r.CLAMP_TO_EDGE),this.setupListeners()}setupListeners(){window.addEventListener("keydown",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=255)}),window.addEventListener("keyup",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=0)})}update(){this.gl.bindTexture(this.gl.TEXTURE_2D,this.texture),this.gl.texSubImage2D(this.gl.TEXTURE_2D,0,0,0,256,1,this.gl.RGBA,this.gl.UNSIGNED_BYTE,this.keys)}getTexture(){return this.texture}}function X(n){const r={x:0,y:0,clickX:0,clickY:0,isDown:!1};function t(e){const o=n.getBoundingClientRect(),i=window.devicePixelRatio||1,s=(e.clientX-o.left)*i,d=(o.height-(e.clientY-o.top))*i;return{x:s,y:d}}return n.addEventListener("mousemove",e=>{const o=t(e);r.x=o.x,r.y=o.y}),n.addEventListener("mousedown",e=>{r.isDown=!0;const o=t(e);r.clickX=o.x,r.clickY=o.y}),n.addEventListener("mouseup",()=>{r.isDown=!1}),n.addEventListener("mouseleave",()=>{r.isDown=!1}),r}class W{constructor(r,t,e,o=!1){this.gl=r,this.width=t,this.height=e,this.doubleBuffered=o,this.textureA=this.createTexture(t,e),this.framebufferA=this.createFramebuffer(this.textureA),o&&(this.textureB=this.createTexture(t,e),this.framebufferB=this.createFramebuffer(this.textureB),this.currentBuffer=0)}createTexture(r,t){const e=this.gl.createTexture();return this.gl.bindTexture(this.gl.TEXTURE_2D,e),this.gl.texImage2D(this.gl.TEXTURE_2D,0,this.gl.RGBA16F,r,t,0,this.gl.RGBA,this.gl.FLOAT,null),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MIN_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MAG_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_S,this.gl.CLAMP_TO_EDGE),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_T,this.gl.CLAMP_TO_EDGE),e}createFramebuffer(r){const t=this.gl.createFramebuffer();this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,t),this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER,this.gl.COLOR_ATTACHMENT0,this.gl.TEXTURE_2D,r,0);const e=this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);if(e!==this.gl.FRAMEBUFFER_COMPLETE)throw new Error(`Framebuffer not complete: ${e}`);return this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null),t}getReadTexture(){return this.doubleBuffered?this.currentBuffer===0?this.textureA:this.textureB:this.textureA}getWriteFramebuffer(){return this.doubleBuffered?this.currentBuffer===0?this.framebufferB:this.framebufferA:this.framebufferA}swap(){this.doubleBuffered&&(this.currentBuffer=1-this.currentBuffer)}resize(r,t){this.width===r&&this.height===t||(this.width=r,this.height=t,this.gl.deleteTexture(this.textureA),this.gl.deleteFramebuffer(this.framebufferA),this.textureA=this.createTexture(r,t),this.framebufferA=this.createFramebuffer(this.textureA),this.doubleBuffered&&(this.gl.deleteTexture(this.textureB),this.gl.deleteFramebuffer(this.framebufferB),this.textureB=this.createTexture(r,t),this.framebufferB=this.createFramebuffer(this.textureB)))}}function b(n){const r=window.devicePixelRatio||1,t=Math.floor(n.clientWidth*r),e=Math.floor(n.clientHeight*r);return n.width!==t||n.height!==e?(n.width=t,n.height=e,!0):!1}function q({canvas:n,shaderSources:r,passes:t}){const e=n.getContext("webgl2");if(!e)throw new Error("WebGL2 not supported in this browser.");e.getExtension("EXT_color_buffer_float")||console.warn("EXT_color_buffer_float not supported, falling back to RGBA16F");const i=T(e,e.VERTEX_SHADER,L),s=M(e),d=new N(e),f=X(n),h={},R={};Object.entries(r).forEach(([a,l])=>{const u=T(e,e.FRAGMENT_SHADER,l);h[a]=F(e,i,u),R[a]=O(e,h[a])});const z=Array.from(new Map(t.filter(a=>a.targetId).map(a=>[a.targetId,{id:a.targetId,doubleBuffered:a.doubleBuffered}])).values());b(n);const v={};z.forEach(({id:a,doubleBuffered:l})=>{v[a]=new W(e,n.width,n.height,l)});function k(a,l){a.iResolution&&e.uniform3f(a.iResolution,n.width,n.height,1),a.iTime&&e.uniform1f(a.iTime,l.time),a.iTimeDelta&&e.uniform1f(a.iTimeDelta,l.timeDelta),a.iFrame&&e.uniform1i(a.iFrame,l.frameCount),a.iMouse&&e.uniform4f(a.iMouse,f.x,f.y,f.isDown?f.clickX:0,f.isDown?f.clickY:0)}function w(a){if(!a)return null;if(a==="keyboard")return d.getTexture();if(a.endsWith(".read")){const l=a.replace(".read","");return v[l].getReadTexture()}throw new Error(`Unknown channel ref: ${a}`)}function I(a,l){const u=h[a.id],p=R[a.id],c=a.targetId?v[a.targetId]:null,B=c?c.getWriteFramebuffer():null;e.bindFramebuffer(e.FRAMEBUFFER,B),e.viewport(0,0,n.width,n.height),e.useProgram(u),U(e,u,s),k(p,l);for(let m=0;m<4;m++){const x=w(a.channels[m]),C=p[`iChannel${m}`];x&&C&&(e.activeTexture(e.TEXTURE0+m),e.bindTexture(e.TEXTURE_2D,x),e.uniform1i(C,m))}e.drawArrays(e.TRIANGLES,0,3),c&&c.doubleBuffered&&c.swap()}let y=0,_=0;function P(a){const l=a*.001,u=_>0?l-_:.016;_=l,b(n)&&Object.values(v).forEach(c=>{c.resize(n.width,n.height)}),d.update();const p={time:l,timeDelta:u,frameCount:y};t.forEach(c=>{I(c,p)}),y+=1,requestAnimationFrame(P)}return{start(){requestAnimationFrame(P)}}}const Q=[{id:"scene-color",targetId:"scene-color",doubleBuffered:!0,channels:[null,null,"camera-state.read","scene-color.read"]},{id:"camera-state",targetId:"camera-state",doubleBuffered:!0,channels:["scene-color.read","camera-state.read",null,"keyboard"]},{id:"bloom-blur-horizontal",targetId:"bloom-blur-horizontal",doubleBuffered:!1,channels:["camera-state.read",null,null,null]},{id:"bloom-blur-vertical",targetId:"bloom-blur-vertical",doubleBuffered:!1,channels:["bloom-blur-horizontal.read",null,null,null]},{id:"image",targetId:null,doubleBuffered:!1,channels:["scene-color.read",null,null,"bloom-blur-vertical.read"]}],K=[{id:"scene-color",targetId:"scene-color",doubleBuffered:!0,channels:[null,null,null,"scene-color.read"]},{id:"image",targetId:null,doubleBuffered:!1,channels:["scene-color.read",null,null,null]}],V=[{id:"image",targetId:null,doubleBuffered:!1,channels:[null,null,null,null]}],S={"bloom-chain":Q,feedback:K,"single-pass":V},g="bloom-chain";function Y(n=g){return S[n]??S[g]}const Z=`vec3 sampleBlurSource(vec2 coord)
+{
+    return texture(iChannel0, coord).rgb;
+}
+
+float getGaussianWeight5(int i)
+{
+    if (i == 0) return 0.19638062;
+    if (i == 1) return 0.29675293;
+    if (i == 2) return 0.09442139;
+    if (i == 3) return 0.01037598;
+    return 0.00025940;
+}
+
+float getGaussianOffset5(int i)
+{
+    if (i == 0) return 0.00000000;
+    if (i == 1) return 1.41176471;
+    if (i == 2) return 3.29411765;
+    if (i == 3) return 5.17647059;
+    return 7.05882353;
+}
+
+vec3 applyGaussianBlur5Tap(vec2 uv, vec2 axisScale)
+{
+    vec3 color = vec3(0.0);
+    float weightSum = 0.0;
+
+    color += sampleBlurSource(uv) * getGaussianWeight5(0);
+    weightSum += getGaussianWeight5(0);
+
+    for (int i = 1; i < 5; i++) {
+        vec2 offset = vec2(getGaussianOffset5(i)) / iResolution.xy;
+        float weight = getGaussianWeight5(i);
+        color += sampleBlurSource(uv + offset * axisScale) * weight;
+        color += sampleBlurSource(uv - offset * axisScale) * weight;
+        weightSum += weight * 2.0;
+    }
+
+    return color / weightSum;
+}
+`,j=`// =============================================================================
+// Original Bloom Functions (Unchanged Logic)
+// =============================================================================
+
+vec3 ColorFetch(vec2 coord)
+{
+	return texture(iChannel0, coord).rgb;
+}
+
+vec3 Grab1(vec2 coord, const float octave, const vec2 offset)
+{
+	float scale = exp2(octave);
+    coord += offset;
+    coord *= scale;
+   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);
+    return ColorFetch(coord);
+}
+
+vec3 Grab4(vec2 coord, const float octave, const vec2 offset)
+{
+	float scale = exp2(octave);
+    coord += offset;
+    coord *= scale;
+   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);
+
+    vec3 color = vec3(0.0);
+    float weights = 0.0;
+    const int oversampling = 4;
+    for (int i = 0; i < oversampling; i++) {
+        for (int j = 0; j < oversampling; j++) {
+			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);
+            color += ColorFetch(coord + off);
+            weights += 1.0;
+        }
+    }
+    return color / weights;
+}
+
+vec3 Grab8(vec2 coord, const float octave, const vec2 offset)
+{
+	float scale = exp2(octave);
+    coord += offset;
+    coord *= scale;
+   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);
+
+    vec3 color = vec3(0.0);
+    float weights = 0.0;
+    const int oversampling = 8;
+    for (int i = 0; i < oversampling; i++) {
+        for (int j = 0; j < oversampling; j++) {
+			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);
+            color += ColorFetch(coord + off);
+            weights += 1.0;
+        }
+    }
+    return color / weights;
+}
+
+vec3 Grab16(vec2 coord, const float octave, const vec2 offset)
+{
+	float scale = exp2(octave);
+    coord += offset;
+    coord *= scale;
+   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);
+
+    vec3 color = vec3(0.0);
+    float weights = 0.0;
+    const int oversampling = 16;
+    for (int i = 0; i < oversampling; i++) {
+        for (int j = 0; j < oversampling; j++) {
+			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);
+            color += ColorFetch(coord + off);
+            weights += 1.0;
+        }
+    }
+    return color / weights;
+}
+
+vec2 CalcOffset(float octave)
+{
+    vec2 offset = vec2(0.0);
+    vec2 padding = vec2(10.0) / iResolution.xy;
+    offset.x = -min(1.0, floor(octave / 3.0)) * (0.25 + padding.x);
+    offset.y = -(1.0 - (1.0 / exp2(octave))) - padding.y * octave;
+	offset.y += min(1.0, floor(octave / 3.0)) * 0.35;
+	return offset;
+}
+`,J=`// =============================================================================
+// Camera & State Logic
+// =============================================================================
+
+#define OFFSET_UP    1  // W-1: Up Vector (Buffer A reads this)
+#define OFFSET_RIGHT 2  // W-2: Right Vector (Buffer A reads this)
+#define OFFSET_POS   3  // W-3: Position (Buffer A reads this)
+#define OFFSET_FWD   4  // W-4: Forward Vector (Internal State)
+#define OFFSET_MOUSE 5  // W-5: Last Mouse (Internal State)
+#define OFFSET_TIME  6  // W-6: Game Time
+
+void writeCameraStateTexel(out vec4 fragColor, in vec2 fragCoord)
+{
+    int pxIndex = int(iResolution.x) - int(fragCoord.x);
+    int width = int(iResolution.x);
+    vec3  up      = texelFetch(iChannel1, ivec2(width - OFFSET_UP, 0), 0).xyz;
+    vec3  right   = texelFetch(iChannel1, ivec2(width - OFFSET_RIGHT, 0), 0).xyz;
+    vec3  pos     = texelFetch(iChannel1, ivec2(width - OFFSET_POS, 0), 0).xyz;
+    vec3  fwd     = texelFetch(iChannel1, ivec2(width - OFFSET_FWD, 0), 0).xyz;
+    vec4  lastMouse = texelFetch(iChannel1, ivec2(width - OFFSET_MOUSE, 0), 0);
+    vec4  timeData = texelFetch(iChannel1, ivec2(width - OFFSET_TIME, 0), 0);
+    float gTime   = timeData.x;
+    float uniSign = timeData.y;
+    vec3 oldPos = pos;
+    if (iFrame <= 5 || length(fwd) < 0.1) {
+        pos = vec3(-2.0, -3.6, 22.0);
+        fwd = vec3(0.0, 0.15, -1.0);
+        fwd = normalize(fwd);
+        right = normalize(cross(fwd, vec3(-0.5, 1.0, 0.0)));
+        up    = normalize(cross(right, fwd));
+        gTime = 0.0;
+        lastMouse = iMouse;
+        uniSign = 1.0;
+    }
+
+    // 3. 处理鼠标旋转
+    if (iMouse.z > 0.0) {
+        vec2 mouseDelta = iMouse.xy - lastMouse.xy;
+
+        // 防止点击瞬间跳变
+        if (lastMouse.z < 0.0) mouseDelta = vec2(0.0);
+
+        float yaw = -mouseDelta.x * MOUSE_SENSITIVITY;
+        float pitch = mouseDelta.y * MOUSE_SENSITIVITY;
+
+        // 绕 Up 轴偏航 (Yaw)
+        fwd = rotAxis(up, yaw) * fwd;
+        right = rotAxis(up, yaw) * right;
+
+        // 绕 Right 轴俯仰 (Pitch)
+        fwd = rotAxis(right, pitch) * fwd;
+
+        // 重新正交化，消除误差
+        up = normalize(cross(right, fwd));
+        right = normalize(cross(fwd, up));
+    }
+
+    // 4. 处理滚转 (Roll Q/E)
+    float roll = 0.0;
+    if (isKeyPressed(KEY_Q)) roll -= ROLL_SPEED * iTimeDelta;
+    if (isKeyPressed(KEY_E)) roll += ROLL_SPEED * iTimeDelta;
+
+    if (roll != 0.0) {
+        right = rotAxis(fwd, roll) * right;
+        up = normalize(cross(right, fwd));
+    }
+
+    // 5. 处理位移 (WSAD RF)
+    vec3 moveDir = vec3(0.0);
+    if (isKeyPressed(KEY_W)) moveDir += fwd;
+    if (isKeyPressed(KEY_S)) moveDir -= fwd;
+    if (isKeyPressed(KEY_A)) moveDir -= right;
+    if (isKeyPressed(KEY_D)) moveDir += right;
+    if (isKeyPressed(KEY_R)) moveDir += up; // 上浮
+    if (isKeyPressed(KEY_F)) moveDir -= up; // 下沉
+
+    pos += moveDir * MOVE_SPEED * iTimeDelta;
+
+    float spinRadius = abs(iSpin * CONST_M);
+    if (oldPos.y * pos.y < 0.0)
+    {
+        float t = oldPos.y / (oldPos.y - pos.y);
+        vec3 crossPoint = mix(oldPos, pos, t);
+
+        if (length(crossPoint.xz) < spinRadius) {
+            uniSign *= -1.0;
+        }
+    }
+    // 6. 更新时间
+    gTime += iTimeDelta;
+
+    // 7. 写入数据 (根据 pxIndex 匹配 Buffer A 的读取位置)
+    fragColor = vec4(0.0);
+
+    if (pxIndex == OFFSET_UP)    fragColor = vec4(up, 1.0);     // W-1 -> Up
+    if (pxIndex == OFFSET_RIGHT) fragColor = vec4(right, 1.0);  // W-2 -> Right
+    if (pxIndex == OFFSET_POS)   fragColor = vec4(pos, 1.0);    // W-3 -> Pos
+    if (pxIndex == OFFSET_FWD)   fragColor = vec4(fwd, 1.0);    // W-4 -> Fwd (Internal)
+    if (pxIndex == OFFSET_MOUSE) fragColor = iMouse;            // W-5 -> Mouse
+    if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, 0.0, 0.0, 1.0); // W-6 -> Time
+    if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, uniSign, 0.0, 1.0);
+}
+`,$=`// =============================================================================
+// Settings & Input Definitions
+// =============================================================================
+#define iSpin 0.99   //必须与BufferA中iSpin一致！It must be modified synchronously with iSpin in BufferA！
+const float CONST_M = 0.5;//DONT CHANGE THIS
+// Keycodes
+const int KEY_W = 87;
+const int KEY_A = 65;
+const int KEY_S = 83;
+const int KEY_D = 68;
+const int KEY_Q = 81;
+const int KEY_E = 69;
+const int KEY_R = 82;
+const int KEY_F = 70;
+
+// Movement Settings
+const float MOVE_SPEED = 1.0;
+const float MOUSE_SENSITIVITY = 0.003;
+const float ROLL_SPEED = 2.0;
+
+// Helper to check key status
+bool isKeyPressed(int key) {
+    return texelFetch(iChannel3, ivec2(key, 0), 0).x > 0.5;
+}
+
+// Rotation matrix helper
+mat3 rotAxis(vec3 axis, float angle) {
+    float s = sin(angle);
+    float c = cos(angle);
+    float oc = 1.0 - c;
+    return mat3(
+        oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,
+        oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,
+        oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c
+    );
+}
+`,rr=`// 核心渲染逻辑请查看Buffer A。
+// Please check Buffer A for the core rendering logic.
+
+// Buffer B/C/D 与 Image 来自 sonicether 的作品 "Gargantua With HDR Bloom"。
+// Buffer B/C/D and Image are adapted from sonicether's "Gargantua With HDR Bloom".
+
+vec3 saturate(vec3 x)
+{
+    return clamp(x, vec3(0.0), vec3(1.0));
+}
+
+vec4 cubic(float x)
+{
+    float x2 = x * x;
+    float x3 = x2 * x;
+    vec4 w;
+    w.x =   -x3 + 3.0*x2 - 3.0*x + 1.0;
+    w.y =  3.0*x3 - 6.0*x2       + 4.0;
+    w.z = -3.0*x3 + 3.0*x2 + 3.0*x + 1.0;
+    w.w =  x3;
+    return w / 6.0;
+}
+
+vec4 BicubicTexture(in sampler2D tex, in vec2 coord)
+{
+	vec2 resolution = iResolution.xy;
+
+	coord *= resolution;
+
+	float fx = fract(coord.x);
+    float fy = fract(coord.y);
+    coord.x -= fx;
+    coord.y -= fy;
+
+    fx -= 0.5;
+    fy -= 0.5;
+
+    vec4 xcubic = cubic(fx);
+    vec4 ycubic = cubic(fy);
+
+    vec4 c = vec4(coord.x - 0.5, coord.x + 1.5, coord.y - 0.5, coord.y + 1.5);
+    vec4 s = vec4(xcubic.x + xcubic.y, xcubic.z + xcubic.w, ycubic.x + ycubic.y, ycubic.z + ycubic.w);
+    vec4 offset = c + vec4(xcubic.y, xcubic.w, ycubic.y, ycubic.w) / s;
+
+    vec4 sample0 = texture(tex, vec2(offset.x, offset.z) / resolution);
+    vec4 sample1 = texture(tex, vec2(offset.y, offset.z) / resolution);
+    vec4 sample2 = texture(tex, vec2(offset.x, offset.w) / resolution);
+    vec4 sample3 = texture(tex, vec2(offset.y, offset.w) / resolution);
+
+    float sx = s.x / (s.x + s.y);
+    float sy = s.z / (s.z + s.w);
+
+    return mix(mix(sample3, sample2, sx), mix(sample1, sample0, sx), sy);
+}
+
+vec3 ColorFetch(vec2 coord)
+{
+	return texture(iChannel0, coord).rgb;
+}
+
+vec3 BloomFetch(vec2 coord)
+{
+	return BicubicTexture(iChannel3, coord).rgb;
+}
+
+vec3 Grab(vec2 coord, const float octave, const vec2 offset)
+{
+	float scale = exp2(octave);
+
+    coord /= scale;
+    coord -= offset;
+
+    return BloomFetch(coord);
+}
+
+vec2 CalcOffset(float octave)
+{
+    vec2 offset = vec2(0.0);
+
+    vec2 padding = vec2(10.0) / iResolution.xy;
+
+    offset.x = -min(1.0, floor(octave / 3.0)) * (0.25 + padding.x);
+    offset.y = -(1.0 - (1.0 / exp2(octave))) - padding.y * octave;
+	offset.y += min(1.0, floor(octave / 3.0)) * 0.35;
+
+	return offset;
+}
+
+vec3 GetBloom(vec2 coord)
+{
+	vec3 bloom = vec3(0.0);
+
+    // Reconstruct bloom from multiple blurred images.
+    bloom += Grab(coord, 1.0, vec2(CalcOffset(0.0))) * 1.0;
+    bloom += Grab(coord, 2.0, vec2(CalcOffset(1.0))) * 1.5;
+	bloom += Grab(coord, 3.0, vec2(CalcOffset(2.0))) * 1.0;
+    bloom += Grab(coord, 4.0, vec2(CalcOffset(3.0))) * 1.5;
+    bloom += Grab(coord, 5.0, vec2(CalcOffset(4.0))) * 1.8;
+    bloom += Grab(coord, 6.0, vec2(CalcOffset(5.0))) * 1.0;
+    bloom += Grab(coord, 7.0, vec2(CalcOffset(6.0))) * 1.0;
+    bloom += Grab(coord, 8.0, vec2(CalcOffset(7.0))) * 1.0;
+
+	return bloom;
+}
+`,nr=`//#version 450\r
 //#pragma shader_stage(fragment)\r
 //#extension GL_EXT_samplerless_texture_functions : enable\r
 /*\r
@@ -72,8 +442,8 @@ Kerr-Newman Black Hole Real-time General Relativity Renderer\r
      [Q] / [E] : 镜头翻滚 (Camera Roll)\r
      [鼠标/Mouse] : 旋转视角 (Look Around - Pitch/Yaw)\r
      \r
-     移动速度与鼠标灵敏度调节见bufferB\r
-     Adjustment of movement speed and mouse sensitivity is detailed in bufferB.\r
+     移动速度与鼠标灵敏度调节见 camera-state pass
+     Adjustment of movement speed and mouse sensitivity is detailed in the camera-state pass.
 --------------------------------------------------------------------------------\r
 \r
 [ 性能与建议 / Performance & Advice ]\r
@@ -2945,246 +3315,23 @@ void mainImage( out vec4 FragColor, in vec2 FragCoord )\r
     }\r
     \r
     FragColor = (iBlendWeight) * FinalColor + (1.0 - iBlendWeight) * PrevColor;\r
-}`,W=`// =============================================================================\r
-// Settings & Input Definitions\r
-// =============================================================================\r
-#define iSpin 0.99   //必须与BufferA中iSpin一致！It must be modified synchronously with iSpin in BufferA！\r
-const float CONST_M = 0.5;//DONT CHANGE THIS\r
-// Keycodes\r
-const int KEY_W = 87;\r
-const int KEY_A = 65;\r
-const int KEY_S = 83;\r
-const int KEY_D = 68;\r
-const int KEY_Q = 81;\r
-const int KEY_E = 69;\r
-const int KEY_R = 82;\r
-const int KEY_F = 70;\r
-\r
-// Movement Settings\r
-const float MOVE_SPEED = 1.0; \r
-const float MOUSE_SENSITIVITY = 0.003;\r
-const float ROLL_SPEED = 2.0;\r
-\r
-// Helper to check key status\r
-bool isKeyPressed(int key) {\r
-    return texelFetch(iChannel3, ivec2(key, 0), 0).x > 0.5;\r
-}\r
-\r
-// Rotation matrix helper\r
-mat3 rotAxis(vec3 axis, float angle) {\r
-    float s = sin(angle);\r
-    float c = cos(angle);\r
-    float oc = 1.0 - c;\r
-    return mat3(\r
-        oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,\r
-        oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,\r
-        oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c\r
-    );\r
-}\r
-\r
-// =============================================================================\r
-// Original Bloom Functions (Unchanged Logic)\r
-// =============================================================================\r
-\r
-vec3 ColorFetch(vec2 coord)\r
-{\r
- 	return texture(iChannel0, coord).rgb;   \r
-}\r
-\r
-vec3 Grab1(vec2 coord, const float octave, const vec2 offset)\r
-{\r
- 	float scale = exp2(octave);\r
-    coord += offset;\r
-    coord *= scale;\r
-   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);   \r
-    return ColorFetch(coord);\r
-}\r
-\r
-vec3 Grab4(vec2 coord, const float octave, const vec2 offset)\r
-{\r
- 	float scale = exp2(octave);\r
-    coord += offset;\r
-    coord *= scale;\r
-   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);   \r
-    \r
-    vec3 color = vec3(0.0);\r
-    float weights = 0.0;\r
-    const int oversampling = 4;\r
-    for (int i = 0; i < oversampling; i++) {    	    \r
-        for (int j = 0; j < oversampling; j++) {\r
-			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);\r
-            color += ColorFetch(coord + off);\r
-            weights += 1.0;\r
-        }\r
-    }\r
-    return color / weights;\r
-}\r
-\r
-vec3 Grab8(vec2 coord, const float octave, const vec2 offset)\r
-{\r
- 	float scale = exp2(octave);\r
-    coord += offset;\r
-    coord *= scale;\r
-   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);   \r
-    \r
-    vec3 color = vec3(0.0);\r
-    float weights = 0.0;\r
-    const int oversampling = 8;\r
-    for (int i = 0; i < oversampling; i++) {    	    \r
-        for (int j = 0; j < oversampling; j++) {\r
-			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);\r
-            color += ColorFetch(coord + off);\r
-            weights += 1.0;\r
-        }\r
-    }\r
-    return color / weights;\r
-}\r
-\r
-vec3 Grab16(vec2 coord, const float octave, const vec2 offset)\r
-{\r
- 	float scale = exp2(octave);\r
-    coord += offset;\r
-    coord *= scale;\r
-   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);   \r
-    \r
-    vec3 color = vec3(0.0);\r
-    float weights = 0.0;\r
-    const int oversampling = 16;\r
-    for (int i = 0; i < oversampling; i++) {    	    \r
-        for (int j = 0; j < oversampling; j++) {\r
-			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);\r
-            color += ColorFetch(coord + off);\r
-            weights += 1.0;\r
-        }\r
-    }\r
-    return color / weights;\r
-}\r
-\r
-vec2 CalcOffset(float octave)\r
-{\r
-    vec2 offset = vec2(0.0);\r
-    vec2 padding = vec2(10.0) / iResolution.xy;\r
-    offset.x = -min(1.0, floor(octave / 3.0)) * (0.25 + padding.x);\r
-    offset.y = -(1.0 - (1.0 / exp2(octave))) - padding.y * octave;\r
-	offset.y += min(1.0, floor(octave / 3.0)) * 0.35;\r
- 	return offset;   \r
-}\r
-\r
-// =============================================================================\r
-// Camera & State Logic\r
-// =============================================================================\r
-\r
-#define OFFSET_UP    1  // W-1: Up Vector (Buffer A reads this)\r
-#define OFFSET_RIGHT 2  // W-2: Right Vector (Buffer A reads this)\r
-#define OFFSET_POS   3  // W-3: Position (Buffer A reads this)\r
-#define OFFSET_FWD   4  // W-4: Forward Vector (Internal State)\r
-#define OFFSET_MOUSE 5  // W-5: Last Mouse (Internal State)\r
-#define OFFSET_TIME  6  // W-6: Game Time\r
-\r
-void UpdateCameraState(out vec4 fragColor, in vec2 fragCoord)\r
-{\r
-    int pxIndex = int(iResolution.x) - int(fragCoord.x);\r
-    int width = int(iResolution.x);\r
-    vec3  up      = texelFetch(iChannel1, ivec2(width - OFFSET_UP, 0), 0).xyz;\r
-    vec3  right   = texelFetch(iChannel1, ivec2(width - OFFSET_RIGHT, 0), 0).xyz;\r
-    vec3  pos     = texelFetch(iChannel1, ivec2(width - OFFSET_POS, 0), 0).xyz;\r
-    vec3  fwd     = texelFetch(iChannel1, ivec2(width - OFFSET_FWD, 0), 0).xyz;\r
-    vec4  lastMouse = texelFetch(iChannel1, ivec2(width - OFFSET_MOUSE, 0), 0);\r
-    vec4  timeData = texelFetch(iChannel1, ivec2(width - OFFSET_TIME, 0), 0);\r
-    float gTime   = timeData.x;\r
-    float uniSign = timeData.y; \r
-    vec3 oldPos = pos; \r
-    if (iFrame <= 5 || length(fwd) < 0.1) {\r
-        pos = vec3(-2.0, -3.6, 22.0); \r
-        fwd = vec3(0.0, 0.15, -1.0);\r
-        fwd = normalize(fwd);\r
-        right = normalize(cross(fwd, vec3(-0.5, 1.0, 0.0)));\r
-        up    = normalize(cross(right, fwd));\r
-        gTime = 0.0;\r
-        lastMouse = iMouse;\r
-        uniSign = 1.0; \r
-    }\r
-\r
-    // 3. 处理鼠标旋转\r
-    if (iMouse.z > 0.0) {\r
-        vec2 mouseDelta = iMouse.xy - lastMouse.xy;\r
-        \r
-        // 防止点击瞬间跳变\r
-        if (lastMouse.z < 0.0) mouseDelta = vec2(0.0);\r
-        \r
-        float yaw = -mouseDelta.x * MOUSE_SENSITIVITY;\r
-        float pitch = mouseDelta.y * MOUSE_SENSITIVITY;\r
-        \r
-        // 绕 Up 轴偏航 (Yaw)\r
-        fwd = rotAxis(up, yaw) * fwd;\r
-        right = rotAxis(up, yaw) * right;\r
-        \r
-        // 绕 Right 轴俯仰 (Pitch)\r
-        fwd = rotAxis(right, pitch) * fwd;\r
-        \r
-        // 重新正交化，消除误差\r
-        up = normalize(cross(right, fwd));\r
-        right = normalize(cross(fwd, up));\r
-    }\r
-    \r
-    // 4. 处理滚转 (Roll Q/E)\r
-    float roll = 0.0;\r
-    if (isKeyPressed(KEY_Q)) roll -= ROLL_SPEED * iTimeDelta;\r
-    if (isKeyPressed(KEY_E)) roll += ROLL_SPEED * iTimeDelta;\r
-    \r
-    if (roll != 0.0) {\r
-        right = rotAxis(fwd, roll) * right;\r
-        up = normalize(cross(right, fwd));\r
-    }\r
-\r
-    // 5. 处理位移 (WSAD RF)\r
-    vec3 moveDir = vec3(0.0);\r
-    if (isKeyPressed(KEY_W)) moveDir += fwd;\r
-    if (isKeyPressed(KEY_S)) moveDir -= fwd;\r
-    if (isKeyPressed(KEY_A)) moveDir -= right;\r
-    if (isKeyPressed(KEY_D)) moveDir += right;\r
-    if (isKeyPressed(KEY_R)) moveDir += up; // 上浮\r
-    if (isKeyPressed(KEY_F)) moveDir -= up; // 下沉\r
-    \r
-    pos += moveDir * MOVE_SPEED * iTimeDelta;\r
-    \r
-    float spinRadius = abs(iSpin * CONST_M);\r
-    if (oldPos.y * pos.y < 0.0) \r
-    {\r
-        float t = oldPos.y / (oldPos.y - pos.y);\r
-        vec3 crossPoint = mix(oldPos, pos, t);\r
-        \r
-        if (length(crossPoint.xz) < spinRadius) {\r
-            uniSign *= -1.0;\r
-        }\r
-    }\r
-    // 6. 更新时间\r
-    gTime += iTimeDelta;\r
-\r
-    // 7. 写入数据 (根据 pxIndex 匹配 Buffer A 的读取位置)\r
-    fragColor = vec4(0.0);\r
-    \r
-    if (pxIndex == OFFSET_UP)    fragColor = vec4(up, 1.0);     // W-1 -> Up\r
-    if (pxIndex == OFFSET_RIGHT) fragColor = vec4(right, 1.0);  // W-2 -> Right\r
-    if (pxIndex == OFFSET_POS)   fragColor = vec4(pos, 1.0);    // W-3 -> Pos\r
-    if (pxIndex == OFFSET_FWD)   fragColor = vec4(fwd, 1.0);    // W-4 -> Fwd (Internal)\r
-    if (pxIndex == OFFSET_MOUSE) fragColor = iMouse;            // W-5 -> Mouse\r
-    if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, 0.0, 0.0, 1.0); // W-6 -> Time\r
-    if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, uniSign, 0.0, 1.0); \r
-}\r
-\r
-// =============================================================================\r
-// Main Image\r
+}
+`,er=`#include "./modules/camera-state/controls-input.frag"
+#include "./modules/camera-state/bloom-pyramid-sampling.frag"
+#include "./modules/camera-state/camera-state-packing.frag"
+
+// =============================================================================
+// Main Image
 // =============================================================================\r
 \r
 void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
 {\r
     // 定义数据存储区：底行 (y=0)，最右侧 8 个像素\r
     // 稍微放宽范围以防万一\r
-    bool isDataPixel = (fragCoord.y < 1.0 && fragCoord.x > (iResolution.x - 8.5));\r
-\r
-    if (isDataPixel) {\r
-        UpdateCameraState(fragColor, fragCoord);\r
+    bool isStateStoragePixel = (fragCoord.y < 1.0 && fragCoord.x > (iResolution.x - 8.5));
+
+    if (isStateStoragePixel) {
+        writeCameraStateTexel(fragColor, fragCoord);
     } else {\r
         // 执行原始 Bloom/Mipmap 逻辑 (读取 iChannel0 = Buffer A)\r
         vec2 uv = fragCoord.xy / iResolution.xy;\r
@@ -3202,211 +3349,38 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
         fragColor = vec4(color, 1.0);\r
     }\r
 }\r
-`,q=`//Horizontal gaussian blur leveraging hardware filtering for fewer texture lookups.\r
-\r
-vec3 ColorFetch(vec2 coord)\r
-{\r
- 	return texture(iChannel0, coord).rgb;   \r
-}\r
-\r
-float weights[5];\r
-float offsets[5];\r
-\r
-\r
-void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
-{    \r
-    \r
-    weights[0] = 0.19638062;\r
-    weights[1] = 0.29675293;\r
-    weights[2] = 0.09442139;\r
-    weights[3] = 0.01037598;\r
-    weights[4] = 0.00025940;\r
-    \r
-    offsets[0] = 0.00000000;\r
-    offsets[1] = 1.41176471;\r
-    offsets[2] = 3.29411765;\r
-    offsets[3] = 5.17647059;\r
-    offsets[4] = 7.05882353;\r
-    \r
-    vec2 uv = fragCoord.xy / iResolution.xy;\r
-    \r
-    vec3 color = vec3(0.0);\r
-    float weightSum = 0.0;\r
-    \r
-    if (uv.x < 0.52)\r
-    {\r
-        color += ColorFetch(uv) * weights[0];\r
-        weightSum += weights[0];\r
-\r
-        for(int i = 1; i < 5; i++)\r
-        {\r
-            vec2 offset = vec2(offsets[i]) / iResolution.xy;\r
-            color += ColorFetch(uv + offset * vec2(0.5, 0.0)) * weights[i];\r
-            color += ColorFetch(uv - offset * vec2(0.5, 0.0)) * weights[i];\r
-            weightSum += weights[i] * 2.0;\r
-        }\r
-\r
-        color /= weightSum;\r
-    }\r
-\r
-    fragColor = vec4(color,1.0);\r
-}`,Q=`//Vertical gaussian blur leveraging hardware filtering for fewer texture lookups.\r
-\r
-vec3 ColorFetch(vec2 coord)\r
-{\r
- 	return texture(iChannel0, coord).rgb;   \r
-}\r
-\r
-float weights[5];\r
-float offsets[5];\r
-\r
-\r
-void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
-{    \r
-    \r
-    weights[0] = 0.19638062;\r
-    weights[1] = 0.29675293;\r
-    weights[2] = 0.09442139;\r
-    weights[3] = 0.01037598;\r
-    weights[4] = 0.00025940;\r
-    \r
-    offsets[0] = 0.00000000;\r
-    offsets[1] = 1.41176471;\r
-    offsets[2] = 3.29411765;\r
-    offsets[3] = 5.17647059;\r
-    offsets[4] = 7.05882353;\r
-    \r
-    vec2 uv = fragCoord.xy / iResolution.xy;\r
-    \r
-    vec3 color = vec3(0.0);\r
-    float weightSum = 0.0;\r
-    \r
-    if (uv.x < 0.52)\r
-    {\r
-        color += ColorFetch(uv) * weights[0];\r
-        weightSum += weights[0];\r
-\r
-        for(int i = 1; i < 5; i++)\r
-        {\r
-            vec2 offset = vec2(offsets[i]) / iResolution.xy;\r
-            color += ColorFetch(uv + offset * vec2(0.0, 0.5)) * weights[i];\r
-            color += ColorFetch(uv - offset * vec2(0.0, 0.5)) * weights[i];\r
-            weightSum += weights[i] * 2.0;\r
-        }\r
-\r
-        color /= weightSum;\r
-    }\r
-\r
-    fragColor = vec4(color,1.0);\r
-}`,K=`// 核心渲染逻辑请查看Buffer A。\r
-// Please check Buffer A for the core rendering logic.\r
-\r
-// Buffer B/C/D 与 Image 来自 sonicether 的作品 "Gargantua With HDR Bloom"。\r
-// Buffer B/C/D and Image  are adapted from sonicether's "Gargantua With HDR Bloom".\r
-\r
-vec3 saturate(vec3 x)\r
-{\r
-    return clamp(x, vec3(0.0), vec3(1.0));\r
-}\r
-\r
-vec4 cubic(float x)\r
-{\r
-    float x2 = x * x;\r
-    float x3 = x2 * x;\r
-    vec4 w;\r
-    w.x =   -x3 + 3.0*x2 - 3.0*x + 1.0;\r
-    w.y =  3.0*x3 - 6.0*x2       + 4.0;\r
-    w.z = -3.0*x3 + 3.0*x2 + 3.0*x + 1.0;\r
-    w.w =  x3;\r
-    return w / 6.0;\r
-}\r
-\r
-vec4 BicubicTexture(in sampler2D tex, in vec2 coord)\r
-{\r
-	vec2 resolution = iResolution.xy;\r
-\r
-	coord *= resolution;\r
-\r
-	float fx = fract(coord.x);\r
-    float fy = fract(coord.y);\r
-    coord.x -= fx;\r
-    coord.y -= fy;\r
-\r
-    fx -= 0.5;\r
-    fy -= 0.5;\r
-\r
-    vec4 xcubic = cubic(fx);\r
-    vec4 ycubic = cubic(fy);\r
-\r
-    vec4 c = vec4(coord.x - 0.5, coord.x + 1.5, coord.y - 0.5, coord.y + 1.5);\r
-    vec4 s = vec4(xcubic.x + xcubic.y, xcubic.z + xcubic.w, ycubic.x + ycubic.y, ycubic.z + ycubic.w);\r
-    vec4 offset = c + vec4(xcubic.y, xcubic.w, ycubic.y, ycubic.w) / s;\r
-\r
-    vec4 sample0 = texture(tex, vec2(offset.x, offset.z) / resolution);\r
-    vec4 sample1 = texture(tex, vec2(offset.y, offset.z) / resolution);\r
-    vec4 sample2 = texture(tex, vec2(offset.x, offset.w) / resolution);\r
-    vec4 sample3 = texture(tex, vec2(offset.y, offset.w) / resolution);\r
-\r
-    float sx = s.x / (s.x + s.y);\r
-    float sy = s.z / (s.z + s.w);\r
-\r
-    return mix( mix(sample3, sample2, sx), mix(sample1, sample0, sx), sy);\r
-}\r
-\r
-vec3 ColorFetch(vec2 coord)\r
-{\r
- 	return texture(iChannel0, coord).rgb;   \r
-}\r
-\r
-vec3 BloomFetch(vec2 coord)\r
-{\r
- 	return BicubicTexture(iChannel3, coord).rgb;   \r
-}\r
-\r
-vec3 Grab(vec2 coord, const float octave, const vec2 offset)\r
-{\r
- 	float scale = exp2(octave);\r
-    \r
-    coord /= scale;\r
-    coord -= offset;\r
-\r
-    return BloomFetch(coord);\r
-}\r
-\r
-vec2 CalcOffset(float octave)\r
-{\r
-    vec2 offset = vec2(0.0);\r
-    \r
-    vec2 padding = vec2(10.0) / iResolution.xy;\r
-    \r
-    offset.x = -min(1.0, floor(octave / 3.0)) * (0.25 + padding.x);\r
-    \r
-    offset.y = -(1.0 - (1.0 / exp2(octave))) - padding.y * octave;\r
-\r
-	offset.y += min(1.0, floor(octave / 3.0)) * 0.35;\r
-    \r
- 	return offset;   \r
-}\r
-\r
-vec3 GetBloom(vec2 coord)\r
-{\r
- 	vec3 bloom = vec3(0.0);\r
-    \r
-    //Reconstruct bloom from multiple blurred images\r
-    bloom += Grab(coord, 1.0, vec2(CalcOffset(0.0))) * 1.0;\r
-    bloom += Grab(coord, 2.0, vec2(CalcOffset(1.0))) * 1.5;\r
-	bloom += Grab(coord, 3.0, vec2(CalcOffset(2.0))) * 1.0;\r
-    bloom += Grab(coord, 4.0, vec2(CalcOffset(3.0))) * 1.5;\r
-    bloom += Grab(coord, 5.0, vec2(CalcOffset(4.0))) * 1.8;\r
-    bloom += Grab(coord, 6.0, vec2(CalcOffset(5.0))) * 1.0;\r
-    bloom += Grab(coord, 7.0, vec2(CalcOffset(6.0))) * 1.0;\r
-    bloom += Grab(coord, 8.0, vec2(CalcOffset(7.0))) * 1.0;\r
-\r
-	return bloom;\r
-}\r
-\r
-void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
-{    vec2 uv = fragCoord.xy / iResolution.xy;\r
+`,tr=`// Horizontal gaussian blur leveraging hardware filtering for fewer texture lookups.
+#include "./modules/blur/gaussian-blur-5tap.frag"
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
+{
+    vec2 uv = fragCoord.xy / iResolution.xy;
+    vec3 color = vec3(0.0);
+
+    if (uv.x < 0.52) {
+        color = applyGaussianBlur5Tap(uv, vec2(0.5, 0.0));
+    }
+
+    fragColor = vec4(color, 1.0);
+}
+`,or=`// Vertical gaussian blur leveraging hardware filtering for fewer texture lookups.
+#include "./modules/blur/gaussian-blur-5tap.frag"
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
+{
+    vec2 uv = fragCoord.xy / iResolution.xy;
+    vec3 color = vec3(0.0);
+
+    if (uv.x < 0.52) {
+        color = applyGaussianBlur5Tap(uv, vec2(0.0, 0.5));
+    }
+
+    fragColor = vec4(color, 1.0);
+}
+`,ar=`#include "./modules/image/bloom-composite-pass.frag"
+
+void mainImage( out vec4 fragColor, in vec2 fragCoord )
+{    vec2 uv = fragCoord.xy / iResolution.xy;
     \r
     vec3 color = ColorFetch(uv);\r
     \r
@@ -3430,4 +3404,4 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
     fragColor = vec4(color, 1.0);\r
 \r
 }\r
-`,V={bufferA:X,bufferB:W,bufferC:q,bufferD:Q,image:K},T=document.getElementById("gl-canvas");if(!T)throw new Error("Canvas element '#gl-canvas' not found.");const Y=U({canvas:T,passes:N,shaderSources:V});Y.start();console.log("✓ Multi-buffer rendering system initialized");console.log("Controls: WASD = Move, Mouse = Look, Q/E = Roll, R/F = Up/Down");
+`,ir=Object.assign({"./modules/blur/gaussian-blur-5tap.frag":Z,"./modules/camera-state/bloom-pyramid-sampling.frag":j,"./modules/camera-state/camera-state-packing.frag":J,"./modules/camera-state/controls-input.frag":$,"./modules/image/bloom-composite-pass.frag":rr}),lr={"scene-color":{path:"./scene-color.frag",source:nr},"camera-state":{path:"./camera-state.frag",source:er},"bloom-blur-horizontal":{path:"./bloom-blur-horizontal.frag",source:tr},"bloom-blur-vertical":{path:"./bloom-blur-vertical.frag",source:or},image:{path:"./image.frag",source:ar}};function sr(n){const r=n.split("/"),t=[];for(const e of r)if(!(!e||e===".")){if(e===".."){t.pop();continue}t.push(e)}return`./${t.join("/")}`}function cr(n,r){const t=n.split("/").slice(0,-1).join("/")||".";return sr(`${t}/${r}`)}function D(n,r,t=[]){return n.replace(/^\s*#include\s+"([^"]+)"\s*$/gm,(e,o)=>{const i=cr(r,o);if(t.includes(i))throw new Error(`Circular shader include detected: ${[...t,i].join(" -> ")}`);const s=ir[i];if(!s)throw new Error(`Missing shader include "${i}" referenced from "${r}".`);return D(s,i,[...t,i])})}const fr=Object.fromEntries(Object.entries(lr).map(([n,r])=>[n,D(r.source,r.path)])),E=document.getElementById("gl-canvas");if(!E)throw new Error("Canvas element '#gl-canvas' not found.");function dr(){const t=new URLSearchParams(window.location.search).get("preset")||void 0||g;return S[t]?t:(console.warn(`Unknown pass preset "${t}". Falling back to "${g}".`),g)}const A=dr(),ur=q({canvas:E,passes:Y(A),shaderSources:fr});ur.start();console.log("✓ Multi-buffer rendering system initialized");console.log(`Pass preset: ${A}`);console.log("Controls: WASD = Move, Mouse = Look, Q/E = Roll, R/F = Up/Down");

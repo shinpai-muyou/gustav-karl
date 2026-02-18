@@ -1,32 +1,17 @@
-export const PASS_CONFIG = [
-  {
-    id: "bufferA",
-    targetId: "bufferA",
-    doubleBuffered: true,
-    channels: [null, null, "bufferB.read", "bufferA.read"]
-  },
-  {
-    id: "bufferB",
-    targetId: "bufferB",
-    doubleBuffered: true,
-    channels: ["bufferA.read", "bufferB.read", null, "keyboard"]
-  },
-  {
-    id: "bufferC",
-    targetId: "bufferC",
-    doubleBuffered: false,
-    channels: ["bufferB.read", null, null, null]
-  },
-  {
-    id: "bufferD",
-    targetId: "bufferD",
-    doubleBuffered: false,
-    channels: ["bufferC.read", null, null, null]
-  },
-  {
-    id: "image",
-    targetId: null,
-    doubleBuffered: false,
-    channels: ["bufferA.read", null, null, "bufferD.read"]
-  }
-];
+import { BLOOM_CHAIN_PASSES } from "./presets/bloom-chain.js";
+import { FEEDBACK_PASSES } from "./presets/feedback.js";
+import { SINGLE_PASS_PASSES } from "./presets/single-pass.js";
+
+export const PASS_PRESETS = {
+  "bloom-chain": BLOOM_CHAIN_PASSES,
+  feedback: FEEDBACK_PASSES,
+  "single-pass": SINGLE_PASS_PASSES
+};
+
+export const DEFAULT_PASS_PRESET = "bloom-chain";
+
+export function resolvePassConfig(presetName = DEFAULT_PASS_PRESET) {
+  return PASS_PRESETS[presetName] ?? PASS_PRESETS[DEFAULT_PASS_PRESET];
+}
+
+export const PASS_CONFIG = resolvePassConfig(DEFAULT_PASS_PRESET);

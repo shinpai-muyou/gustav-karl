@@ -19,7 +19,7 @@ void main() {
 }
 `;
 
-function preprocessShaderSource(source) {
+export function preprocessShaderSource(source) {
   let processedSource = source;
 
   processedSource = processedSource.replace(/^\/\/#version\s+\d+.*$/gm, "");
