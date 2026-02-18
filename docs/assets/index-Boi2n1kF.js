@@ -1,19 +1,19 @@
-(function(){const r=document.createElement("link").relList;if(r&&r.supports&&r.supports("modulepreload"))return;for(const o of document.querySelectorAll('link[rel="modulepreload"]'))e(o);new MutationObserver(o=>{for(const i of o)if(i.type==="childList")for(const l of i.addedNodes)l.tagName==="LINK"&&l.rel==="modulepreload"&&e(l)}).observe(document,{childList:!0,subtree:!0});function t(o){const i={};return o.integrity&&(i.integrity=o.integrity),o.referrerPolicy&&(i.referrerPolicy=o.referrerPolicy),o.crossOrigin==="use-credentials"?i.credentials="include":o.crossOrigin==="anonymous"?i.credentials="omit":i.credentials="same-origin",i}function e(o){if(o.ep)return;o.ep=!0;const i=t(o);fetch(o.href,i)}})();const N=`#version 300 es
-in vec2 aPosition;
-void main() {
-  gl_Position = vec4(aPosition, 0.0, 1.0);
-}
-`,D=`// Shadertoy uniforms
-uniform vec3 iResolution;           // viewport resolution (in pixels)
-uniform float iTime;                // shader playback time (in seconds)
-uniform float iTimeDelta;           // render time (in seconds)
-uniform int iFrame;                 // shader playback frame
-uniform vec4 iMouse;                // mouse pixel coords. xy: current, zw: click
-uniform sampler2D iChannel0;        // input channel 0
-uniform sampler2D iChannel1;        // input channel 1
-uniform sampler2D iChannel2;        // input channel 2
-uniform sampler2D iChannel3;        // input channel 3
-uniform vec3 iChannelResolution[4]; // channel resolution (in pixels)
+(function(){const r=document.createElement("link").relList;if(r&&r.supports&&r.supports("modulepreload"))return;for(const o of document.querySelectorAll('link[rel="modulepreload"]'))e(o);new MutationObserver(o=>{for(const i of o)if(i.type==="childList")for(const l of i.addedNodes)l.tagName==="LINK"&&l.rel==="modulepreload"&&e(l)}).observe(document,{childList:!0,subtree:!0});function t(o){const i={};return o.integrity&&(i.integrity=o.integrity),o.referrerPolicy&&(i.referrerPolicy=o.referrerPolicy),o.crossOrigin==="use-credentials"?i.credentials="include":o.crossOrigin==="anonymous"?i.credentials="omit":i.credentials="same-origin",i}function e(o){if(o.ep)return;o.ep=!0;const i=t(o);fetch(o.href,i)}})();const N=`#version 300 es\r
+in vec2 aPosition;\r
+void main() {\r
+  gl_Position = vec4(aPosition, 0.0, 1.0);\r
+}\r
+`,D=`// Shadertoy uniforms\r
+uniform vec3 iResolution;           // viewport resolution (in pixels)\r
+uniform float iTime;                // shader playback time (in seconds)\r
+uniform float iTimeDelta;           // render time (in seconds)\r
+uniform int iFrame;                 // shader playback frame\r
+uniform vec4 iMouse;                // mouse pixel coords. xy: current, zw: click\r
+uniform sampler2D iChannel0;        // input channel 0\r
+uniform sampler2D iChannel1;        // input channel 1\r
+uniform sampler2D iChannel2;        // input channel 2\r
+uniform sampler2D iChannel3;        // input channel 3\r
+uniform vec3 iChannelResolution[4]; // channel resolution (in pixels)\r
 `;function X(n,r){let t=n;t=t.replace(/^\/\/#version\s+\d+.*$/gm,""),t=t.replace(/^#version\s+\d+.*$/gm,""),t=t.replace(/^\/\/#pragma.*$/gm,""),t=t.replace(/^\/\/#extension.*$/gm,""),t=t.replace(/^#pragma.*$/gm,""),t=t.replace(/^#extension.*$/gm,"");const e=t.match(/void\s+mainImage\s*\(\s*out\s+vec4\s+(\w+)\s*,\s*in\s+vec2\s+(\w+)\s*\)\s*\{/i);if(e){const o=e[1],l=`out vec4 fragColor;
 void main()
 {
@@ -28,419 +28,419 @@ precision highp sampler2D;
 ${r}
 ${t}`}function W(n){return X(n,D)}function T(n,r,t){const e=n.createShader(r),o=W(t);if(n.shaderSource(e,o),n.compileShader(e),!n.getShaderParameter(e,n.COMPILE_STATUS)){const i=n.getShaderInfoLog(e)||"Shader compile failed.",d=o.split(`
 `).slice(0,100).map((f,h)=>`${h+1}: ${f}`).join(`
-`);throw console.error("=== SHADER COMPILATION ERROR ==="),console.error(i),console.error("=== First 100 lines of processed source ==="),console.error(d),n.deleteShader(e),new Error(i)}return e}function q(n,r,t){const e=n.createProgram();if(n.attachShader(e,r),n.attachShader(e,t),n.linkProgram(e),!n.getProgramParameter(e,n.LINK_STATUS)){const o=n.getProgramInfoLog(e)||"Program link failed.";throw n.deleteProgram(e),new Error(o)}return e}function Q(n,r){return{iResolution:n.getUniformLocation(r,"iResolution"),iTime:n.getUniformLocation(r,"iTime"),iTimeDelta:n.getUniformLocation(r,"iTimeDelta"),iFrame:n.getUniformLocation(r,"iFrame"),iMouse:n.getUniformLocation(r,"iMouse"),iChannel0:n.getUniformLocation(r,"iChannel0"),iChannel1:n.getUniformLocation(r,"iChannel1"),iChannel2:n.getUniformLocation(r,"iChannel2"),iChannel3:n.getUniformLocation(r,"iChannel3")}}function K(n){const r=n.createBuffer();return n.bindBuffer(n.ARRAY_BUFFER,r),n.bufferData(n.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),n.STATIC_DRAW),r}function V(n,r,t){const e=n.getAttribLocation(r,"aPosition");n.bindBuffer(n.ARRAY_BUFFER,t),n.enableVertexAttribArray(e),n.vertexAttribPointer(e,2,n.FLOAT,!1,0,0)}class Y{constructor(r){this.gl=r,this.keys=new Uint8Array(256*4),this.texture=r.createTexture(),r.bindTexture(r.TEXTURE_2D,this.texture),r.texImage2D(r.TEXTURE_2D,0,r.RGBA,256,1,0,r.RGBA,r.UNSIGNED_BYTE,this.keys),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MIN_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MAG_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_S,r.CLAMP_TO_EDGE),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_T,r.CLAMP_TO_EDGE),this.setupListeners()}setupListeners(){window.addEventListener("keydown",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=255)}),window.addEventListener("keyup",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=0)})}update(){this.gl.bindTexture(this.gl.TEXTURE_2D,this.texture),this.gl.texSubImage2D(this.gl.TEXTURE_2D,0,0,0,256,1,this.gl.RGBA,this.gl.UNSIGNED_BYTE,this.keys)}getTexture(){return this.texture}}function Z(n){const r={x:0,y:0,clickX:0,clickY:0,isDown:!1};function t(e){const o=n.getBoundingClientRect(),i=window.devicePixelRatio||1,l=(e.clientX-o.left)*i,d=(o.height-(e.clientY-o.top))*i;return{x:l,y:d}}return n.addEventListener("mousemove",e=>{const o=t(e);r.x=o.x,r.y=o.y}),n.addEventListener("mousedown",e=>{r.isDown=!0;const o=t(e);r.clickX=o.x,r.clickY=o.y}),n.addEventListener("mouseup",()=>{r.isDown=!1}),n.addEventListener("mouseleave",()=>{r.isDown=!1}),r}class j{constructor(r,t,e,o=!1){this.gl=r,this.width=t,this.height=e,this.doubleBuffered=o,this.textureA=this.createTexture(t,e),this.framebufferA=this.createFramebuffer(this.textureA),o&&(this.textureB=this.createTexture(t,e),this.framebufferB=this.createFramebuffer(this.textureB),this.currentBuffer=0)}createTexture(r,t){const e=this.gl.createTexture();return this.gl.bindTexture(this.gl.TEXTURE_2D,e),this.gl.texImage2D(this.gl.TEXTURE_2D,0,this.gl.RGBA16F,r,t,0,this.gl.RGBA,this.gl.FLOAT,null),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MIN_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MAG_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_S,this.gl.CLAMP_TO_EDGE),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_T,this.gl.CLAMP_TO_EDGE),e}createFramebuffer(r){const t=this.gl.createFramebuffer();this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,t),this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER,this.gl.COLOR_ATTACHMENT0,this.gl.TEXTURE_2D,r,0);const e=this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);if(e!==this.gl.FRAMEBUFFER_COMPLETE)throw new Error(`Framebuffer not complete: ${e}`);return this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null),t}getReadTexture(){return this.doubleBuffered?this.currentBuffer===0?this.textureA:this.textureB:this.textureA}getWriteFramebuffer(){return this.doubleBuffered?this.currentBuffer===0?this.framebufferB:this.framebufferA:this.framebufferA}swap(){this.doubleBuffered&&(this.currentBuffer=1-this.currentBuffer)}resize(r,t){this.width===r&&this.height===t||(this.width=r,this.height=t,this.gl.deleteTexture(this.textureA),this.gl.deleteFramebuffer(this.framebufferA),this.textureA=this.createTexture(r,t),this.framebufferA=this.createFramebuffer(this.textureA),this.doubleBuffered&&(this.gl.deleteTexture(this.textureB),this.gl.deleteFramebuffer(this.framebufferB),this.textureB=this.createTexture(r,t),this.framebufferB=this.createFramebuffer(this.textureB)))}}function b(n){const r=window.devicePixelRatio||1,t=Math.floor(n.clientWidth*r),e=Math.floor(n.clientHeight*r);return n.width!==t||n.height!==e?(n.width=t,n.height=e,!0):!1}function J({canvas:n,shaderSources:r,passes:t}){const e=n.getContext("webgl2");if(!e)throw new Error("WebGL2 not supported in this browser.");e.getExtension("EXT_color_buffer_float")||console.warn("EXT_color_buffer_float not supported, falling back to RGBA16F");const i=T(e,e.VERTEX_SHADER,N),l=K(e),d=new Y(e),f=Z(n),h={},S={};Object.entries(r).forEach(([a,s])=>{const u=T(e,e.FRAGMENT_SHADER,s);h[a]=q(e,i,u),S[a]=Q(e,h[a])});const G=Array.from(new Map(t.filter(a=>a.targetId).map(a=>[a.targetId,{id:a.targetId,doubleBuffered:a.doubleBuffered}])).values());b(n);const v={};G.forEach(({id:a,doubleBuffered:s})=>{v[a]=new j(e,n.width,n.height,s)});function F(a,s){a.iResolution&&e.uniform3f(a.iResolution,n.width,n.height,1),a.iTime&&e.uniform1f(a.iTime,s.time),a.iTimeDelta&&e.uniform1f(a.iTimeDelta,s.timeDelta),a.iFrame&&e.uniform1i(a.iFrame,s.frameCount),a.iMouse&&e.uniform4f(a.iMouse,f.x,f.y,f.isDown?f.clickX:0,f.isDown?f.clickY:0)}function O(a){if(!a)return null;if(a==="keyboard")return d.getTexture();if(a.endsWith(".read")){const s=a.replace(".read","");return v[s].getReadTexture()}throw new Error(`Unknown channel ref: ${a}`)}function M(a,s){const u=h[a.id],p=S[a.id],c=a.targetId?v[a.targetId]:null,U=c?c.getWriteFramebuffer():null;e.bindFramebuffer(e.FRAMEBUFFER,U),e.viewport(0,0,n.width,n.height),e.useProgram(u),V(e,u,l),F(p,s);for(let m=0;m<4;m++){const x=O(a.channels[m]),C=p[`iChannel${m}`];x&&C&&(e.activeTexture(e.TEXTURE0+m),e.bindTexture(e.TEXTURE_2D,x),e.uniform1i(C,m))}e.drawArrays(e.TRIANGLES,0,3),c&&c.doubleBuffered&&c.swap()}let y=0,_=0;function P(a){const s=a*.001,u=_>0?s-_:.016;_=s,b(n)&&Object.values(v).forEach(c=>{c.resize(n.width,n.height)}),d.update();const p={time:s,timeDelta:u,frameCount:y};t.forEach(c=>{M(c,p)}),y+=1,requestAnimationFrame(P)}return{start(){requestAnimationFrame(P)}}}const $=[{id:"scene-color",targetId:"scene-color",doubleBuffered:!0,channels:[null,null,"camera-state.read","scene-color.read"]},{id:"camera-state",targetId:"camera-state",doubleBuffered:!0,channels:["scene-color.read","camera-state.read",null,"keyboard"]},{id:"bloom-blur-horizontal",targetId:"bloom-blur-horizontal",doubleBuffered:!1,channels:["camera-state.read",null,null,null]},{id:"bloom-blur-vertical",targetId:"bloom-blur-vertical",doubleBuffered:!1,channels:["bloom-blur-horizontal.read",null,null,null]},{id:"image",targetId:null,doubleBuffered:!1,channels:["scene-color.read",null,null,"bloom-blur-vertical.read"]}],rr=[{id:"scene-color",targetId:"scene-color",doubleBuffered:!0,channels:[null,null,null,"scene-color.read"]},{id:"image",targetId:null,doubleBuffered:!1,channels:["scene-color.read",null,null,null]}],nr=[{id:"image",targetId:null,doubleBuffered:!1,channels:[null,null,null,null]}],R={"bloom-chain":$,feedback:rr,"single-pass":nr},g="bloom-chain";function er(n=g){return R[n]??R[g]}const tr=`// Shared 5-tap Gaussian blur kernel used by horizontal/vertical bloom passes.
-vec3 sampleBlurSource(vec2 coord)
-{
-    return texture(iChannel0, coord).rgb;
-}
-
-float getGaussianWeight5(int i)
-{
-    if (i == 0) return 0.19638062;
-    if (i == 1) return 0.29675293;
-    if (i == 2) return 0.09442139;
-    if (i == 3) return 0.01037598;
-    return 0.00025940;
-}
-
-float getGaussianOffset5(int i)
-{
-    if (i == 0) return 0.00000000;
-    if (i == 1) return 1.41176471;
-    if (i == 2) return 3.29411765;
-    if (i == 3) return 5.17647059;
-    return 7.05882353;
-}
-
-vec3 applyGaussianBlur5Tap(vec2 uv, vec2 axisScale)
-{
-    vec3 color = vec3(0.0);
-    float weightSum = 0.0;
-
-    color += sampleBlurSource(uv) * getGaussianWeight5(0);
-    weightSum += getGaussianWeight5(0);
-
-    for (int i = 1; i < 5; i++) {
-        vec2 offset = vec2(getGaussianOffset5(i)) / iResolution.xy;
-        float weight = getGaussianWeight5(i);
-        color += sampleBlurSource(uv + offset * axisScale) * weight;
-        color += sampleBlurSource(uv - offset * axisScale) * weight;
-        weightSum += weight * 2.0;
-    }
-
-    return color / weightSum;
+`);throw console.error("=== SHADER COMPILATION ERROR ==="),console.error(i),console.error("=== First 100 lines of processed source ==="),console.error(d),n.deleteShader(e),new Error(i)}return e}function q(n,r,t){const e=n.createProgram();if(n.attachShader(e,r),n.attachShader(e,t),n.linkProgram(e),!n.getProgramParameter(e,n.LINK_STATUS)){const o=n.getProgramInfoLog(e)||"Program link failed.";throw n.deleteProgram(e),new Error(o)}return e}function Q(n,r){return{iResolution:n.getUniformLocation(r,"iResolution"),iTime:n.getUniformLocation(r,"iTime"),iTimeDelta:n.getUniformLocation(r,"iTimeDelta"),iFrame:n.getUniformLocation(r,"iFrame"),iMouse:n.getUniformLocation(r,"iMouse"),iChannel0:n.getUniformLocation(r,"iChannel0"),iChannel1:n.getUniformLocation(r,"iChannel1"),iChannel2:n.getUniformLocation(r,"iChannel2"),iChannel3:n.getUniformLocation(r,"iChannel3")}}function K(n){const r=n.createBuffer();return n.bindBuffer(n.ARRAY_BUFFER,r),n.bufferData(n.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),n.STATIC_DRAW),r}function V(n,r,t){const e=n.getAttribLocation(r,"aPosition");n.bindBuffer(n.ARRAY_BUFFER,t),n.enableVertexAttribArray(e),n.vertexAttribPointer(e,2,n.FLOAT,!1,0,0)}class Y{constructor(r){this.gl=r,this.keys=new Uint8Array(256*4),this.texture=r.createTexture(),r.bindTexture(r.TEXTURE_2D,this.texture),r.texImage2D(r.TEXTURE_2D,0,r.RGBA,256,1,0,r.RGBA,r.UNSIGNED_BYTE,this.keys),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MIN_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MAG_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_S,r.CLAMP_TO_EDGE),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_T,r.CLAMP_TO_EDGE),this.setupListeners()}setupListeners(){window.addEventListener("keydown",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=255)}),window.addEventListener("keyup",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=0)})}update(){this.gl.bindTexture(this.gl.TEXTURE_2D,this.texture),this.gl.texSubImage2D(this.gl.TEXTURE_2D,0,0,0,256,1,this.gl.RGBA,this.gl.UNSIGNED_BYTE,this.keys)}getTexture(){return this.texture}}function Z(n){const r={x:0,y:0,clickX:0,clickY:0,isDown:!1};function t(e){const o=n.getBoundingClientRect(),i=window.devicePixelRatio||1,l=(e.clientX-o.left)*i,d=(o.height-(e.clientY-o.top))*i;return{x:l,y:d}}return n.addEventListener("mousemove",e=>{const o=t(e);r.x=o.x,r.y=o.y}),n.addEventListener("mousedown",e=>{r.isDown=!0;const o=t(e);r.clickX=o.x,r.clickY=o.y}),n.addEventListener("mouseup",()=>{r.isDown=!1}),n.addEventListener("mouseleave",()=>{r.isDown=!1}),r}class j{constructor(r,t,e,o=!1){this.gl=r,this.width=t,this.height=e,this.doubleBuffered=o,this.textureA=this.createTexture(t,e),this.framebufferA=this.createFramebuffer(this.textureA),o&&(this.textureB=this.createTexture(t,e),this.framebufferB=this.createFramebuffer(this.textureB),this.currentBuffer=0)}createTexture(r,t){const e=this.gl.createTexture();return this.gl.bindTexture(this.gl.TEXTURE_2D,e),this.gl.texImage2D(this.gl.TEXTURE_2D,0,this.gl.RGBA16F,r,t,0,this.gl.RGBA,this.gl.FLOAT,null),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MIN_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MAG_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_S,this.gl.CLAMP_TO_EDGE),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_T,this.gl.CLAMP_TO_EDGE),e}createFramebuffer(r){const t=this.gl.createFramebuffer();this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,t),this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER,this.gl.COLOR_ATTACHMENT0,this.gl.TEXTURE_2D,r,0);const e=this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);if(e!==this.gl.FRAMEBUFFER_COMPLETE)throw new Error(`Framebuffer not complete: ${e}`);return this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null),t}getReadTexture(){return this.doubleBuffered?this.currentBuffer===0?this.textureA:this.textureB:this.textureA}getWriteFramebuffer(){return this.doubleBuffered?this.currentBuffer===0?this.framebufferB:this.framebufferA:this.framebufferA}swap(){this.doubleBuffered&&(this.currentBuffer=1-this.currentBuffer)}resize(r,t){this.width===r&&this.height===t||(this.width=r,this.height=t,this.gl.deleteTexture(this.textureA),this.gl.deleteFramebuffer(this.framebufferA),this.textureA=this.createTexture(r,t),this.framebufferA=this.createFramebuffer(this.textureA),this.doubleBuffered&&(this.gl.deleteTexture(this.textureB),this.gl.deleteFramebuffer(this.framebufferB),this.textureB=this.createTexture(r,t),this.framebufferB=this.createFramebuffer(this.textureB)))}}function b(n){const r=window.devicePixelRatio||1,t=Math.floor(n.clientWidth*r),e=Math.floor(n.clientHeight*r);return n.width!==t||n.height!==e?(n.width=t,n.height=e,!0):!1}function J({canvas:n,shaderSources:r,passes:t}){const e=n.getContext("webgl2");if(!e)throw new Error("WebGL2 not supported in this browser.");e.getExtension("EXT_color_buffer_float")||console.warn("EXT_color_buffer_float not supported, falling back to RGBA16F");const i=T(e,e.VERTEX_SHADER,N),l=K(e),d=new Y(e),f=Z(n),h={},S={};Object.entries(r).forEach(([a,s])=>{const u=T(e,e.FRAGMENT_SHADER,s);h[a]=q(e,i,u),S[a]=Q(e,h[a])});const G=Array.from(new Map(t.filter(a=>a.targetId).map(a=>[a.targetId,{id:a.targetId,doubleBuffered:a.doubleBuffered}])).values());b(n);const v={};G.forEach(({id:a,doubleBuffered:s})=>{v[a]=new j(e,n.width,n.height,s)});function F(a,s){a.iResolution&&e.uniform3f(a.iResolution,n.width,n.height,1),a.iTime&&e.uniform1f(a.iTime,s.time),a.iTimeDelta&&e.uniform1f(a.iTimeDelta,s.timeDelta),a.iFrame&&e.uniform1i(a.iFrame,s.frameCount),a.iMouse&&e.uniform4f(a.iMouse,f.x,f.y,f.isDown?f.clickX:0,f.isDown?f.clickY:0)}function O(a){if(!a)return null;if(a==="keyboard")return d.getTexture();if(a.endsWith(".read")){const s=a.replace(".read","");return v[s].getReadTexture()}throw new Error(`Unknown channel ref: ${a}`)}function M(a,s){const u=h[a.id],p=S[a.id],c=a.targetId?v[a.targetId]:null,U=c?c.getWriteFramebuffer():null;e.bindFramebuffer(e.FRAMEBUFFER,U),e.viewport(0,0,n.width,n.height),e.useProgram(u),V(e,u,l),F(p,s);for(let m=0;m<4;m++){const x=O(a.channels[m]),C=p[`iChannel${m}`];x&&C&&(e.activeTexture(e.TEXTURE0+m),e.bindTexture(e.TEXTURE_2D,x),e.uniform1i(C,m))}e.drawArrays(e.TRIANGLES,0,3),c&&c.doubleBuffered&&c.swap()}let y=0,_=0;function P(a){const s=a*.001,u=_>0?s-_:.016;_=s,b(n)&&Object.values(v).forEach(c=>{c.resize(n.width,n.height)}),d.update();const p={time:s,timeDelta:u,frameCount:y};t.forEach(c=>{M(c,p)}),y+=1,requestAnimationFrame(P)}return{start(){requestAnimationFrame(P)}}}const $=[{id:"scene-color",targetId:"scene-color",doubleBuffered:!0,channels:[null,null,"camera-state.read","scene-color.read"]},{id:"camera-state",targetId:"camera-state",doubleBuffered:!0,channels:["scene-color.read","camera-state.read",null,"keyboard"]},{id:"bloom-blur-horizontal",targetId:"bloom-blur-horizontal",doubleBuffered:!1,channels:["camera-state.read",null,null,null]},{id:"bloom-blur-vertical",targetId:"bloom-blur-vertical",doubleBuffered:!1,channels:["bloom-blur-horizontal.read",null,null,null]},{id:"image",targetId:null,doubleBuffered:!1,channels:["scene-color.read",null,null,"bloom-blur-vertical.read"]}],rr=[{id:"scene-color",targetId:"scene-color",doubleBuffered:!0,channels:[null,null,null,"scene-color.read"]},{id:"image",targetId:null,doubleBuffered:!1,channels:["scene-color.read",null,null,null]}],nr=[{id:"image",targetId:null,doubleBuffered:!1,channels:[null,null,null,null]}],R={"bloom-chain":$,feedback:rr,"single-pass":nr},g="bloom-chain";function er(n=g){return R[n]??R[g]}const tr=`// Shared 5-tap Gaussian blur kernel used by horizontal/vertical bloom passes.\r
+vec3 sampleBlurSource(vec2 coord)\r
+{\r
+    return texture(iChannel0, coord).rgb;\r
 }\r
 \r
-`,or=`// Downsample/oversample helpers for bloom pyramid construction.
-vec3 ColorFetch(vec2 coord)
-{
-	return texture(iChannel0, coord).rgb;
-}
-
-vec3 Grab1(vec2 coord, const float octave, const vec2 offset)
-{
-	float scale = exp2(octave);
-    coord += offset;
-    coord *= scale;
-   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);
-    return ColorFetch(coord);
-}
-
-vec3 Grab4(vec2 coord, const float octave, const vec2 offset)
-{
-	float scale = exp2(octave);
-    coord += offset;
-    coord *= scale;
-   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);
-
-    vec3 color = vec3(0.0);
-    float weights = 0.0;
-    const int oversampling = 4;
-    for (int i = 0; i < oversampling; i++) {
-        for (int j = 0; j < oversampling; j++) {
-			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);
-            color += ColorFetch(coord + off);
-            weights += 1.0;
-        }
-    }
-    return color / weights;
-}
-
-vec3 Grab8(vec2 coord, const float octave, const vec2 offset)
-{
-	float scale = exp2(octave);
-    coord += offset;
-    coord *= scale;
-   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);
-
-    vec3 color = vec3(0.0);
-    float weights = 0.0;
-    const int oversampling = 8;
-    for (int i = 0; i < oversampling; i++) {
-        for (int j = 0; j < oversampling; j++) {
-			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);
-            color += ColorFetch(coord + off);
-            weights += 1.0;
-        }
-    }
-    return color / weights;
-}
-
-vec3 Grab16(vec2 coord, const float octave, const vec2 offset)
-{
-	float scale = exp2(octave);
-    coord += offset;
-    coord *= scale;
-   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);
-
-    vec3 color = vec3(0.0);
-    float weights = 0.0;
-    const int oversampling = 16;
-    for (int i = 0; i < oversampling; i++) {
-        for (int j = 0; j < oversampling; j++) {
-			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);
-            color += ColorFetch(coord + off);
-            weights += 1.0;
-        }
-    }
-    return color / weights;
-}
-
-vec2 CalcOffset(float octave)
-{
-    vec2 offset = vec2(0.0);
-    vec2 padding = vec2(10.0) / iResolution.xy;
-    offset.x = -min(1.0, floor(octave / 3.0)) * (0.25 + padding.x);
-    offset.y = -(1.0 - (1.0 / exp2(octave))) - padding.y * octave;
-	offset.y += min(1.0, floor(octave / 3.0)) * 0.35;
-	return offset;
+float getGaussianWeight5(int i)\r
+{\r
+    if (i == 0) return 0.19638062;\r
+    if (i == 1) return 0.29675293;\r
+    if (i == 2) return 0.09442139;\r
+    if (i == 3) return 0.01037598;\r
+    return 0.00025940;\r
 }\r
 \r
-`,ar=`// Packs camera basis/position/time into reserved texels for scene-color pass reads.
-#define OFFSET_UP    1  
-#define OFFSET_RIGHT 2  
-#define OFFSET_POS   3  
-#define OFFSET_FWD   4  
-#define OFFSET_MOUSE 5  
-#define OFFSET_TIME  6  
-
-void writeCameraStateTexel(out vec4 fragColor, in vec2 fragCoord)
-{
-    int pxIndex = int(iResolution.x) - int(fragCoord.x);
-    int width = int(iResolution.x);
-    vec3  up      = texelFetch(iChannel1, ivec2(width - OFFSET_UP, 0), 0).xyz;
-    vec3  right   = texelFetch(iChannel1, ivec2(width - OFFSET_RIGHT, 0), 0).xyz;
-    vec3  pos     = texelFetch(iChannel1, ivec2(width - OFFSET_POS, 0), 0).xyz;
-    vec3  fwd     = texelFetch(iChannel1, ivec2(width - OFFSET_FWD, 0), 0).xyz;
-    vec4  lastMouse = texelFetch(iChannel1, ivec2(width - OFFSET_MOUSE, 0), 0);
-    vec4  timeData = texelFetch(iChannel1, ivec2(width - OFFSET_TIME, 0), 0);
-    float gTime   = timeData.x;
-    float uniSign = timeData.y;
-    vec3 oldPos = pos;
-    if (iFrame <= 5 || length(fwd) < 0.1) {
-        pos = vec3(-2.0, -3.6, 22.0);
-        fwd = vec3(0.0, 0.15, -1.0);
-        fwd = normalize(fwd);
-        right = normalize(cross(fwd, vec3(-0.5, 1.0, 0.0)));
-        up    = normalize(cross(right, fwd));
-        gTime = 0.0;
-        lastMouse = iMouse;
-        uniSign = 1.0;
-    }
-
-    
-    if (iMouse.z > 0.0) {
-        vec2 mouseDelta = iMouse.xy - lastMouse.xy;
-
-        
-        if (lastMouse.z < 0.0) mouseDelta = vec2(0.0);
-
-        float yaw = -mouseDelta.x * MOUSE_SENSITIVITY;
-        float pitch = mouseDelta.y * MOUSE_SENSITIVITY;
-
-        
-        fwd = rotAxis(up, yaw) * fwd;
-        right = rotAxis(up, yaw) * right;
-
-        
-        fwd = rotAxis(right, pitch) * fwd;
-
-        
-        up = normalize(cross(right, fwd));
-        right = normalize(cross(fwd, up));
-    }
-
-    
-    float roll = 0.0;
-    if (isKeyPressed(KEY_Q)) roll -= ROLL_SPEED * iTimeDelta;
-    if (isKeyPressed(KEY_E)) roll += ROLL_SPEED * iTimeDelta;
-
-    if (roll != 0.0) {
-        right = rotAxis(fwd, roll) * right;
-        up = normalize(cross(right, fwd));
-    }
-
-    
-    vec3 moveDir = vec3(0.0);
-    if (isKeyPressed(KEY_W)) moveDir += fwd;
-    if (isKeyPressed(KEY_S)) moveDir -= fwd;
-    if (isKeyPressed(KEY_A)) moveDir -= right;
-    if (isKeyPressed(KEY_D)) moveDir += right;
-    if (isKeyPressed(KEY_R)) moveDir += up; 
-    if (isKeyPressed(KEY_F)) moveDir -= up; 
-
-    pos += moveDir * MOVE_SPEED * iTimeDelta;
-
-    float spinRadius = abs(iSpin * CONST_M);
-    if (oldPos.y * pos.y < 0.0)
-    {
-        float t = oldPos.y / (oldPos.y - pos.y);
-        vec3 crossPoint = mix(oldPos, pos, t);
-
-        if (length(crossPoint.xz) < spinRadius) {
-            uniSign *= -1.0;
-        }
-    }
-    
-    gTime += iTimeDelta;
-
-    
-    fragColor = vec4(0.0);
-
-    if (pxIndex == OFFSET_UP)    fragColor = vec4(up, 1.0);     
-    if (pxIndex == OFFSET_RIGHT) fragColor = vec4(right, 1.0);  
-    if (pxIndex == OFFSET_POS)   fragColor = vec4(pos, 1.0);    
-    if (pxIndex == OFFSET_FWD)   fragColor = vec4(fwd, 1.0);    
-    if (pxIndex == OFFSET_MOUSE) fragColor = iMouse;            
-    if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, 0.0, 0.0, 1.0); 
-    if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, uniSign, 0.0, 1.0);
+float getGaussianOffset5(int i)\r
+{\r
+    if (i == 0) return 0.00000000;\r
+    if (i == 1) return 1.41176471;\r
+    if (i == 2) return 3.29411765;\r
+    if (i == 3) return 5.17647059;\r
+    return 7.05882353;\r
 }\r
 \r
-`,ir=`// Input constants and camera movement tuning.
-#define iSpin 0.99   
-const float CONST_M = 0.5;
-
-const int KEY_W = 87;
-const int KEY_A = 65;
-const int KEY_S = 83;
-const int KEY_D = 68;
-const int KEY_Q = 81;
-const int KEY_E = 69;
-const int KEY_R = 82;
-const int KEY_F = 70;
-
-
-const float MOVE_SPEED = 1.0;
-const float MOUSE_SENSITIVITY = 0.003;
-const float ROLL_SPEED = 2.0;
-
-
-bool isKeyPressed(int key) {
-    return texelFetch(iChannel3, ivec2(key, 0), 0).x > 0.5;
-}
-
-
-mat3 rotAxis(vec3 axis, float angle) {
-    float s = sin(angle);
-    float c = cos(angle);
-    float oc = 1.0 - c;
-    return mat3(
-        oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,
-        oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,
-        oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c
-    );
+vec3 applyGaussianBlur5Tap(vec2 uv, vec2 axisScale)\r
+{\r
+    vec3 color = vec3(0.0);\r
+    float weightSum = 0.0;\r
+\r
+    color += sampleBlurSource(uv) * getGaussianWeight5(0);\r
+    weightSum += getGaussianWeight5(0);\r
+\r
+    for (int i = 1; i < 5; i++) {\r
+        vec2 offset = vec2(getGaussianOffset5(i)) / iResolution.xy;\r
+        float weight = getGaussianWeight5(i);\r
+        color += sampleBlurSource(uv + offset * axisScale) * weight;\r
+        color += sampleBlurSource(uv - offset * axisScale) * weight;\r
+        weightSum += weight * 2.0;\r
+    }\r
+\r
+    return color / weightSum;\r
 }\r
 \r
-`,sr=`// Cite:
-// - "Gargantua With HDR Bloom" by sonicether (adapted bloom chain/composite logic).
-// Final composite helpers: bloom reconstruction + tone/color mapping.
-vec3 saturate(vec3 x)
-{
-    return clamp(x, vec3(0.0), vec3(1.0));
-}
-
-vec4 cubic(float x)
-{
-    float x2 = x * x;
-    float x3 = x2 * x;
-    vec4 w;
-    w.x =   -x3 + 3.0*x2 - 3.0*x + 1.0;
-    w.y =  3.0*x3 - 6.0*x2       + 4.0;
-    w.z = -3.0*x3 + 3.0*x2 + 3.0*x + 1.0;
-    w.w =  x3;
-    return w / 6.0;
-}
-
-vec4 BicubicTexture(in sampler2D tex, in vec2 coord)
-{
-	vec2 resolution = iResolution.xy;
-
-	coord *= resolution;
-
-	float fx = fract(coord.x);
-    float fy = fract(coord.y);
-    coord.x -= fx;
-    coord.y -= fy;
-
-    fx -= 0.5;
-    fy -= 0.5;
-
-    vec4 xcubic = cubic(fx);
-    vec4 ycubic = cubic(fy);
-
-    vec4 c = vec4(coord.x - 0.5, coord.x + 1.5, coord.y - 0.5, coord.y + 1.5);
-    vec4 s = vec4(xcubic.x + xcubic.y, xcubic.z + xcubic.w, ycubic.x + ycubic.y, ycubic.z + ycubic.w);
-    vec4 offset = c + vec4(xcubic.y, xcubic.w, ycubic.y, ycubic.w) / s;
-
-    vec4 sample0 = texture(tex, vec2(offset.x, offset.z) / resolution);
-    vec4 sample1 = texture(tex, vec2(offset.y, offset.z) / resolution);
-    vec4 sample2 = texture(tex, vec2(offset.x, offset.w) / resolution);
-    vec4 sample3 = texture(tex, vec2(offset.y, offset.w) / resolution);
-
-    float sx = s.x / (s.x + s.y);
-    float sy = s.z / (s.z + s.w);
-
-    return mix(mix(sample3, sample2, sx), mix(sample1, sample0, sx), sy);
-}
-
-vec3 ColorFetch(vec2 coord)
-{
-	return texture(iChannel0, coord).rgb;
-}
-
-vec3 BloomFetch(vec2 coord)
-{
-	return BicubicTexture(iChannel3, coord).rgb;
-}
-
-vec3 Grab(vec2 coord, const float octave, const vec2 offset)
-{
-	float scale = exp2(octave);
-
-    coord /= scale;
-    coord -= offset;
-
-    return BloomFetch(coord);
-}
-
-vec2 CalcOffset(float octave)
-{
-    vec2 offset = vec2(0.0);
-
-    vec2 padding = vec2(10.0) / iResolution.xy;
-
-    offset.x = -min(1.0, floor(octave / 3.0)) * (0.25 + padding.x);
-    offset.y = -(1.0 - (1.0 / exp2(octave))) - padding.y * octave;
-	offset.y += min(1.0, floor(octave / 3.0)) * 0.35;
-
-	return offset;
-}
-
-vec3 GetBloom(vec2 coord)
-{
-	vec3 bloom = vec3(0.0);
-
-    
-    bloom += Grab(coord, 1.0, vec2(CalcOffset(0.0))) * 1.0;
-    bloom += Grab(coord, 2.0, vec2(CalcOffset(1.0))) * 1.5;
-	bloom += Grab(coord, 3.0, vec2(CalcOffset(2.0))) * 1.0;
-    bloom += Grab(coord, 4.0, vec2(CalcOffset(3.0))) * 1.5;
-    bloom += Grab(coord, 5.0, vec2(CalcOffset(4.0))) * 1.8;
-    bloom += Grab(coord, 6.0, vec2(CalcOffset(5.0))) * 1.0;
-    bloom += Grab(coord, 7.0, vec2(CalcOffset(6.0))) * 1.0;
-    bloom += Grab(coord, 8.0, vec2(CalcOffset(7.0))) * 1.0;
-
-	return bloom;
+`,or=`// Downsample/oversample helpers for bloom pyramid construction.\r
+vec3 ColorFetch(vec2 coord)\r
+{\r
+	return texture(iChannel0, coord).rgb;\r
 }\r
 \r
-`,E=`// Bloom blur pass: horizontal axis.
-#include "../blur/gaussian-blur-5tap.frag"
-
-void mainImage(out vec4 fragColor, in vec2 fragCoord)
-{
-    vec2 uv = fragCoord.xy / iResolution.xy;
-    vec3 color = vec3(0.0);
-
-    if (uv.x < 0.52) {
-        color = applyGaussianBlur5Tap(uv, vec2(0.5, 0.0));
-    }
-
-    fragColor = vec4(color, 1.0);
+vec3 Grab1(vec2 coord, const float octave, const vec2 offset)\r
+{\r
+	float scale = exp2(octave);\r
+    coord += offset;\r
+    coord *= scale;\r
+   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);\r
+    return ColorFetch(coord);\r
 }\r
 \r
-`,A=`// Bloom blur pass: vertical axis.
-#include "../blur/gaussian-blur-5tap.frag"
-
-void mainImage(out vec4 fragColor, in vec2 fragCoord)
-{
-    vec2 uv = fragCoord.xy / iResolution.xy;
-    vec3 color = vec3(0.0);
-
-    if (uv.x < 0.52) {
-        color = applyGaussianBlur5Tap(uv, vec2(0.0, 0.5));
-    }
-
-    fragColor = vec4(color, 1.0);
+vec3 Grab4(vec2 coord, const float octave, const vec2 offset)\r
+{\r
+	float scale = exp2(octave);\r
+    coord += offset;\r
+    coord *= scale;\r
+   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);\r
+\r
+    vec3 color = vec3(0.0);\r
+    float weights = 0.0;\r
+    const int oversampling = 4;\r
+    for (int i = 0; i < oversampling; i++) {\r
+        for (int j = 0; j < oversampling; j++) {\r
+			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);\r
+            color += ColorFetch(coord + off);\r
+            weights += 1.0;\r
+        }\r
+    }\r
+    return color / weights;\r
 }\r
 \r
-`,z=`// Camera-state pass:
-// - Right-side bottom pixels store camera/state payload.
-// - Remaining pixels build bloom pyramid from scene-color input.
-#include "../camera-state/controls-input.frag"
-#include "../camera-state/bloom-pyramid-sampling.frag"
-#include "../camera-state/camera-state-packing.frag"
+vec3 Grab8(vec2 coord, const float octave, const vec2 offset)\r
+{\r
+	float scale = exp2(octave);\r
+    coord += offset;\r
+    coord *= scale;\r
+   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);\r
+\r
+    vec3 color = vec3(0.0);\r
+    float weights = 0.0;\r
+    const int oversampling = 8;\r
+    for (int i = 0; i < oversampling; i++) {\r
+        for (int j = 0; j < oversampling; j++) {\r
+			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);\r
+            color += ColorFetch(coord + off);\r
+            weights += 1.0;\r
+        }\r
+    }\r
+    return color / weights;\r
+}\r
+\r
+vec3 Grab16(vec2 coord, const float octave, const vec2 offset)\r
+{\r
+	float scale = exp2(octave);\r
+    coord += offset;\r
+    coord *= scale;\r
+   	if (coord.x < 0.0 || coord.x > 1.0 || coord.y < 0.0 || coord.y > 1.0) return vec3(0.0);\r
+\r
+    vec3 color = vec3(0.0);\r
+    float weights = 0.0;\r
+    const int oversampling = 16;\r
+    for (int i = 0; i < oversampling; i++) {\r
+        for (int j = 0; j < oversampling; j++) {\r
+			vec2 off = (vec2(i, j) / iResolution.xy + vec2(-float(oversampling)*0.5) / iResolution.xy) * scale / float(oversampling);\r
+            color += ColorFetch(coord + off);\r
+            weights += 1.0;\r
+        }\r
+    }\r
+    return color / weights;\r
+}\r
+\r
+vec2 CalcOffset(float octave)\r
+{\r
+    vec2 offset = vec2(0.0);\r
+    vec2 padding = vec2(10.0) / iResolution.xy;\r
+    offset.x = -min(1.0, floor(octave / 3.0)) * (0.25 + padding.x);\r
+    offset.y = -(1.0 - (1.0 / exp2(octave))) - padding.y * octave;\r
+	offset.y += min(1.0, floor(octave / 3.0)) * 0.35;\r
+	return offset;\r
+}\r
+\r
+`,ar=`// Packs camera basis/position/time into reserved texels for scene-color pass reads.\r
+#define OFFSET_UP    1  \r
+#define OFFSET_RIGHT 2  \r
+#define OFFSET_POS   3  \r
+#define OFFSET_FWD   4  \r
+#define OFFSET_MOUSE 5  \r
+#define OFFSET_TIME  6  \r
+\r
+void writeCameraStateTexel(out vec4 fragColor, in vec2 fragCoord)\r
+{\r
+    int pxIndex = int(iResolution.x) - int(fragCoord.x);\r
+    int width = int(iResolution.x);\r
+    vec3  up      = texelFetch(iChannel1, ivec2(width - OFFSET_UP, 0), 0).xyz;\r
+    vec3  right   = texelFetch(iChannel1, ivec2(width - OFFSET_RIGHT, 0), 0).xyz;\r
+    vec3  pos     = texelFetch(iChannel1, ivec2(width - OFFSET_POS, 0), 0).xyz;\r
+    vec3  fwd     = texelFetch(iChannel1, ivec2(width - OFFSET_FWD, 0), 0).xyz;\r
+    vec4  lastMouse = texelFetch(iChannel1, ivec2(width - OFFSET_MOUSE, 0), 0);\r
+    vec4  timeData = texelFetch(iChannel1, ivec2(width - OFFSET_TIME, 0), 0);\r
+    float gTime   = timeData.x;\r
+    float uniSign = timeData.y;\r
+    vec3 oldPos = pos;\r
+    if (iFrame <= 5 || length(fwd) < 0.1) {\r
+        pos = vec3(-2.0, -3.6, 22.0);\r
+        fwd = vec3(0.0, 0.15, -1.0);\r
+        fwd = normalize(fwd);\r
+        right = normalize(cross(fwd, vec3(-0.5, 1.0, 0.0)));\r
+        up    = normalize(cross(right, fwd));\r
+        gTime = 0.0;\r
+        lastMouse = iMouse;\r
+        uniSign = 1.0;\r
+    }\r
+\r
+    \r
+    if (iMouse.z > 0.0) {\r
+        vec2 mouseDelta = iMouse.xy - lastMouse.xy;\r
+\r
+        \r
+        if (lastMouse.z < 0.0) mouseDelta = vec2(0.0);\r
+\r
+        float yaw = -mouseDelta.x * MOUSE_SENSITIVITY;\r
+        float pitch = mouseDelta.y * MOUSE_SENSITIVITY;\r
+\r
+        \r
+        fwd = rotAxis(up, yaw) * fwd;\r
+        right = rotAxis(up, yaw) * right;\r
+\r
+        \r
+        fwd = rotAxis(right, pitch) * fwd;\r
+\r
+        \r
+        up = normalize(cross(right, fwd));\r
+        right = normalize(cross(fwd, up));\r
+    }\r
+\r
+    \r
+    float roll = 0.0;\r
+    if (isKeyPressed(KEY_Q)) roll -= ROLL_SPEED * iTimeDelta;\r
+    if (isKeyPressed(KEY_E)) roll += ROLL_SPEED * iTimeDelta;\r
+\r
+    if (roll != 0.0) {\r
+        right = rotAxis(fwd, roll) * right;\r
+        up = normalize(cross(right, fwd));\r
+    }\r
+\r
+    \r
+    vec3 moveDir = vec3(0.0);\r
+    if (isKeyPressed(KEY_W)) moveDir += fwd;\r
+    if (isKeyPressed(KEY_S)) moveDir -= fwd;\r
+    if (isKeyPressed(KEY_A)) moveDir -= right;\r
+    if (isKeyPressed(KEY_D)) moveDir += right;\r
+    if (isKeyPressed(KEY_R)) moveDir += up; \r
+    if (isKeyPressed(KEY_F)) moveDir -= up; \r
+\r
+    pos += moveDir * MOVE_SPEED * iTimeDelta;\r
+\r
+    float spinRadius = abs(iSpin * CONST_M);\r
+    if (oldPos.y * pos.y < 0.0)\r
+    {\r
+        float t = oldPos.y / (oldPos.y - pos.y);\r
+        vec3 crossPoint = mix(oldPos, pos, t);\r
+\r
+        if (length(crossPoint.xz) < spinRadius) {\r
+            uniSign *= -1.0;\r
+        }\r
+    }\r
+    \r
+    gTime += iTimeDelta;\r
+\r
+    \r
+    fragColor = vec4(0.0);\r
+\r
+    if (pxIndex == OFFSET_UP)    fragColor = vec4(up, 1.0);     \r
+    if (pxIndex == OFFSET_RIGHT) fragColor = vec4(right, 1.0);  \r
+    if (pxIndex == OFFSET_POS)   fragColor = vec4(pos, 1.0);    \r
+    if (pxIndex == OFFSET_FWD)   fragColor = vec4(fwd, 1.0);    \r
+    if (pxIndex == OFFSET_MOUSE) fragColor = iMouse;            \r
+    if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, 0.0, 0.0, 1.0); \r
+    if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, uniSign, 0.0, 1.0);\r
+}\r
+\r
+`,ir=`// Input constants and camera movement tuning.\r
+#define iSpin 0.99   \r
+const float CONST_M = 0.5;\r
+\r
+const int KEY_W = 87;\r
+const int KEY_A = 65;\r
+const int KEY_S = 83;\r
+const int KEY_D = 68;\r
+const int KEY_Q = 81;\r
+const int KEY_E = 69;\r
+const int KEY_R = 82;\r
+const int KEY_F = 70;\r
+\r
+\r
+const float MOVE_SPEED = 1.0;\r
+const float MOUSE_SENSITIVITY = 0.003;\r
+const float ROLL_SPEED = 2.0;\r
+\r
+\r
+bool isKeyPressed(int key) {\r
+    return texelFetch(iChannel3, ivec2(key, 0), 0).x > 0.5;\r
+}\r
+\r
+\r
+mat3 rotAxis(vec3 axis, float angle) {\r
+    float s = sin(angle);\r
+    float c = cos(angle);\r
+    float oc = 1.0 - c;\r
+    return mat3(\r
+        oc * axis.x * axis.x + c,           oc * axis.x * axis.y - axis.z * s,  oc * axis.z * axis.x + axis.y * s,\r
+        oc * axis.x * axis.y + axis.z * s,  oc * axis.y * axis.y + c,           oc * axis.y * axis.z - axis.x * s,\r
+        oc * axis.z * axis.x - axis.y * s,  oc * axis.y * axis.z + axis.x * s,  oc * axis.z * axis.z + c\r
+    );\r
+}\r
+\r
+`,sr=`// Cite:\r
+// - "Gargantua With HDR Bloom" by sonicether (adapted bloom chain/composite logic).\r
+// Final composite helpers: bloom reconstruction + tone/color mapping.\r
+vec3 saturate(vec3 x)\r
+{\r
+    return clamp(x, vec3(0.0), vec3(1.0));\r
+}\r
+\r
+vec4 cubic(float x)\r
+{\r
+    float x2 = x * x;\r
+    float x3 = x2 * x;\r
+    vec4 w;\r
+    w.x =   -x3 + 3.0*x2 - 3.0*x + 1.0;\r
+    w.y =  3.0*x3 - 6.0*x2       + 4.0;\r
+    w.z = -3.0*x3 + 3.0*x2 + 3.0*x + 1.0;\r
+    w.w =  x3;\r
+    return w / 6.0;\r
+}\r
+\r
+vec4 BicubicTexture(in sampler2D tex, in vec2 coord)\r
+{\r
+	vec2 resolution = iResolution.xy;\r
+\r
+	coord *= resolution;\r
+\r
+	float fx = fract(coord.x);\r
+    float fy = fract(coord.y);\r
+    coord.x -= fx;\r
+    coord.y -= fy;\r
+\r
+    fx -= 0.5;\r
+    fy -= 0.5;\r
+\r
+    vec4 xcubic = cubic(fx);\r
+    vec4 ycubic = cubic(fy);\r
+\r
+    vec4 c = vec4(coord.x - 0.5, coord.x + 1.5, coord.y - 0.5, coord.y + 1.5);\r
+    vec4 s = vec4(xcubic.x + xcubic.y, xcubic.z + xcubic.w, ycubic.x + ycubic.y, ycubic.z + ycubic.w);\r
+    vec4 offset = c + vec4(xcubic.y, xcubic.w, ycubic.y, ycubic.w) / s;\r
+\r
+    vec4 sample0 = texture(tex, vec2(offset.x, offset.z) / resolution);\r
+    vec4 sample1 = texture(tex, vec2(offset.y, offset.z) / resolution);\r
+    vec4 sample2 = texture(tex, vec2(offset.x, offset.w) / resolution);\r
+    vec4 sample3 = texture(tex, vec2(offset.y, offset.w) / resolution);\r
+\r
+    float sx = s.x / (s.x + s.y);\r
+    float sy = s.z / (s.z + s.w);\r
+\r
+    return mix(mix(sample3, sample2, sx), mix(sample1, sample0, sx), sy);\r
+}\r
+\r
+vec3 ColorFetch(vec2 coord)\r
+{\r
+	return texture(iChannel0, coord).rgb;\r
+}\r
+\r
+vec3 BloomFetch(vec2 coord)\r
+{\r
+	return BicubicTexture(iChannel3, coord).rgb;\r
+}\r
+\r
+vec3 Grab(vec2 coord, const float octave, const vec2 offset)\r
+{\r
+	float scale = exp2(octave);\r
+\r
+    coord /= scale;\r
+    coord -= offset;\r
+\r
+    return BloomFetch(coord);\r
+}\r
+\r
+vec2 CalcOffset(float octave)\r
+{\r
+    vec2 offset = vec2(0.0);\r
+\r
+    vec2 padding = vec2(10.0) / iResolution.xy;\r
+\r
+    offset.x = -min(1.0, floor(octave / 3.0)) * (0.25 + padding.x);\r
+    offset.y = -(1.0 - (1.0 / exp2(octave))) - padding.y * octave;\r
+	offset.y += min(1.0, floor(octave / 3.0)) * 0.35;\r
+\r
+	return offset;\r
+}\r
+\r
+vec3 GetBloom(vec2 coord)\r
+{\r
+	vec3 bloom = vec3(0.0);\r
+\r
+    \r
+    bloom += Grab(coord, 1.0, vec2(CalcOffset(0.0))) * 1.0;\r
+    bloom += Grab(coord, 2.0, vec2(CalcOffset(1.0))) * 1.5;\r
+	bloom += Grab(coord, 3.0, vec2(CalcOffset(2.0))) * 1.0;\r
+    bloom += Grab(coord, 4.0, vec2(CalcOffset(3.0))) * 1.5;\r
+    bloom += Grab(coord, 5.0, vec2(CalcOffset(4.0))) * 1.8;\r
+    bloom += Grab(coord, 6.0, vec2(CalcOffset(5.0))) * 1.0;\r
+    bloom += Grab(coord, 7.0, vec2(CalcOffset(6.0))) * 1.0;\r
+    bloom += Grab(coord, 8.0, vec2(CalcOffset(7.0))) * 1.0;\r
+\r
+	return bloom;\r
+}\r
+\r
+`,E=`// Bloom blur pass: horizontal axis.\r
+#include "../blur/gaussian-blur-5tap.frag"\r
+\r
+void mainImage(out vec4 fragColor, in vec2 fragCoord)\r
+{\r
+    vec2 uv = fragCoord.xy / iResolution.xy;\r
+    vec3 color = vec3(0.0);\r
+\r
+    if (uv.x < 0.52) {\r
+        color = applyGaussianBlur5Tap(uv, vec2(0.5, 0.0));\r
+    }\r
+\r
+    fragColor = vec4(color, 1.0);\r
+}\r
+\r
+`,A=`// Bloom blur pass: vertical axis.\r
+#include "../blur/gaussian-blur-5tap.frag"\r
+\r
+void mainImage(out vec4 fragColor, in vec2 fragCoord)\r
+{\r
+    vec2 uv = fragCoord.xy / iResolution.xy;\r
+    vec3 color = vec3(0.0);\r
+\r
+    if (uv.x < 0.52) {\r
+        color = applyGaussianBlur5Tap(uv, vec2(0.0, 0.5));\r
+    }\r
+\r
+    fragColor = vec4(color, 1.0);\r
+}\r
+\r
+`,z=`// Camera-state pass:\r
+// - Right-side bottom pixels store camera/state payload.\r
+// - Remaining pixels build bloom pyramid from scene-color input.\r
+#include "../camera-state/controls-input.frag"\r
+#include "../camera-state/bloom-pyramid-sampling.frag"\r
+#include "../camera-state/camera-state-packing.frag"\r
 \r
 \r
 void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
 {\r
-    
-    
-    bool isStateStoragePixel = (fragCoord.y < 1.0 && fragCoord.x > (iResolution.x - 8.5));
-
-    if (isStateStoragePixel) {
-        writeCameraStateTexel(fragColor, fragCoord);
+    \r
+    \r
+    bool isStateStoragePixel = (fragCoord.y < 1.0 && fragCoord.x > (iResolution.x - 8.5));\r
+\r
+    if (isStateStoragePixel) {\r
+        writeCameraStateTexel(fragColor, fragCoord);\r
     } else {\r
-        
+        \r
         vec2 uv = fragCoord.xy / iResolution.xy;\r
         vec3 color = vec3(0.0);\r
         \r
@@ -457,8 +457,8 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
     }\r
 }\r
 \r
-`,k=`// Final display pass: scene-color + bloom composite.
-#include "../image/bloom-composite-pass.frag"
+`,k=`// Final display pass: scene-color + bloom composite.\r
+#include "../image/bloom-composite-pass.frag"\r
 \r
 void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
 {    vec2 uv = fragCoord.xy / iResolution.xy;\r
@@ -485,27 +485,27 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
 \r
 }\r
 \r
-`,I=`// Scene-color pass entrypoint.
-// Read order: params -> utils -> color -> relativity -> accretion -> main.
-#include "../scene-color/params-and-constants.frag"
-#include "../scene-color/noise-and-utils.frag"
-#include "../scene-color/color-and-post.frag"
-#include "../scene-color/relativity-core.frag"
-#include "../scene-color/accretion-and-jets.frag"
-#include "../scene-color/main.frag"
+`,I=`// Scene-color pass entrypoint.\r
+// Read order: params -> utils -> color -> relativity -> accretion -> main.\r
+#include "../scene-color/params-and-constants.frag"\r
+#include "../scene-color/noise-and-utils.frag"\r
+#include "../scene-color/color-and-post.frag"\r
+#include "../scene-color/relativity-core.frag"\r
+#include "../scene-color/accretion-and-jets.frag"\r
+#include "../scene-color/main.frag"\r
 \r
-`,lr=`// Volumetric accretion disk, jet lighting, and heat-haze sampling.
-float HazeNoise01(vec3 p) {
+`,lr=`// Volumetric accretion disk, jet lighting, and heat-haze sampling.\r
+float HazeNoise01(vec3 p) {\r
     return PerlinNoise(p) * 0.5 + 0.5;\r
 }\r
 \r
-
+\r
 float GetBaseNoise(vec3 p)\r
 {\r
     float baseScale = HAZE_SCALE * 0.4; \r
     vec3 pos = p * baseScale;\r
     \r
-    
+    \r
     const mat3 rotNoise = mat3(\r
          0.80,  0.60,  0.00,\r
         -0.48,  0.64,  0.60,\r
@@ -519,13 +519,13 @@ float GetBaseNoise(vec3 p)\r
     return n1 * 0.6 + n2 * 0.4; \r
 }\r
 \r
-
+\r
 float GetDiskHazeMask(vec3 pos_Rg, float InterRadius, float OuterRadius, float Thin, float Hopper)\r
 {\r
     float r = length(pos_Rg.xz);\r
     float y = abs(pos_Rg.y);\r
     \r
-    
+    \r
     float GeometricThin = Thin + max(0.0, (r - 3.0) * Hopper);\r
     float diskThickRef = GeometricThin; \r
     \r
@@ -538,7 +538,7 @@ float GetDiskHazeMask(vec3 pos_Rg, float InterRadius, float OuterRadius, float T
     return vMaskDisk * rMaskDisk;\r
 }\r
 \r
-
+\r
 float GetJetHazeMask(vec3 pos_Rg, float InterRadius, float OuterRadius)\r
 {\r
     float r = length(pos_Rg.xz);\r
@@ -551,13 +551,13 @@ float GetJetHazeMask(vec3 pos_Rg, float InterRadius, float OuterRadius)\r
 \r
     float shellRadiusLimit = 1.3 * InterRadius + 0.25 * y;\r
     \r
-    
+    \r
     float maxJetRadius = max(coreRadiusLimit, shellRadiusLimit) * 1.2;\r
 \r
 \r
     float jLen = OuterRadius * 0.8;\r
     \r
-    
+    \r
     float rMaskJet = 1.0 - smoothstep(maxJetRadius * 0.8, maxJetRadius * 1.1, r);\r
     float hMaskJet = 1.0 - smoothstep(jLen * 0.75, jLen * 1.0, y);\r
 \r
@@ -567,18 +567,18 @@ float GetJetHazeMask(vec3 pos_Rg, float InterRadius, float OuterRadius)\r
     return rMaskJet * hMaskJet * startYMask;\r
 }\r
 \r
-
+\r
 bool IsInHazeBoundingVolume(vec3 pos, float probeDist, float OuterRadius) {\r
     float maxR = OuterRadius * 1.2;\r
-    float maxY = maxR; 
+    float maxY = maxR; \r
     float r = length(pos);\r
-    
-    
+    \r
+    \r
     if (r > maxR + probeDist) return false;\r
     return true;\r
 }\r
 \r
-
+\r
 vec3 GetHazeForce(vec3 pos_Rg, float time, float PhysicalSpinA, float PhysicalQ, \r
                   float InterRadius, float OuterRadius, float Thin, float Hopper,\r
                   float AccretionRate)\r
@@ -588,7 +588,7 @@ vec3 GetHazeForce(vec3 pos_Rg, float time, float PhysicalSpinA, float PhysicalQ,
     float dDens = HAZE_DISK_DENSITY_REF;\r
     float dLimitAbs = 20.0;\r
     float dFactorAbs = clamp((log(dDens/dLimitAbs)) / 2.302585, 0.0, 1.0);\r
-    
+    \r
     float jDensRef = HAZE_JET_DENSITY_REF; \r
     float dFactorRel = 1.0;\r
     if (jDensRef > 1e-20) dFactorRel = clamp((log(dDens/jDensRef)) / 2.302585, 0.0, 1.0);\r
@@ -598,11 +598,11 @@ vec3 GetHazeForce(vec3 pos_Rg, float time, float PhysicalSpinA, float PhysicalQ,
     float jetHazeStrength = 0.0;\r
     float JetThreshold = 1e-2;\r
     \r
-    
+    \r
     if (AccretionRate >= JetThreshold)\r
     {\r
-        
-        
+        \r
+        \r
         float logRate = log(AccretionRate);\r
         float logMin  = log(JetThreshold);\r
         float logMax  = log(1.0);\r
@@ -611,7 +611,7 @@ vec3 GetHazeForce(vec3 pos_Rg, float time, float PhysicalSpinA, float PhysicalQ,
         jetHazeStrength = intensity;\r
     }\r
 \r
-    
+    \r
     if (diskHazeStrength <= 0.001 && jetHazeStrength <= 0.001) return vec3(0.0);\r
 \r
     vec3 totalForce = vec3(0.0);\r
@@ -624,10 +624,10 @@ vec3 GetHazeForce(vec3 pos_Rg, float time, float PhysicalSpinA, float PhysicalQ,
 \r
     float ReferenceOmega = GetKeplerianAngularVelocity(6.0, 1.0, PhysicalSpinA, PhysicalQ);\r
     \r
-    
+    \r
     float AdaptiveFrequency = abs(ReferenceOmega * rotSpeedBase) / (2.0 * kPi * 5.14);\r
     \r
-    
+    \r
     AdaptiveFrequency = max(AdaptiveFrequency, 0.1);\r
 \r
     float flowTime = time * AdaptiveFrequency;\r
@@ -635,7 +635,7 @@ vec3 GetHazeForce(vec3 pos_Rg, float time, float PhysicalSpinA, float PhysicalQ,
     float phase1 = fract(flowTime);\r
     float phase2 = fract(flowTime + 0.5);\r
     \r
-    
+    \r
     float weight1 = 1.0 - abs(2.0 * phase1 - 1.0);\r
     float weight2 = 1.0 - abs(2.0 * phase2 - 1.0);\r
     \r
@@ -646,11 +646,11 @@ vec3 GetHazeForce(vec3 pos_Rg, float time, float PhysicalSpinA, float PhysicalQ,
     float w1_norm = (doLayer1 && wTotal > 0.0) ? (weight1 / wTotal) : 0.0;\r
     float w2_norm = (doLayer2 && wTotal > 0.0) ? (weight2 / wTotal) : 0.0;\r
 \r
-    
+    \r
     float t_offset1 = phase1 - 0.5;\r
     float t_offset2 = phase2 - 0.5;\r
 \r
-    
+    \r
     float VerticalDrift1 = t_offset1 * 1.0; \r
     float VerticalDrift2 = t_offset2 * 1.0;\r
 \r
@@ -762,7 +762,7 @@ vec3 GetHazeForce(vec3 pos_Rg, float time, float PhysicalSpinA, float PhysicalQ,
                 valCombined += val2 * w2_norm;\r
             }\r
             \r
-            float cloud = max(0.0, valCombined - 0.3-0.7*HAZE_DENSITY_THRESHOLD); 
+            float cloud = max(0.0, valCombined - 0.3-0.7*HAZE_DENSITY_THRESHOLD); \r
             cloud /= clamp((1.0 - 0.3-0.7*HAZE_DENSITY_THRESHOLD),0.0,1.0);\r
             cloud = pow(cloud, 1.5);\r
             \r
@@ -823,7 +823,7 @@ vec4 DiskColor(vec4 BaseColor, float StepLength, vec4 RayPos, vec4 LastRayPos,\r
         vec3 CurrentPos = StartPos + DirVec * TraveledDist;\r
         float DistanceToBlackHole = length(CurrentPos); \r
         \r
-        
+        \r
         float SmallStepBoundary = max(OuterRadius, 12.0);\r
         float StepSize = 1.0; \r
         \r
@@ -834,7 +834,7 @@ vec4 DiskColor(vec4 BaseColor, float StepLength, vec4 RayPos, vec4 LastRayPos,\r
         \r
         StepSize = max(0.01, StepSize); \r
 \r
-        
+        \r
         float DistToNextSample = RayMarchPhase * StepSize;\r
         float DistRemainingInRK4 = TotalDist - TraveledDist;\r
 \r
@@ -843,18 +843,18 @@ vec4 DiskColor(vec4 BaseColor, float StepLength, vec4 RayPos, vec4 LastRayPos,\r
 \r
 \r
             float PhaseProgress = DistRemainingInRK4 / StepSize;\r
-            RayMarchPhase -= PhaseProgress; 
+            RayMarchPhase -= PhaseProgress; \r
             \r
-            
-            if(RayMarchPhase < 0.0) RayMarchPhase = 0.0; 
             \r
-            TraveledDist = TotalDist; 
+            if(RayMarchPhase < 0.0) RayMarchPhase = 0.0; \r
+            \r
+            TraveledDist = TotalDist; \r
             break;\r
         }\r
 \r
         float dt = DistToNextSample;\r
         \r
-        
+        \r
         TraveledDist += dt;\r
         vec3 SamplePos = StartPos + DirVec * TraveledDist;\r
         \r
@@ -862,8 +862,8 @@ vec4 DiskColor(vec4 BaseColor, float StepLength, vec4 RayPos, vec4 LastRayPos,\r
         float CurrentRayTimeLag = mix(StartTimeLag, EndTimeLag, TimeInterpolant);\r
         float EmissionTime = iBlackHoleTime + CurrentRayTimeLag;\r
 \r
-        
-        vec3 PreviousPos = CurrentPos; 
+        \r
+        vec3 PreviousPos = CurrentPos; \r
 \r
 \r
         float PosR = KerrSchildRadius(SamplePos, PhysicalSpinA, 1.0);\r
@@ -871,7 +871,7 @@ vec4 DiskColor(vec4 BaseColor, float StepLength, vec4 RayPos, vec4 LastRayPos,\r
         \r
         float GeometricThin = Thin + max(0.0, (length(SamplePos.xz) - 3.0) * Hopper);\r
         \r
-        
+        \r
         float InterCloudEffectiveRadius = (PosR - InterRadius) / min(OuterRadius - InterRadius, 12.0);\r
         float InnerCloudBound = max(GeometricThin, Thin * 1.0) * (1.0 - 5.0 * pow(InterCloudEffectiveRadius, 2.0));\r
 \r
@@ -894,7 +894,7 @@ vec4 DiskColor(vec4 BaseColor, float StepLength, vec4 RayPos, vec4 LastRayPos,\r
              \r
              float PerturbedThickness = max(1e-6, GeometricThin * DenAndThiFactor * (0.4 + 0.6 * clamp(GeometricThin - 0.5, 0.0, 2.5) / 2.5 + (1.0 - (0.4 + 0.6 * clamp(GeometricThin - 0.5, 0.0, 2.5) / 2.5)) * SoftSaturate(ThickNoise)));\r
 \r
-             
+             \r
              if ((abs(PosY) < PerturbedThickness) || (abs(PosY) < InnerCloudBound))\r
              {\r
                  float u = sqrt(max(1e-6, PosR));\r
@@ -917,22 +917,22 @@ vec4 DiskColor(vec4 BaseColor, float StepLength, vec4 RayPos, vec4 LastRayPos,\r
                  float inv_r = 1.0 / max(1e-6, PosR);\r
                  float inv_r2 = inv_r * inv_r;\r
                  \r
-                 
+                 \r
                  float V_pot = inv_r - (PhysicalQ * PhysicalQ) * inv_r2;\r
                  \r
-                 
+                 \r
                  float g_tt = -(1.0 - V_pot);\r
                  float g_tphi = -PhysicalSpinA * V_pot; \r
                  float g_phiphi = PosR * PosR + PhysicalSpinA * PhysicalSpinA + PhysicalSpinA * PhysicalSpinA * V_pot;\r
                  \r
-                 
+                 \r
                  float norm_metric = g_tt + 2.0 * AngularVelocity * g_tphi + AngularVelocity * AngularVelocity * g_phiphi;\r
                  \r
-                 
+                 \r
                  float min_norm = -0.01; \r
                  float u_t = inversesqrt(max(abs(min_norm), -norm_metric));\r
                  \r
-                 
+                 \r
                  float P_phi = - SamplePos.x * iP_cov.z + SamplePos.z * iP_cov.x;\r
 \r
 \r
@@ -950,7 +950,7 @@ vec4 DiskColor(vec4 BaseColor, float StepLength, vec4 RayPos, vec4 LastRayPos,\r
                  \r
                  vec4 SampleColor = vec4(0.0);\r
 \r
-                 
+                 \r
                  if (abs(PosY) < PerturbedThickness) \r
                  {\r
                      float Levelmut = 0.91 * log(1.0 + (0.06 / 0.91 * max(0.0, min(1000.0, PosR) - 10.0)));\r
@@ -981,7 +981,7 @@ vec4 DiskColor(vec4 BaseColor, float StepLength, vec4 RayPos, vec4 LastRayPos,\r
                      float RelHeight = clamp(abs(PosY) / PerturbedThickness, 0.0, 1.0);\r
                      SampleColor.xyz *= max(0.0, (0.2 + 2.0 * sqrt(max(0.0, RelHeight * RelHeight + 0.001))));\r
                  }\r
-
+\r
                  SampleColor.xyz *=1.0+    clamp(  iPhotonRingBoost        ,0.0,10.0)  *clamp(0.3*ThetaInShell-0.1,0.0,1.0);\r
                  VisionTemperature *= 1.0 +clamp( iPhotonRingColorTempBoost,0.0,10.0) * clamp(0.3*ThetaInShell-0.1,0.0,1.0);\r
 \r
@@ -1298,7 +1298,7 @@ vec4 GridColor(vec4 BaseColor, vec4 RayPos, vec4 LastRayPos,\r
                 float CheckR = KerrSchildRadius(HitPos, PhysicalSpinA, HitPointSign);\r
                 if (abs(CheckR - TargetSignedR) > 0.1 * TargetGeoR + 0.1) continue; \r
 \r
-                
+                \r
                 float Omega = GetZamoOmega(TargetSignedR, PhysicalSpinA, PhysicalQ, HitPos.y);\r
                 vec3 VelSpatial = Omega * vec3(HitPos.z, 0.0, -HitPos.x);\r
                 vec4 U_zamo_unnorm = vec4(VelSpatial, 1.0); \r
@@ -1314,7 +1314,7 @@ vec4 GridColor(vec4 BaseColor, vec4 RayPos, vec4 LastRayPos,\r
                 float E_emit = -dot(iP_cov, U_zamo);\r
                 float Shift = 1.0/ max(1e-6, abs(E_emit)); \r
 \r
-                
+                \r
                 float Phi = Vec2ToTheta(normalize(HitPos.zx), vec2(0.0, 1.0));\r
                 float CosTheta = clamp(HitPos.y / TargetGeoR, -1.0, 1.0);\r
                 float Theta = acos(CosTheta);\r
@@ -1335,7 +1335,7 @@ vec4 GridColor(vec4 BaseColor, vec4 RayPos, vec4 LastRayPos,\r
                 float GridIntensity = max(GridPhi, GridTheta);\r
 \r
                 if (GridIntensity > 0.01) {\r
-                    
+                    \r
                     float BaseTemp = 6500.0;\r
                     vec3 BlackbodyColor = KelvinToRgb(BaseTemp * Shift);\r
                     float Intensity = min(1.5 * pow(Shift, 4.0), 20.0);\r
@@ -1349,7 +1349,7 @@ vec4 GridColor(vec4 BaseColor, vec4 RayPos, vec4 LastRayPos,\r
         }\r
     }\r
 \r
-    
+    \r
     if (bHasCrossed && CurrentResult.a < 0.99) {\r
         \r
         \r
@@ -1563,9 +1563,9 @@ vec4 GridColorSimple(vec4 BaseColor, vec4 RayPos, vec4 LastRayPos,\r
     return CurrentResult;\r
 }\r
 \r
-`,cr=`// Spectral mapping and post-process color helpers.
-vec3 KelvinToRgb(float Kelvin)
-{
+`,cr=`// Spectral mapping and post-process color helpers.\r
+vec3 KelvinToRgb(float Kelvin)\r
+{\r
     if (Kelvin < 400.01) return vec3(0.0);\r
     float Teff     = (Kelvin - 6500.0) / (6500.0 * Kelvin * 2.2);\r
     vec3  RgbColor = vec3(0.0);\r
@@ -1611,12 +1611,12 @@ vec4 hash43x(vec3 p)\r
     uvec3 x = uvec3(ivec3(p));\r
     x = 1103515245U*((x.xyz >> 1U)^(x.yzx));\r
     uint h = 1103515245U*((x.x^x.z)^(x.y>>3U));\r
-    uvec4 rz = uvec4(h, h*16807U, h*48271U, h*69621U); 
+    uvec4 rz = uvec4(h, h*16807U, h*48271U, h*69621U); \r
     return vec4((rz >> 1) & uvec4(0x7fffffffU))/float(0x7fffffff);\r
 }\r
 \r
 \r
-vec3 stars(vec3 p)
+vec3 stars(vec3 p)\r
 {\r
     vec3 col = vec3(0);\r
     float rad = .087*iResolution.y;\r
@@ -1636,13 +1636,13 @@ vec3 stars(vec3 p)
         vec4 rand = hash43x(ip*283.1);\r
         vec3 q2 = abs(p2);\r
         vec3 pl = 1.0- step(max(q2.x, max(q2.y, q2.z)), q2);\r
-        vec3 pp = fp - ((rand.xyz-0.5)*.6 + 0.5)*pl; 
+        vec3 pp = fp - ((rand.xyz-0.5)*.6 + 0.5)*pl; \r
         float pr = length(ip) - rad;   \r
         if (rand.w > (dens - dens*pr*0.035)) pp += 1e6;\r
 \r
         float d = dot(pp, pp);\r
         d /= pow(fract(rand.w*172.1), 32.) + .25;\r
-        float bri = dot(rand.xyz*(1.-pl),vec3(1)); 
+        float bri = dot(rand.xyz*(1.-pl),vec3(1)); \r
         id = fract(rand.w*101.);\r
         col += bri*z*.00009/pow(d + 0.025, 3.0)*(mix(vec3(1.0,0.45,0.1),vec3(0.75,0.85,1.), id)*0.6+0.4);\r
         \r
@@ -1654,19 +1654,19 @@ vec3 stars(vec3 p)
     \r
     return col;\r
 }\r
-
-const int ITERATIONS = 40;   
+\r
+const int ITERATIONS = 40;   \r
 const float SPEED = 1.;\r
 \r
 const float STRIP_CHARS_MIN =  7.;\r
 const float STRIP_CHARS_MAX = 40.;\r
 const float STRIP_CHAR_HEIGHT = 0.15;\r
 const float STRIP_CHAR_WIDTH = 0.10;\r
-const float ZCELL_SIZE = 1. * (STRIP_CHAR_HEIGHT * STRIP_CHARS_MAX);  
-const float XYCELL_SIZE = 12. * STRIP_CHAR_WIDTH;  
+const float ZCELL_SIZE = 1. * (STRIP_CHAR_HEIGHT * STRIP_CHARS_MAX);  \r
+const float XYCELL_SIZE = 12. * STRIP_CHAR_WIDTH;  \r
 \r
-const int BLOCK_SIZE = 10;  
-const int BLOCK_GAP = 2;    
+const int BLOCK_SIZE = 10;  \r
+const int BLOCK_GAP = 2;    \r
 \r
 const float WALK_SPEED = 1. * XYCELL_SIZE;\r
 const float BLOCKS_BEFORE_TURN = 3.;\r
@@ -1708,31 +1708,31 @@ vec4 hash4(vec3 v)\r
 }\r
 \r
 \r
-float rune_line(vec2 p, vec2 a, vec2 b) {   
+float rune_line(vec2 p, vec2 a, vec2 b) {   \r
     p -= a, b -= a;\r
-	float h = clamp(dot(p, b) / dot(b, b), 0., 1.);   
-	return length(p - b * h);                         
+	float h = clamp(dot(p, b) / dot(b, b), 0., 1.);   \r
+	return length(p - b * h);                         \r
 }\r
 \r
 float rune(vec2 U, vec2 seed, float highlight)\r
 {\r
 	float d = 1e5;\r
-	for (int i = 0; i < 4; i++)	
+	for (int i = 0; i < 4; i++)	\r
 	{\r
         vec4 pos = hash4(seed);\r
 		seed += 1.;\r
 \r
-		
+		\r
 		if (i == 0) pos.y = .0;\r
 		if (i == 1) pos.x = .999;\r
 		if (i == 2) pos.x = .0;\r
 		if (i == 3) pos.y = .999;\r
-		
+		\r
 		vec4 snaps = vec4(2, 3, 2, 3);\r
 		pos = ( floor(pos * snaps) + .5) / snaps;\r
 \r
-		if (pos.xy != pos.zw)  
-		    d = min(d, rune_line(U, pos.xy, pos.zw + .001) ); 
+		if (pos.xy != pos.zw)  \r
+		    d = min(d, rune_line(U, pos.xy, pos.zw + .001) ); \r
 	}\r
 	return smoothstep(0.1, 0., d) + highlight*smoothstep(0.4, 0., d);\r
 }\r
@@ -1746,34 +1746,34 @@ float random_char(vec2 outer, vec2 inner, float highlight) {\r
 vec3 rain(vec3 ro3, vec3 rd3, float time) {\r
     vec4 result = vec4(0.);\r
 \r
-    
+    \r
     vec2 ro2 = vec2(ro3);\r
     vec2 rd2 = normalize(vec2(rd3));\r
 \r
-    
+    \r
     bool prefer_dx = abs(rd2.x) > abs(rd2.y);\r
     float t3_to_t2 = prefer_dx ? rd3.x / rd2.x : rd3.y / rd2.y;\r
 \r
 \r
-    ivec3 cell_side = ivec3(step(0., rd3));      
-    ivec3 cell_shift = ivec3(sign(rd3));         
+    ivec3 cell_side = ivec3(step(0., rd3));      \r
+    ivec3 cell_shift = ivec3(sign(rd3));         \r
 \r
-    
-    float t2 = 0.;  
-    ivec2 next_cell = ivec2(floor(ro2/XYCELL_SIZE));  
+    \r
+    float t2 = 0.;  \r
+    ivec2 next_cell = ivec2(floor(ro2/XYCELL_SIZE));  \r
     for (int i=0; i<ITERATIONS; i++) {\r
-        ivec2 cell = next_cell;  
-        float t2s = t2;          
+        ivec2 cell = next_cell;  \r
+        float t2s = t2;          \r
 \r
-        
-        vec2 side = vec2(next_cell + cell_side.xy) * XYCELL_SIZE;  
-        vec2 t2_side = (side - ro2) / rd2;  
+        \r
+        vec2 side = vec2(next_cell + cell_side.xy) * XYCELL_SIZE;  \r
+        vec2 t2_side = (side - ro2) / rd2;  \r
         if (t2_side.x < t2_side.y) {\r
             t2 = t2_side.x;\r
-            next_cell.x += cell_shift.x;  
+            next_cell.x += cell_shift.x;  \r
         } else {\r
             t2 = t2_side.y;\r
-            next_cell.y += cell_shift.y;  
+            next_cell.y += cell_shift.y;  \r
         }\r
 \r
 \r
@@ -1783,18 +1783,18 @@ vec3 rain(vec3 ro3, vec3 rd3, float time) {\r
             continue;\r
         }\r
 \r
-        
+        \r
         float t3s = t2s / t3_to_t2;\r
 \r
-        
+        \r
         float pos_z = ro3.z + rd3.z * t3s;\r
         float xycell_hash = hash(vec2(cell));\r
-        float z_shift = xycell_hash*11. - time * (0.5 + xycell_hash * 1.0 + xycell_hash * xycell_hash * 1.0 + pow(xycell_hash, 16.) * 3.0);  
+        float z_shift = xycell_hash*11. - time * (0.5 + xycell_hash * 1.0 + xycell_hash * xycell_hash * 1.0 + pow(xycell_hash, 16.) * 3.0);  \r
         float char_z_shift = floor(z_shift / STRIP_CHAR_HEIGHT);\r
         z_shift = char_z_shift * STRIP_CHAR_HEIGHT;\r
-        int zcell = int(floor((pos_z - z_shift)/ZCELL_SIZE));  
-        for (int j=0; j<2; j++) {  
-            
+        int zcell = int(floor((pos_z - z_shift)/ZCELL_SIZE));  \r
+        for (int j=0; j<2; j++) {  \r
+            \r
             vec4 cell_hash = hash4(vec3(ivec3(cell, zcell)));\r
             vec4 cell_hash2 = fract(cell_hash * vec4(127.1, 311.7, 271.9, 124.6));\r
 \r
@@ -1804,25 +1804,25 @@ vec3 rain(vec3 ro3, vec3 rd3, float time) {\r
             float target_z = (float(zcell)*ZCELL_SIZE + z_shift) + cell_hash.z * (ZCELL_SIZE - target_length);\r
             vec2 target = vec2(cell) * XYCELL_SIZE + target_rad + cell_hash.xy * (XYCELL_SIZE - target_rad*2.);\r
 \r
-            
+            \r
             vec2 s = target - ro2;\r
-            float tmin = dot(s, rd2);  
+            float tmin = dot(s, rd2);  \r
             if (tmin >= t2s && tmin <= t2) {\r
-                float u = s.x * rd2.y - s.y * rd2.x;  
+                float u = s.x * rd2.y - s.y * rd2.x;  \r
                 if (abs(u) < target_rad) {\r
                     u = (u/target_rad + 1.) / 2.;\r
                     float z = ro3.z + rd3.z * tmin/t3_to_t2;\r
-                    float v = (z - target_z) / target_length;  
+                    float v = (z - target_z) / target_length;  \r
                     if (v >= 0.0 && v < 1.0) {\r
-                        float c = floor(v * chars_count);  
+                        float c = floor(v * chars_count);  \r
                         float q = fract(v * chars_count);\r
                         vec2 char_hash = hash2(vec2(c+char_z_shift, cell_hash2.x));\r
-                        if (char_hash.x >= 0.1 || c == 0.) {  
-                            float time_factor = floor(c == 0. ? time*5.0 :  
-                                    time*(1.0*cell_hash2.z +   
-                                            cell_hash2.w*cell_hash2.w*4.*pow(char_hash.y, 4.)));  
-                            float a = random_char(vec2(char_hash.x, time_factor), vec2(u,q), max(1., 3. - c/2.)*0.2);  
-                            a *= clamp((chars_count - 0.5 - c) / 2., 0., 1.);  
+                        if (char_hash.x >= 0.1 || c == 0.) {  \r
+                            float time_factor = floor(c == 0. ? time*5.0 :  \r
+                                    time*(1.0*cell_hash2.z +   \r
+                                            cell_hash2.w*cell_hash2.w*4.*pow(char_hash.y, 4.)));  \r
+                            float a = random_char(vec2(char_hash.x, time_factor), vec2(u,q), max(1., 3. - c/2.)*0.2);  \r
+                            a *= clamp((chars_count - 0.5 - c) / 2., 0., 1.);  \r
                             if (a > 0.) {\r
                                 float attenuation = 1. + pow(0.06*tmin/t3_to_t2, 2.);\r
                                 vec3 col = (c == 0. ? vec3(0.67, 1.0, 0.82) : vec3(0.25, 0.80, 0.40)) / attenuation;\r
@@ -1835,10 +1835,10 @@ vec3 rain(vec3 ro3, vec3 rd3, float time) {\r
                     }\r
                 }\r
             }\r
-            
+            \r
             zcell += cell_shift.z;\r
         }\r
-        
+        \r
     }\r
 \r
     return result.xyz * result.a;\r
@@ -1847,11 +1847,11 @@ vec3 rain(vec3 ro3, vec3 rd3, float time) {\r
 vec4 SampleBackground(vec3 Dir, float Shift, float Status)\r
 {\r
     vec4 Backcolor =vec4(stars( Dir),1.0);\r
-    if (Status > 1.5) { 
+    if (Status > 1.5) { \r
         Backcolor =vec4(rain(vec3(0.0), Dir, iTime+1.0),1.0);\r
     }\r
 \r
-    
+    \r
     float BackgroundShift = Shift;\r
     vec3 Rcolor = Backcolor.r * 1.0 * WavelengthToRgb(max(453.0, 645.0 / BackgroundShift));\r
     vec3 Gcolor = Backcolor.g * 1.5 * WavelengthToRgb(max(416.0, 510.0 / BackgroundShift));\r
@@ -1879,13 +1879,13 @@ vec4 ApplyToneMapping(vec4 Result,float shift)\r
     return Mapped;\r
 }\r
 \r
-`,fr=`// Main ray-trace orchestration and final scene-color output.
-struct TraceResult {
-    vec3  EscapeDir;      
-    float FreqShift;      
-    float Status;         
-    vec4  AccumColor;     
-    float CurrentSign;    
+`,fr=`// Main ray-trace orchestration and final scene-color output.\r
+struct TraceResult {\r
+    vec3  EscapeDir;      \r
+    float FreqShift;      \r
+    float Status;         \r
+    vec4  AccumColor;     \r
+    float CurrentSign;    \r
 };\r
 \r
 TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
@@ -1899,7 +1899,7 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
     TraceResult res;\r
     res.EscapeDir = vec3(0.0);\r
     res.FreqShift = 0.0;\r
-    res.Status    = 0.0; 
+    res.Status    = 0.0; \r
     res.AccumColor = vec4(0.0);\r
 \r
     float Fov = tan(iFovRadians / 2.0);\r
@@ -1918,22 +1918,22 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
     float RmsRatio = Rms_M / 2.0; \r
     float AccretionEffective = sqrt(max(0.001, 1.0 - (2.0 / 3.0) / Rms_M));\r
 \r
-    
+    \r
     const float kPhysicsFactor = 1.52491e30; \r
     float DiskArgument = kPhysicsFactor / iBlackHoleMassSol * (iMu / AccretionEffective) * (iAccretionRate);\r
     float PeakTemperature = pow(DiskArgument * 0.05665278, 0.25);\r
 \r
-    
+    \r
     float PhysicalSpinA = iSpin * CONST_M;  \r
     float PhysicalQ     = iQ * CONST_M; \r
     \r
-    
+    \r
     float HorizonDiscrim = 0.25 - PhysicalSpinA * PhysicalSpinA - PhysicalQ * PhysicalQ;\r
     float EventHorizonR = 0.5 + sqrt(max(0.0, HorizonDiscrim));\r
     float InnerHorizonR = 0.5 - sqrt(max(0.0, HorizonDiscrim));\r
     bool  bIsNakedSingularity = HorizonDiscrim < 0.0;\r
 \r
-    
+    \r
     float RaymarchingBoundary = max(iOuterRadiusRs + 1.0, 501.0);\r
     float BackgroundShiftMax = 2.0;\r
     float ShiftMax = 1.0; \r
@@ -1960,10 +1960,10 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
     bool bWaitCalBack = false;\r
     float DistanceToBlackHole = length(RayPosLocal);\r
     \r
-    
+    \r
     float GlobalMinGeoR = 10000.0;\r
     \r
-    if (DistanceToBlackHole > RaymarchingBoundary) 
+    if (DistanceToBlackHole > RaymarchingBoundary) \r
     {\r
         vec3 O = RayPosLocal; vec3 D = RayDirWorld_Geo; float r = RaymarchingBoundary - 1.0; \r
         float b = dot(O, D); float c = dot(O, O) - r * r; float delta = b * b - c; \r
@@ -1992,33 +1992,33 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
 \r
     if (bShouldContinueMarchRay) {\r
        P_cov = GetInitialMomentum(RayDir, X, iObserverMode, iUniverseSign, PhysicalSpinA, PhysicalQ, GravityFade);\r
-       
+       \r
     }\r
     E_conserved = -P_cov.w;\r
     \r
     #if ENABLE_HEAT_HAZE == 1\r
     {\r
-        
+        \r
         vec3 pos_Rg_Start = X.xyz; \r
         vec3 rayDirNorm = normalize(RayDir);\r
 \r
         float totalProbeDist = float(HAZE_PROBE_STEPS) * HAZE_STEP_SIZE;\r
         \r
-        
+        \r
         float hazeTime = mod(iTime, 1000.0); \r
 \r
-        
+        \r
         #if HAZE_DEBUG_MASK == 1\r
         {\r
             float debugAccum = 0.0;\r
             float debugStep = 1.0; \r
             vec3 debugPos = pos_Rg_Start;\r
             \r
-            
+            \r
             float rotSpeedBase = 100.0 * HAZE_ROT_SPEED;\r
             float jetSpeedBase = 50.0 * HAZE_FLOW_SPEED;\r
             \r
-            
+            \r
             float ReferenceOmega = GetKeplerianAngularVelocity(6.0, 1.0, PhysicalSpinA, PhysicalQ);\r
             float AdaptiveFrequency = abs(ReferenceOmega * rotSpeedBase) / (2.0 * kPi * 5.14);\r
             AdaptiveFrequency = max(AdaptiveFrequency, 0.1);\r
@@ -2028,7 +2028,7 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
             float weight1 = 1.0 - abs(2.0 * phase1 - 1.0); float weight2 = 1.0 - abs(2.0 * phase2 - 1.0);\r
             float t_offset1 = phase1 - 0.5; float t_offset2 = phase2 - 0.5;\r
             \r
-            
+            \r
             float VerticalDrift1 = t_offset1 * 1.0; \r
             float VerticalDrift2 = t_offset2 * 1.0;\r
 \r
@@ -2043,7 +2043,7 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
             {\r
                 float valCombined = 0.0;\r
 \r
-                
+                \r
                 float maskDisk = GetDiskHazeMask(debugPos, iInterRadiusRs, iOuterRadiusRs, iThinRs, iHopper);\r
                 if (maskDisk > 0.001) {\r
                     float r_local = length(debugPos.xz);\r
@@ -2071,7 +2071,7 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
                     valCombined += maskDisk * max(0.0, vDisk - HAZE_DENSITY_THRESHOLD);\r
                 }\r
 \r
-                
+                \r
                 float maskJet = GetJetHazeMask(debugPos, iInterRadiusRs, iOuterRadiusRs);\r
                 if (maskJet > 0.001) {\r
                     float v_jet_mag = 0.9;\r
@@ -2094,19 +2094,19 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
                 debugPos += rayDirNorm * debugStep;\r
             }\r
             \r
-            res.Status = 3.0; 
+            res.Status = 3.0; \r
             res.AccumColor = vec4(vec3(min(1.0, debugAccum)), 1.0);\r
             return res;\r
         }\r
         #endif\r
 \r
-        
+        \r
         if (IsInHazeBoundingVolume(pos_Rg_Start, totalProbeDist, iOuterRadiusRs)) \r
         {\r
             vec3 accumulatedForce = vec3(0.0);\r
             float totalWeight = 0.0;\r
 \r
-            
+            \r
             for (int i = 0; i < HAZE_PROBE_STEPS; i++)\r
             {\r
                 float marchDist = float(i + 1) * HAZE_STEP_SIZE; \r
@@ -2125,7 +2125,7 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
 \r
             vec3 avgHazeForce = accumulatedForce / max(0.001, totalWeight);\r
 \r
-            
+            \r
             #if HAZE_DEBUG_VECTOR == 1\r
                 if (length(avgHazeForce) > 1e-4) {\r
                     res.Status = 3.0;\r
@@ -2136,17 +2136,17 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
                 }\r
             #endif\r
 \r
-            
+            \r
             float forceMagSq = dot(avgHazeForce, avgHazeForce);\r
             if (forceMagSq > 1e-10)\r
             {\r
-                
+                \r
                 vec3 forcePerp = avgHazeForce - dot(avgHazeForce, rayDirNorm) * rayDirNorm;\r
                 \r
-                
+                \r
                 vec3 deflection = forcePerp * HAZE_STRENGTH * 25.0; \r
                 \r
-                
+                \r
                 P_cov.xyz += deflection;\r
 \r
 \r
@@ -2163,7 +2163,7 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
     \r
     if (CurrentUniverseSign > 0.0) \r
     {\r
-        
+        \r
         if (iObserverMode == 0) \r
         {\r
             float CosThetaSq = (RayPosLocal.y * RayPosLocal.y) / (CameraStartR * CameraStartR + 1e-20);\r
@@ -2182,9 +2182,9 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
         }\r
         else\r
         {\r
-        
+        \r
         }\r
-        
+        \r
         if (!bIsNakedSingularity && CurrentUniverseSign > 0.0) \r
         {\r
             if (CameraStartR > EventHorizonR) TerminationR = EventHorizonR; \r
@@ -2193,9 +2193,9 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
         }\r
     }\r
     \r
-    
+    \r
     float AbsSpin = abs(CONST_M * iSpin);\r
-    float Q2 = iQ * iQ * CONST_M * CONST_M; 
+    float Q2 = iQ * iQ * CONST_M * CONST_M; \r
     \r
 \r
     float AcosTerm = acos(clamp(-abs(iSpin), -1.0, 1.0));\r
@@ -2208,10 +2208,10 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
         float Mr_Q2 = CONST_M * r - Q2;\r
         float sqrt_term = sqrt(max(0.0001, Mr_Q2)); \r
         \r
-        
+        \r
         float f = r*r - 3.0*CONST_M*r + 2.0*Q2 + sign_a * 2.0 * AbsSpin * sqrt_term;\r
         \r
-        
+        \r
         float df = 2.0*r - 3.0*CONST_M + sign_a * AbsSpin * CONST_M / sqrt_term;\r
         \r
         if(abs(df) < 0.00001) break;\r
@@ -2222,7 +2222,7 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
     float ProgradePhotonRadius = r;\r
 \r
     float MaxStep=150.0+300.0/(1.0+1000.0*(1.0-iSpin*iSpin-iQ*iQ)*(1.0-iSpin*iSpin-iQ*iQ));\r
-    if(bIsNakedSingularity) MaxStep=450.0;
+    if(bIsNakedSingularity) MaxStep=450.0;\r
 \r
 \r
     int Count = 0;\r
@@ -2244,7 +2244,7 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
         { \r
             bShouldContinueMarchRay = false; \r
             bWaitCalBack = true; \r
-            break; 
+            break; \r
         }\r
         \r
         KerrGeometry geo;\r
@@ -2254,16 +2254,16 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
         { \r
             bShouldContinueMarchRay = false;\r
             bWaitCalBack = false;\r
-            
-            break; 
+            \r
+            break; \r
         }\r
         if (float(Count) > MaxStep) \r
         { \r
             bShouldContinueMarchRay = false; \r
             bWaitCalBack = false;\r
             if(bIsNakedSingularity&&RadialTurningCounts <= 2) bWaitCalBack = true;\r
-            
-            break; 
+            \r
+            break; \r
         }\r
 \r
         State s0; s0.X = X; s0.P = P_cov;\r
@@ -2278,14 +2278,14 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
                 if (RadialTurningCounts > 2) \r
                 {\r
                     bShouldContinueMarchRay = false; bWaitCalBack = false;\r
-                    
-                    break;
+                    \r
+                    break;\r
                 }\r
                 \r
             }\r
             \r
-            if(geo.r > InnerHorizonR && lastR < InnerHorizonR) bIntoInHorizon = true;     
-            if(geo.r > EventHorizonR && lastR < EventHorizonR) bIntoOutHorizon = true;    
+            if(geo.r > InnerHorizonR && lastR < InnerHorizonR) bIntoInHorizon = true;     \r
+            if(geo.r > EventHorizonR && lastR < EventHorizonR) bIntoOutHorizon = true;    \r
             \r
             if (CurrentUniverseSign > 0.0 && !bIsNakedSingularity)\r
             {\r
@@ -2294,8 +2294,8 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
                 float SafetyGap = 0.001;\r
                 float PhotonShellLimit = ProgradePhotonRadius - SafetyGap; \r
                 float preCeiling = min(CameraStartR - SafetyGap, TerminationR + 0.2);\r
-                if(bIntoInHorizon) { preCeiling = InnerHorizonR + 0.2; } 
-                if(bIntoOutHorizon) { preCeiling = EventHorizonR + 0.2; }
+                if(bIntoInHorizon) { preCeiling = InnerHorizonR + 0.2; } \r
+                if(bIntoOutHorizon) { preCeiling = EventHorizonR + 0.2; }\r
                 \r
                 float PruningCeiling = min(iInterRadiusRs, preCeiling);\r
                 PruningCeiling = min(PruningCeiling, PhotonShellLimit); \r
@@ -2307,14 +2307,14 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
                     {\r
                         bShouldContinueMarchRay = false;\r
                         bWaitCalBack = false;\r
-                        
-                        break; 
+                        \r
+                        break; \r
                     }\r
                 }\r
             }\r
         }\r
         \r
-        
+        \r
         float rho = length(RayPos.xz);\r
         float DistRing = sqrt(RayPos.y * RayPos.y + pow(rho - abs(PhysicalSpinA), 2.0));\r
         float Vel_Mag = length(k1.X); \r
@@ -2341,8 +2341,8 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
         { \r
             bShouldContinueMarchRay = false; \r
             bWaitCalBack = false;\r
-            
-            break; 
+            \r
+            break; \r
         }\r
 \r
 \r
@@ -2362,14 +2362,14 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
         lastR = geo.r;\r
         RayDir = (ActualStepLength > 1e-7) ? StepVec / ActualStepLength : LastDir;\r
         \r
-        
+        \r
         if (LastPos.y * RayPos.y < 0.0) {\r
             float t_cross = LastPos.y / (LastPos.y - RayPos.y);\r
             float rho_cross = length(mix(LastPos.xz, RayPos.xz, t_cross));\r
             if (rho_cross < abs(PhysicalSpinA)) CurrentUniverseSign *= -1.0;\r
         }\r
 \r
-        
+        \r
         if (CurrentUniverseSign > 0.0) \r
         {\r
            Result = DiskColor(Result, ActualStepLength, X, LastX, RayDir, LastDir, P_cov, E_conserved,\r
@@ -2408,27 +2408,27 @@ TraceResult TraceRay(vec2 FragUv, vec2 Resolution, \r
         Count++;\r
     }\r
 \r
-    
+    \r
     res.CurrentSign = CurrentUniverseSign;\r
     res.AccumColor  = Result;\r
 \r
 \r
     if (Result.a > 0.99) {\r
-        
+        \r
         res.Status = 3.0; \r
         res.EscapeDir = vec3(0.0); \r
         res.FreqShift = 0.0;\r
     } \r
     else if (bWaitCalBack) {\r
-        
+        \r
         res.EscapeDir = LocalToWorldRot * normalize(RayDir);\r
         res.FreqShift = clamp(1.0 / max(1e-4, E_conserved), 1.0/2.0, 10.0); \r
         \r
-        if (CurrentUniverseSign  > 0.0) res.Status = 1.0; 
-        else res.Status = 2.0; 
+        if (CurrentUniverseSign  > 0.0) res.Status = 1.0; \r
+        else res.Status = 2.0; \r
     } \r
     else {\r
-        
+        \r
         res.Status = 0.0; \r
         res.EscapeDir = vec3(0.0);\r
         res.FreqShift = 0.0;\r
@@ -2506,9 +2506,9 @@ void mainImage( out vec4 FragColor, in vec2 FragCoord )\r
     FragColor = (iBlendWeight) * FinalColor + (1.0 - iBlendWeight) * PrevColor;\r
 }\r
 \r
-`,dr=`// Utility math/noise helpers used by accretion/jets and sampling jitter.
-float RandomStep(vec2 Input, float Seed)
-{
+`,dr=`// Utility math/noise helpers used by accretion/jets and sampling jitter.\r
+float RandomStep(vec2 Input, float Seed)\r
+{\r
     return fract(sin(dot(Input + fract(11.4514 * sin(Seed)), vec2(12.9898, 78.233))) * 43758.5453);\r
 }\r
 \r
@@ -2517,7 +2517,7 @@ float CubicInterpolate(float x)\r
     return 3.0 * pow(x, 2.0) - 2.0 * pow(x, 3.0);\r
 }\r
 \r
-float PerlinNoise(vec3 Position)
+float PerlinNoise(vec3 Position)\r
 {\r
     vec3 PosInt   = floor(Position);\r
     vec3 PosFloat = fract(Position);\r
@@ -2593,62 +2593,62 @@ float Shape(float x, float Alpha, float Beta)\r
     return k * pow(x, Alpha) * pow(1.0 - x, Beta);\r
 }\r
 \r
-`,ur=`// Cite:
-// - https://zhuanlan.zhihu.com/p/2003513260645830673
-// - https://github.com/baopinshui/NPGS/blob/master/NPGS/Sources/Engine/Shaders/BlackHole_common.glsl
-// This module is the central parameter/config surface used by scene-color.
-#define iHistoryTex iChannel3
+`,ur=`// Cite:\r
+// - https://zhuanlan.zhihu.com/p/2003513260645830673\r
+// - https://github.com/baopinshui/NPGS/blob/master/NPGS/Sources/Engine/Shaders/BlackHole_common.glsl\r
+// This module is the central parameter/config surface used by scene-color.\r
+#define iHistoryTex iChannel3\r
 \r
 \r
 #define iFovRadians  60.0 * 0.01745329\r
-#define iGrid           0      
-#define iObserverMode   0      
+#define iGrid           0      \r
+#define iObserverMode   0      \r
 \r
-#define iBlackHoleTime          (2.0*iTime)  
-#define iBlackHoleMassSol       (1e7)     
-#define iSpin                   0.99      
-#define iQ                      0.0      
+#define iBlackHoleTime          (2.0*iTime)  \r
+#define iBlackHoleMassSol       (1e7)     \r
+#define iSpin                   0.99      \r
+#define iQ                      0.0      \r
 \r
-#define iMu                     1.0      
-#define iAccretionRate          (5e-4)      
+#define iMu                     1.0      \r
+#define iAccretionRate          (5e-4)      \r
 \r
-#define iInterRadiusRs          1.5      
-#define iOuterRadiusRs          25.0     
-#define iThinRs                 0.75     
-#define iHopper                 0.24      
-#define iBrightmut              1.0      
-#define iDarkmut                0.5     
-#define iReddening              0.3      
-#define iSaturation             0.5      
+#define iInterRadiusRs          1.5      \r
+#define iOuterRadiusRs          25.0     \r
+#define iThinRs                 0.75     \r
+#define iHopper                 0.24      \r
+#define iBrightmut              1.0      \r
+#define iDarkmut                0.5     \r
+#define iReddening              0.3      \r
+#define iSaturation             0.5      \r
 #define iBlackbodyIntensityExponent 0.5\r
 #define iRedShiftColorExponent      3.0\r
 #define iRedShiftIntensityExponent  4.0\r
 \r
-#define iPhotonRingBoost             7.0 
-#define iPhotonRingColorTempBoost    2.0 
-#define iBoostRot                    0.75 
+#define iPhotonRingBoost             7.0 \r
+#define iPhotonRingColorTempBoost    2.0 \r
+#define iBoostRot                    0.75 \r
 \r
 #define iJetRedShiftIntensityExponent 2.0\r
 #define iJetBrightmut           1.0\r
 #define iJetSaturation          0.0\r
 #define iJetShiftMax            3.0\r
 \r
-#define ENABLE_HEAT_HAZE        1       
-#define HAZE_STRENGTH           0.03    
-#define HAZE_SCALE              5.2     
-#define HAZE_DENSITY_THRESHOLD  0.1     
-#define HAZE_LAYER_THICKNESS    0.8     
-#define HAZE_RADIAL_EXPAND      0.8     
-#define HAZE_ROT_SPEED          0.2     
-#define HAZE_FLOW_SPEED         0.15     
-#define HAZE_PROBE_STEPS        12      
-#define HAZE_STEP_SIZE          0.06    
-#define HAZE_DEBUG_MASK         0       
-#define HAZE_DEBUG_VECTOR       0       
+#define ENABLE_HEAT_HAZE        1       \r
+#define HAZE_STRENGTH           0.03    \r
+#define HAZE_SCALE              5.2     \r
+#define HAZE_DENSITY_THRESHOLD  0.1     \r
+#define HAZE_LAYER_THICKNESS    0.8     \r
+#define HAZE_RADIAL_EXPAND      0.8     \r
+#define HAZE_ROT_SPEED          0.2     \r
+#define HAZE_FLOW_SPEED         0.15     \r
+#define HAZE_PROBE_STEPS        12      \r
+#define HAZE_STEP_SIZE          0.06    \r
+#define HAZE_DEBUG_MASK         0       \r
+#define HAZE_DEBUG_VECTOR       0       \r
 #define HAZE_DISK_DENSITY_REF   (iBrightmut * 30.0) \r
 #define HAZE_JET_DENSITY_REF    (iJetBrightmut * 1.0)\r
 \r
-#define iBlendWeight            0.5      
+#define iBlendWeight            0.5      \r
 \r
 \r
 vec3 FragUvToDir(vec2 FragUv, float Fov, vec2 NdcResolution)\r
@@ -2688,11 +2688,11 @@ const float kGravityConstant = 6.6743e-11;\r
 const float kSpeedOfLight    = 299792458.0;\r
 const float kSolarMass       = 1.9884e30;\r
 \r
-`,mr=`// Core spacetime math and geodesic stepping primitives.
-const float CONST_M = 0.5; 
-const float EPSILON = 1e-6;
+`,mr=`// Core spacetime math and geodesic stepping primitives.\r
+const float CONST_M = 0.5; \r
+const float EPSILON = 1e-6;\r
 \r
-
+\r
 \r
 float GetKeplerianAngularVelocity(float Radius, float Rs, float PhysicalSpinA, float PhysicalQ) \r
 {\r
@@ -2704,13 +2704,13 @@ float GetKeplerianAngularVelocity(float Radius, float Rs, float PhysicalSpinA, f
     return sqrt_Term / max(EPSILON, denominator);\r
 }\r
 \r
-
+\r
 float KerrSchildRadius(vec3 p, float PhysicalSpinA, float r_sign) {\r
     float r_sign_len = r_sign * length(p);\r
     if (PhysicalSpinA == 0.0) return r_sign_len; \r
 \r
     float a2 = PhysicalSpinA * PhysicalSpinA;\r
-    float rho2 = dot(p.xz, p.xz); 
+    float rho2 = dot(p.xz, p.xz); \r
     float y2 = p.y * p.y;\r
     \r
     float b = rho2 + y2 - a2;\r
@@ -2724,7 +2724,7 @@ float KerrSchildRadius(vec3 p, float PhysicalSpinA, float r_sign) {\r
     }\r
     return r_sign * sqrt(r2);\r
 }\r
-
+\r
 float GetZamoOmega(float r, float a, float Q, float y) {\r
     float r2 = r * r;\r
     float a2 = a * a;\r
@@ -2732,13 +2732,13 @@ float GetZamoOmega(float r, float a, float Q, float y) {\r
     float cos2 = min(1.0, y2 / (r2 + 1e-9)); \r
     float sin2 = 1.0 - cos2;\r
     \r
-    
+    \r
     float Delta = r2 - r + a2 + Q * Q;\r
     \r
-    
+    \r
     float Sigma = r2 + a2 * cos2;\r
     \r
-    
+    \r
     float A_metric = (r2 + a2) * (r2 + a2) - Delta * a2 * sin2;\r
 \r
 \r
@@ -2749,8 +2749,8 @@ float GetZamoOmega(float r, float a, float Q, float y) {\r
 vec2 IntersectKerrEllipsoid(vec3 O, vec3 D, float r, float a) {\r
     float r2 = r * r;\r
     float a2 = a * a;\r
-    float R_eq_sq = r2 + a2; 
-    float R_pol_sq = r2;     
+    float R_eq_sq = r2 + a2; \r
+    float R_pol_sq = r2;     \r
 \r
 \r
     float A = R_eq_sq;\r
@@ -2761,7 +2761,7 @@ vec2 IntersectKerrEllipsoid(vec3 O, vec3 D, float r, float a) {\r
     float qb = 2.0 * (B * (O.x * D.x + O.z * D.z) + A * O.y * D.y);\r
     float qc = B * (O.x * O.x + O.z * O.z) + A * O.y * O.y - A * B;\r
     \r
-    if (abs(qa) < 1e-9) return vec2(-1.0); 
+    if (abs(qa) < 1e-9) return vec2(-1.0); \r
     \r
     float disc = qb * qb - 4.0 * qa * qc;\r
     if (disc < 0.0) return vec2(-1.0);\r
@@ -2780,8 +2780,8 @@ struct KerrGeometry {\r
     float f;              \r
     vec3  grad_r;         \r
     vec3  grad_f;         \r
-    vec4  l_up;           
-    vec4  l_down;         
+    vec4  l_up;           \r
+    vec4  l_down;         \r
     float inv_r2_a2;\r
     float inv_den_f;      \r
     float num_f;          \r
@@ -2874,7 +2874,7 @@ void ComputeGeometryGradients(vec3 X, float PhysicalSpinA, float PhysicalQ, floa
 \r
 \r
 vec4 RaiseIndex(vec4 P_cov, KerrGeometry geo) {\r
-    
+    \r
     vec4 P_flat = vec4(P_cov.xyz, -P_cov.w); \r
 \r
     float L_dot_P = dot(geo.l_up, P_cov);\r
@@ -2884,7 +2884,7 @@ vec4 RaiseIndex(vec4 P_cov, KerrGeometry geo) {\r
 \r
 \r
 vec4 LowerIndex(vec4 P_contra, KerrGeometry geo) {\r
-    
+    \r
     vec4 P_flat = vec4(P_contra.xyz, -P_contra.w);\r
     \r
     float L_dot_P = dot(geo.l_down, P_contra);\r
@@ -2907,14 +2907,14 @@ vec4 GetInitialMomentum(\r
     KerrGeometry geo;\r
     ComputeGeometryScalars(X.xyz, PhysicalSpinA, PhysicalQ, GravityFade, universesign, geo);\r
 \r
-    
+    \r
     vec4 U_up;\r
-    
+    \r
     float g_tt = -1.0 + geo.f;\r
     float time_comp = 1.0 / sqrt(max(1e-9, -g_tt));\r
     U_up = vec4(0.0, 0.0, 0.0, time_comp);\r
     if (ObserverMode == 1) {\r
-        
+        \r
         float r = geo.r; float r2 = geo.r2; float a = PhysicalSpinA; float a2 = geo.a2;\r
         float y_phys = X.y; \r
         \r
@@ -2955,7 +2955,7 @@ vec4 GetInitialMomentum(\r
                  Ut = (-B - sqrtDet) / (2.0 * A);\r
             }\r
         }\r
-        U_up = mix(U_up,vec4(U_spatial, Ut),GravityFade);
+        U_up = mix(U_up,vec4(U_spatial, Ut),GravityFade);\r
 \r
     }\r
        \r
@@ -2965,7 +2965,7 @@ vec4 GetInitialMomentum(\r
     vec3 m_r = -normalize(X.xyz);\r
 \r
     vec3 WorldUp = vec3(0.0, 1.0, 0.0);\r
-    
+    \r
     if (abs(dot(m_r, WorldUp)) > 0.999) {\r
         WorldUp = vec3(1.0, 0.0, 0.0);\r
     }\r
@@ -2974,7 +2974,7 @@ vec4 GetInitialMomentum(\r
 \r
     vec3 m_theta = cross(m_phi, m_r); \r
 \r
-    
+    \r
     float k_r     = dot(RayDir, m_r);\r
     float k_theta = dot(RayDir, m_theta);\r
     float k_phi   = dot(RayDir, m_phi);\r
@@ -3004,19 +3004,19 @@ vec4 GetInitialMomentum(\r
 \r
     vec4 P_up = U_up - (k_r * e1 + k_theta * e2 + k_phi * e3);\r
 \r
-    
+    \r
     return LowerIndex(P_up, geo);\r
 }\r
 \r
 \r
 struct State {\r
-    vec4 X; 
-    vec4 P; 
+    vec4 X; \r
+    vec4 P; \r
 };\r
 \r
-
+\r
 void ApplyHamiltonianCorrection(inout vec4 P, vec4 X, float E, float PhysicalSpinA, float PhysicalQ, float fade, float r_sign) {\r
-    
+    \r
 \r
     P.w = -E; \r
     vec3 p = P.xyz;    \r
@@ -3051,24 +3051,24 @@ void ApplyHamiltonianCorrection(inout vec4 P, vec4 X, float E, float PhysicalSpi
             \r
             float k = (dist1 < dist2) ? k1 : k2;\r
             \r
-            P.xyz *= mix(k,1.0,clamp(abs(k-1.0)/0.1-1.0,0.0,1.0));
+            P.xyz *= mix(k,1.0,clamp(abs(k-1.0)/0.1-1.0,0.0,1.0));\r
         }\r
     }\r
 }\r
-
-State GetDerivativesAnalytic(State S, float PhysicalSpinA, float PhysicalQ, float fade, inout KerrGeometry geo) {
+\r
+State GetDerivativesAnalytic(State S, float PhysicalSpinA, float PhysicalQ, float fade, inout KerrGeometry geo) {\r
     State deriv;\r
     \r
     ComputeGeometryGradients(S.X.xyz, PhysicalSpinA, PhysicalQ, fade, geo);\r
     \r
-    
+    \r
     float l_dot_P = dot(geo.l_up.xyz, S.P.xyz) + geo.l_up.w * S.P.w;\r
     \r
-    
+    \r
     vec4 P_flat = vec4(S.P.xyz, -S.P.w); \r
     deriv.X = P_flat - geo.f * l_dot_P * geo.l_up;\r
     \r
-    
+    \r
     vec3 grad_A = (-2.0 * geo.r * geo.inv_r2_a2) * geo.inv_r2_a2 * geo.grad_r;\r
     \r
     float rx_az = geo.r * S.X.x - PhysicalSpinA * S.X.z;\r
@@ -3088,7 +3088,7 @@ State GetDerivativesAnalytic(State S, float PhysicalSpinA, float PhysicalQ, floa
     \r
     vec3 P_dot_grad_l = S.P.x * grad_lx + S.P.y * grad_ly + S.P.z * grad_lz;\r
     \r
-    
+    \r
     vec3 Force = 0.5 * ( (l_dot_P * l_dot_P) * geo.grad_f + (2.0 * geo.f * l_dot_P) * P_dot_grad_l );\r
     \r
     deriv.P = vec4(Force, 0.0); \r
@@ -3096,7 +3096,7 @@ State GetDerivativesAnalytic(State S, float PhysicalSpinA, float PhysicalQ, floa
     return deriv;\r
 }\r
 \r
-
+\r
 float GetIntermediateSign(vec4 StartX, vec4 CurrentX, float CurrentSign, float PhysicalSpinA) {\r
     if (StartX.y * CurrentX.y < 0.0) {\r
         float t = StartX.y / (StartX.y - CurrentX.y);\r
@@ -3108,13 +3108,13 @@ float GetIntermediateSign(vec4 StartX, vec4 CurrentX, float CurrentSign, float P
     return CurrentSign;\r
 }\r
 \r
-
+\r
 void StepGeodesicRK4_Optimized(\r
     inout vec4 X, inout vec4 P, \r
     float E, float dt, \r
     float PhysicalSpinA, float PhysicalQ, float fade, float r_sign, \r
     KerrGeometry geo0, \r
-    State k1 
+    State k1 \r
 ) {\r
     State s0; s0.X = X; s0.P = P;\r
 \r
@@ -3127,7 +3127,7 @@ void StepGeodesicRK4_Optimized(\r
     ComputeGeometryScalars(s1.X.xyz, PhysicalSpinA, PhysicalQ, fade, sign1, geo1);\r
     State k2 = GetDerivativesAnalytic(s1, PhysicalSpinA, PhysicalQ, fade, geo1);\r
 \r
-    
+    \r
     State s2; \r
     s2.X = s0.X + 0.5 * dt * k2.X; \r
     s2.P = s0.P + 0.5 * dt * k2.P;\r
@@ -3136,7 +3136,7 @@ void StepGeodesicRK4_Optimized(\r
     ComputeGeometryScalars(s2.X.xyz, PhysicalSpinA, PhysicalQ, fade, sign2, geo2);\r
     State k3 = GetDerivativesAnalytic(s2, PhysicalSpinA, PhysicalQ, fade, geo2);\r
 \r
-    
+    \r
     State s3; \r
     s3.X = s0.X + dt * k3.X; \r
     s3.P = s0.P + dt * k3.P;\r
@@ -3150,18 +3150,18 @@ void StepGeodesicRK4_Optimized(\r
 \r
     \r
     float finalSign = GetIntermediateSign(s0.X, finalX, r_sign, PhysicalSpinA);\r
-    if(finalSign>0.0){
+    if(finalSign>0.0){\r
     ApplyHamiltonianCorrection(finalP, finalX, E, PhysicalSpinA, PhysicalQ, fade, finalSign);\r
     }\r
     X = finalX;\r
     P = finalP;\r
 }\r
 \r
-`,hr=`// Shader orchestration manifest.
-// Format: @pass <id> <relative-path>
-@pass scene-color ./modules/passes/scene-color.frag
-@pass camera-state ./modules/passes/camera-state.frag
-@pass bloom-blur-horizontal ./modules/passes/bloom-blur-horizontal.frag
-@pass bloom-blur-vertical ./modules/passes/bloom-blur-vertical.frag
-@pass image ./modules/passes/image.frag
+`,hr=`// Shader orchestration manifest.\r
+// Format: @pass <id> <relative-path>\r
+@pass scene-color ./modules/passes/scene-color.frag\r
+@pass camera-state ./modules/passes/camera-state.frag\r
+@pass bloom-blur-horizontal ./modules/passes/bloom-blur-horizontal.frag\r
+@pass bloom-blur-vertical ./modules/passes/bloom-blur-vertical.frag\r
+@pass image ./modules/passes/image.frag\r
 `,gr=Object.assign({"./modules/blur/gaussian-blur-5tap.frag":tr,"./modules/camera-state/bloom-pyramid-sampling.frag":or,"./modules/camera-state/camera-state-packing.frag":ar,"./modules/camera-state/controls-input.frag":ir,"./modules/image/bloom-composite-pass.frag":sr,"./modules/passes/bloom-blur-horizontal.frag":E,"./modules/passes/bloom-blur-vertical.frag":A,"./modules/passes/camera-state.frag":z,"./modules/passes/image.frag":k,"./modules/passes/scene-color.frag":I,"./modules/runtime/shadertoy-uniforms.frag":D,"./modules/scene-color/accretion-and-jets.frag":lr,"./modules/scene-color/color-and-post.frag":cr,"./modules/scene-color/main.frag":fr,"./modules/scene-color/noise-and-utils.frag":dr,"./modules/scene-color/params-and-constants.frag":ur,"./modules/scene-color/relativity-core.frag":mr}),vr=Object.assign({"./modules/passes/bloom-blur-horizontal.frag":E,"./modules/passes/bloom-blur-vertical.frag":A,"./modules/passes/camera-state.frag":z,"./modules/passes/image.frag":k,"./modules/passes/scene-color.frag":I});function w(n){const r=n.split("/"),t=[];for(const e of r)if(!(!e||e===".")){if(e===".."){t.pop();continue}t.push(e)}return`./${t.join("/")}`}function pr(n,r){const t=n.split("/").slice(0,-1).join("/")||".";return w(`${t}/${r}`)}function _r(n){const r={},t=/^\s*@pass\s+([a-z0-9-]+)\s+(\.\/[^\s]+)\s*$/gim;for(const e of n.matchAll(t)){const o=e[1],i=w(e[2]);if(r[o])throw new Error(`Duplicate pass "${o}" in shader.frag manifest.`);r[o]=i}if(Object.keys(r).length===0)throw new Error("No passes declared in shader.frag manifest.");return r}function B(n,r,t=[]){return n.replace(/^\s*#include\s+"([^"]+)"\s*$/gm,(e,o)=>{const i=pr(r,o);if(t.includes(i))throw new Error(`Circular shader include detected: ${[...t,i].join(" -> ")}`);const l=gr[i];if(!l)throw new Error(`Missing shader include "${i}" referenced from "${r}".`);return B(l,i,[...t,i])})}const Rr=_r(hr),Sr=Object.fromEntries(Object.entries(Rr).map(([n,r])=>{const t=vr[r];if(!t)throw new Error(`Manifest pass "${n}" points to missing shader file "${r}".`);return[n,B(t,r)]})),L=document.getElementById("gl-canvas");if(!L)throw new Error("Canvas element '#gl-canvas' not found.");function yr(){const t=new URLSearchParams(window.location.search).get("preset")||void 0||g;return R[t]?t:(console.warn(`Unknown pass preset "${t}". Falling back to "${g}".`),g)}const H=yr(),Pr=J({canvas:L,passes:er(H),shaderSources:Sr});Pr.start();console.log("✓ Multi-buffer rendering system initialized");console.log(`Pass preset: ${H}`);console.log("Controls: WASD = Move, Mouse = Look, Q/E = Roll, R/F = Up/Down");
