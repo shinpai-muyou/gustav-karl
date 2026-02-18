@@ -2,13 +2,21 @@ import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { PASS_PRESETS } from "../src/pipeline/passes.config.js";
-import { preprocessShaderSource } from "../src/engine/gl/shaderCompiler.js";
+import { preprocessShaderSource as preprocessShaderSourceBase } from "../src/engine/gl/shaderPreprocess.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 const shadersDir = path.join(rootDir, "src", "shader");
 const shaderManifestPath = path.join(shadersDir, "shader.frag");
+const shaderUniformsPath = path.join(
+  rootDir,
+  "src",
+  "shader",
+  "modules",
+  "runtime",
+  "shadertoy-uniforms.frag"
+);
 
 const errors = [];
 
@@ -147,7 +155,7 @@ async function expandIncludes(filePath, source, stack = []) {
   return expanded;
 }
 
-async function validateShaderSource(passId, usedByPreset, manifest) {
+async function validateShaderSource(passId, usedByPreset, manifest, shadertoyUniforms) {
   const relPath = manifest[passId];
   if (!relPath) {
     errors.push(`Pass "${passId}" (preset "${usedByPreset}") not declared in shader manifest.`);
@@ -169,7 +177,7 @@ async function validateShaderSource(passId, usedByPreset, manifest) {
   await validateIncludes(shaderPath, rawSource);
 
   const expandedSource = await expandIncludes(shaderPath, rawSource);
-  const processed = preprocessShaderSource(expandedSource);
+  const processed = preprocessShaderSourceBase(expandedSource, shadertoyUniforms);
 
   if (!/void\s+main\s*\(/.test(processed)) {
     errors.push(`Shader "${passId}" does not produce a valid main() after preprocessing.`);
@@ -182,6 +190,7 @@ async function validateShaderSource(passId, usedByPreset, manifest) {
 }
 
 async function run() {
+  const shadertoyUniforms = await readFile(shaderUniformsPath, "utf8");
   const manifestSource = await readFile(shaderManifestPath, "utf8");
   const manifest = parseShaderManifest(manifestSource);
 
@@ -199,7 +208,7 @@ async function run() {
 
   await Promise.all(
     Array.from(uniquePassIds.entries()).map(([passId, presetName]) =>
-      validateShaderSource(passId, presetName, manifest)
+      validateShaderSource(passId, presetName, manifest, shadertoyUniforms)
     )
   );
 
