@@ -1,5 +1,5 @@
 // Bloom blur pass: vertical axis.
-#include "./modules/blur/gaussian-blur-5tap.frag"
+#include "../blur/gaussian-blur-5tap.frag"
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
 {

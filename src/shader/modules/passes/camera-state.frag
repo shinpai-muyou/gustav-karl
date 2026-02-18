@@ -1,9 +1,9 @@
 // Camera-state pass:
 // - Right-side bottom pixels store camera/state payload.
 // - Remaining pixels build bloom pyramid from scene-color input.
-#include "./modules/camera-state/controls-input.frag"
-#include "./modules/camera-state/bloom-pyramid-sampling.frag"
-#include "./modules/camera-state/camera-state-packing.frag"
+#include "../camera-state/controls-input.frag"
+#include "../camera-state/bloom-pyramid-sampling.frag"
+#include "../camera-state/camera-state-packing.frag"
 
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )

@@ -1,4 +1,4 @@
-(function(){const r=document.createElement("link").relList;if(r&&r.supports&&r.supports("modulepreload"))return;for(const o of document.querySelectorAll('link[rel="modulepreload"]'))e(o);new MutationObserver(o=>{for(const i of o)if(i.type==="childList")for(const s of i.addedNodes)s.tagName==="LINK"&&s.rel==="modulepreload"&&e(s)}).observe(document,{childList:!0,subtree:!0});function t(o){const i={};return o.integrity&&(i.integrity=o.integrity),o.referrerPolicy&&(i.referrerPolicy=o.referrerPolicy),o.crossOrigin==="use-credentials"?i.credentials="include":o.crossOrigin==="anonymous"?i.credentials="omit":i.credentials="same-origin",i}function e(o){if(o.ep)return;o.ep=!0;const i=t(o);fetch(o.href,i)}})();const L=`
+(function(){const r=document.createElement("link").relList;if(r&&r.supports&&r.supports("modulepreload"))return;for(const o of document.querySelectorAll('link[rel="modulepreload"]'))e(o);new MutationObserver(o=>{for(const i of o)if(i.type==="childList")for(const l of i.addedNodes)l.tagName==="LINK"&&l.rel==="modulepreload"&&e(l)}).observe(document,{childList:!0,subtree:!0});function t(o){const i={};return o.integrity&&(i.integrity=o.integrity),o.referrerPolicy&&(i.referrerPolicy=o.referrerPolicy),o.crossOrigin==="use-credentials"?i.credentials="include":o.crossOrigin==="anonymous"?i.credentials="omit":i.credentials="same-origin",i}function e(o){if(o.ep)return;o.ep=!0;const i=t(o);fetch(o.href,i)}})();const U=`
 // Shadertoy uniforms
 uniform vec3 iResolution;           // viewport resolution (in pixels)
 uniform float iTime;                // shader playback time (in seconds)
@@ -10,12 +10,12 @@ uniform sampler2D iChannel1;        // input channel 1
 uniform sampler2D iChannel2;        // input channel 2
 uniform sampler2D iChannel3;        // input channel 3
 uniform vec3 iChannelResolution[4]; // channel resolution (in pixels)
-`,H=`#version 300 es
+`,N=`#version 300 es
 in vec2 aPosition;
 void main() {
   gl_Position = vec4(aPosition, 0.0, 1.0);
 }
-`;function G(n){let r=n;r=r.replace(/^\/\/#version\s+\d+.*$/gm,""),r=r.replace(/^#version\s+\d+.*$/gm,""),r=r.replace(/^\/\/#pragma.*$/gm,""),r=r.replace(/^\/\/#extension.*$/gm,""),r=r.replace(/^#pragma.*$/gm,""),r=r.replace(/^#extension.*$/gm,"");const t=r.match(/void\s+mainImage\s*\(\s*out\s+vec4\s+(\w+)\s*,\s*in\s+vec2\s+(\w+)\s*\)\s*\{/i);if(t){const e=t[1],i=`out vec4 fragColor;
+`;function X(n){let r=n;r=r.replace(/^\/\/#version\s+\d+.*$/gm,""),r=r.replace(/^#version\s+\d+.*$/gm,""),r=r.replace(/^\/\/#pragma.*$/gm,""),r=r.replace(/^\/\/#extension.*$/gm,""),r=r.replace(/^#pragma.*$/gm,""),r=r.replace(/^#extension.*$/gm,"");const t=r.match(/void\s+mainImage\s*\(\s*out\s+vec4\s+(\w+)\s*,\s*in\s+vec2\s+(\w+)\s*\)\s*\{/i);if(t){const e=t[1],i=`out vec4 fragColor;
 void main()
 {
     // Shadertoy parameter mapping
@@ -26,10 +26,10 @@ precision highp float;
 precision highp int;
 precision highp sampler2D;
 
-${L}
-${r}`}function T(n,r,t){const e=n.createShader(r),o=G(t);if(n.shaderSource(e,o),n.compileShader(e),!n.getShaderParameter(e,n.COMPILE_STATUS)){const i=n.getShaderInfoLog(e)||"Shader compile failed.",d=o.split(`
+${U}
+${r}`}function T(n,r,t){const e=n.createShader(r),o=X(t);if(n.shaderSource(e,o),n.compileShader(e),!n.getShaderParameter(e,n.COMPILE_STATUS)){const i=n.getShaderInfoLog(e)||"Shader compile failed.",d=o.split(`
 `).slice(0,100).map((f,h)=>`${h+1}: ${f}`).join(`
-`);throw console.error("=== SHADER COMPILATION ERROR ==="),console.error(i),console.error("=== First 100 lines of processed source ==="),console.error(d),n.deleteShader(e),new Error(i)}return e}function F(n,r,t){const e=n.createProgram();if(n.attachShader(e,r),n.attachShader(e,t),n.linkProgram(e),!n.getProgramParameter(e,n.LINK_STATUS)){const o=n.getProgramInfoLog(e)||"Program link failed.";throw n.deleteProgram(e),new Error(o)}return e}function O(n,r){return{iResolution:n.getUniformLocation(r,"iResolution"),iTime:n.getUniformLocation(r,"iTime"),iTimeDelta:n.getUniformLocation(r,"iTimeDelta"),iFrame:n.getUniformLocation(r,"iFrame"),iMouse:n.getUniformLocation(r,"iMouse"),iChannel0:n.getUniformLocation(r,"iChannel0"),iChannel1:n.getUniformLocation(r,"iChannel1"),iChannel2:n.getUniformLocation(r,"iChannel2"),iChannel3:n.getUniformLocation(r,"iChannel3")}}function M(n){const r=n.createBuffer();return n.bindBuffer(n.ARRAY_BUFFER,r),n.bufferData(n.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),n.STATIC_DRAW),r}function U(n,r,t){const e=n.getAttribLocation(r,"aPosition");n.bindBuffer(n.ARRAY_BUFFER,t),n.enableVertexAttribArray(e),n.vertexAttribPointer(e,2,n.FLOAT,!1,0,0)}class N{constructor(r){this.gl=r,this.keys=new Uint8Array(256*4),this.texture=r.createTexture(),r.bindTexture(r.TEXTURE_2D,this.texture),r.texImage2D(r.TEXTURE_2D,0,r.RGBA,256,1,0,r.RGBA,r.UNSIGNED_BYTE,this.keys),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MIN_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MAG_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_S,r.CLAMP_TO_EDGE),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_T,r.CLAMP_TO_EDGE),this.setupListeners()}setupListeners(){window.addEventListener("keydown",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=255)}),window.addEventListener("keyup",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=0)})}update(){this.gl.bindTexture(this.gl.TEXTURE_2D,this.texture),this.gl.texSubImage2D(this.gl.TEXTURE_2D,0,0,0,256,1,this.gl.RGBA,this.gl.UNSIGNED_BYTE,this.keys)}getTexture(){return this.texture}}function X(n){const r={x:0,y:0,clickX:0,clickY:0,isDown:!1};function t(e){const o=n.getBoundingClientRect(),i=window.devicePixelRatio||1,s=(e.clientX-o.left)*i,d=(o.height-(e.clientY-o.top))*i;return{x:s,y:d}}return n.addEventListener("mousemove",e=>{const o=t(e);r.x=o.x,r.y=o.y}),n.addEventListener("mousedown",e=>{r.isDown=!0;const o=t(e);r.clickX=o.x,r.clickY=o.y}),n.addEventListener("mouseup",()=>{r.isDown=!1}),n.addEventListener("mouseleave",()=>{r.isDown=!1}),r}class W{constructor(r,t,e,o=!1){this.gl=r,this.width=t,this.height=e,this.doubleBuffered=o,this.textureA=this.createTexture(t,e),this.framebufferA=this.createFramebuffer(this.textureA),o&&(this.textureB=this.createTexture(t,e),this.framebufferB=this.createFramebuffer(this.textureB),this.currentBuffer=0)}createTexture(r,t){const e=this.gl.createTexture();return this.gl.bindTexture(this.gl.TEXTURE_2D,e),this.gl.texImage2D(this.gl.TEXTURE_2D,0,this.gl.RGBA16F,r,t,0,this.gl.RGBA,this.gl.FLOAT,null),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MIN_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MAG_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_S,this.gl.CLAMP_TO_EDGE),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_T,this.gl.CLAMP_TO_EDGE),e}createFramebuffer(r){const t=this.gl.createFramebuffer();this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,t),this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER,this.gl.COLOR_ATTACHMENT0,this.gl.TEXTURE_2D,r,0);const e=this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);if(e!==this.gl.FRAMEBUFFER_COMPLETE)throw new Error(`Framebuffer not complete: ${e}`);return this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null),t}getReadTexture(){return this.doubleBuffered?this.currentBuffer===0?this.textureA:this.textureB:this.textureA}getWriteFramebuffer(){return this.doubleBuffered?this.currentBuffer===0?this.framebufferB:this.framebufferA:this.framebufferA}swap(){this.doubleBuffered&&(this.currentBuffer=1-this.currentBuffer)}resize(r,t){this.width===r&&this.height===t||(this.width=r,this.height=t,this.gl.deleteTexture(this.textureA),this.gl.deleteFramebuffer(this.framebufferA),this.textureA=this.createTexture(r,t),this.framebufferA=this.createFramebuffer(this.textureA),this.doubleBuffered&&(this.gl.deleteTexture(this.textureB),this.gl.deleteFramebuffer(this.framebufferB),this.textureB=this.createTexture(r,t),this.framebufferB=this.createFramebuffer(this.textureB)))}}function b(n){const r=window.devicePixelRatio||1,t=Math.floor(n.clientWidth*r),e=Math.floor(n.clientHeight*r);return n.width!==t||n.height!==e?(n.width=t,n.height=e,!0):!1}function q({canvas:n,shaderSources:r,passes:t}){const e=n.getContext("webgl2");if(!e)throw new Error("WebGL2 not supported in this browser.");e.getExtension("EXT_color_buffer_float")||console.warn("EXT_color_buffer_float not supported, falling back to RGBA16F");const i=T(e,e.VERTEX_SHADER,H),s=M(e),d=new N(e),f=X(n),h={},S={};Object.entries(r).forEach(([a,l])=>{const u=T(e,e.FRAGMENT_SHADER,l);h[a]=F(e,i,u),S[a]=O(e,h[a])});const z=Array.from(new Map(t.filter(a=>a.targetId).map(a=>[a.targetId,{id:a.targetId,doubleBuffered:a.doubleBuffered}])).values());b(n);const v={};z.forEach(({id:a,doubleBuffered:l})=>{v[a]=new W(e,n.width,n.height,l)});function k(a,l){a.iResolution&&e.uniform3f(a.iResolution,n.width,n.height,1),a.iTime&&e.uniform1f(a.iTime,l.time),a.iTimeDelta&&e.uniform1f(a.iTimeDelta,l.timeDelta),a.iFrame&&e.uniform1i(a.iFrame,l.frameCount),a.iMouse&&e.uniform4f(a.iMouse,f.x,f.y,f.isDown?f.clickX:0,f.isDown?f.clickY:0)}function I(a){if(!a)return null;if(a==="keyboard")return d.getTexture();if(a.endsWith(".read")){const l=a.replace(".read","");return v[l].getReadTexture()}throw new Error(`Unknown channel ref: ${a}`)}function B(a,l){const u=h[a.id],p=S[a.id],c=a.targetId?v[a.targetId]:null,w=c?c.getWriteFramebuffer():null;e.bindFramebuffer(e.FRAMEBUFFER,w),e.viewport(0,0,n.width,n.height),e.useProgram(u),U(e,u,s),k(p,l);for(let m=0;m<4;m++){const x=I(a.channels[m]),C=p[`iChannel${m}`];x&&C&&(e.activeTexture(e.TEXTURE0+m),e.bindTexture(e.TEXTURE_2D,x),e.uniform1i(C,m))}e.drawArrays(e.TRIANGLES,0,3),c&&c.doubleBuffered&&c.swap()}let y=0,_=0;function P(a){const l=a*.001,u=_>0?l-_:.016;_=l,b(n)&&Object.values(v).forEach(c=>{c.resize(n.width,n.height)}),d.update();const p={time:l,timeDelta:u,frameCount:y};t.forEach(c=>{B(c,p)}),y+=1,requestAnimationFrame(P)}return{start(){requestAnimationFrame(P)}}}const Q=[{id:"scene-color",targetId:"scene-color",doubleBuffered:!0,channels:[null,null,"camera-state.read","scene-color.read"]},{id:"camera-state",targetId:"camera-state",doubleBuffered:!0,channels:["scene-color.read","camera-state.read",null,"keyboard"]},{id:"bloom-blur-horizontal",targetId:"bloom-blur-horizontal",doubleBuffered:!1,channels:["camera-state.read",null,null,null]},{id:"bloom-blur-vertical",targetId:"bloom-blur-vertical",doubleBuffered:!1,channels:["bloom-blur-horizontal.read",null,null,null]},{id:"image",targetId:null,doubleBuffered:!1,channels:["scene-color.read",null,null,"bloom-blur-vertical.read"]}],K=[{id:"scene-color",targetId:"scene-color",doubleBuffered:!0,channels:[null,null,null,"scene-color.read"]},{id:"image",targetId:null,doubleBuffered:!1,channels:["scene-color.read",null,null,null]}],V=[{id:"image",targetId:null,doubleBuffered:!1,channels:[null,null,null,null]}],R={"bloom-chain":Q,feedback:K,"single-pass":V},g="bloom-chain";function Y(n=g){return R[n]??R[g]}const Z=`// Shared 5-tap Gaussian blur kernel used by horizontal/vertical bloom passes.
+`);throw console.error("=== SHADER COMPILATION ERROR ==="),console.error(i),console.error("=== First 100 lines of processed source ==="),console.error(d),n.deleteShader(e),new Error(i)}return e}function W(n,r,t){const e=n.createProgram();if(n.attachShader(e,r),n.attachShader(e,t),n.linkProgram(e),!n.getProgramParameter(e,n.LINK_STATUS)){const o=n.getProgramInfoLog(e)||"Program link failed.";throw n.deleteProgram(e),new Error(o)}return e}function q(n,r){return{iResolution:n.getUniformLocation(r,"iResolution"),iTime:n.getUniformLocation(r,"iTime"),iTimeDelta:n.getUniformLocation(r,"iTimeDelta"),iFrame:n.getUniformLocation(r,"iFrame"),iMouse:n.getUniformLocation(r,"iMouse"),iChannel0:n.getUniformLocation(r,"iChannel0"),iChannel1:n.getUniformLocation(r,"iChannel1"),iChannel2:n.getUniformLocation(r,"iChannel2"),iChannel3:n.getUniformLocation(r,"iChannel3")}}function Q(n){const r=n.createBuffer();return n.bindBuffer(n.ARRAY_BUFFER,r),n.bufferData(n.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),n.STATIC_DRAW),r}function K(n,r,t){const e=n.getAttribLocation(r,"aPosition");n.bindBuffer(n.ARRAY_BUFFER,t),n.enableVertexAttribArray(e),n.vertexAttribPointer(e,2,n.FLOAT,!1,0,0)}class V{constructor(r){this.gl=r,this.keys=new Uint8Array(256*4),this.texture=r.createTexture(),r.bindTexture(r.TEXTURE_2D,this.texture),r.texImage2D(r.TEXTURE_2D,0,r.RGBA,256,1,0,r.RGBA,r.UNSIGNED_BYTE,this.keys),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MIN_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_MAG_FILTER,r.NEAREST),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_S,r.CLAMP_TO_EDGE),r.texParameteri(r.TEXTURE_2D,r.TEXTURE_WRAP_T,r.CLAMP_TO_EDGE),this.setupListeners()}setupListeners(){window.addEventListener("keydown",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=255)}),window.addEventListener("keyup",r=>{const t=r.keyCode;t<256&&(this.keys[t*4]=0)})}update(){this.gl.bindTexture(this.gl.TEXTURE_2D,this.texture),this.gl.texSubImage2D(this.gl.TEXTURE_2D,0,0,0,256,1,this.gl.RGBA,this.gl.UNSIGNED_BYTE,this.keys)}getTexture(){return this.texture}}function Y(n){const r={x:0,y:0,clickX:0,clickY:0,isDown:!1};function t(e){const o=n.getBoundingClientRect(),i=window.devicePixelRatio||1,l=(e.clientX-o.left)*i,d=(o.height-(e.clientY-o.top))*i;return{x:l,y:d}}return n.addEventListener("mousemove",e=>{const o=t(e);r.x=o.x,r.y=o.y}),n.addEventListener("mousedown",e=>{r.isDown=!0;const o=t(e);r.clickX=o.x,r.clickY=o.y}),n.addEventListener("mouseup",()=>{r.isDown=!1}),n.addEventListener("mouseleave",()=>{r.isDown=!1}),r}class Z{constructor(r,t,e,o=!1){this.gl=r,this.width=t,this.height=e,this.doubleBuffered=o,this.textureA=this.createTexture(t,e),this.framebufferA=this.createFramebuffer(this.textureA),o&&(this.textureB=this.createTexture(t,e),this.framebufferB=this.createFramebuffer(this.textureB),this.currentBuffer=0)}createTexture(r,t){const e=this.gl.createTexture();return this.gl.bindTexture(this.gl.TEXTURE_2D,e),this.gl.texImage2D(this.gl.TEXTURE_2D,0,this.gl.RGBA16F,r,t,0,this.gl.RGBA,this.gl.FLOAT,null),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MIN_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_MAG_FILTER,this.gl.LINEAR),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_S,this.gl.CLAMP_TO_EDGE),this.gl.texParameteri(this.gl.TEXTURE_2D,this.gl.TEXTURE_WRAP_T,this.gl.CLAMP_TO_EDGE),e}createFramebuffer(r){const t=this.gl.createFramebuffer();this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,t),this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER,this.gl.COLOR_ATTACHMENT0,this.gl.TEXTURE_2D,r,0);const e=this.gl.checkFramebufferStatus(this.gl.FRAMEBUFFER);if(e!==this.gl.FRAMEBUFFER_COMPLETE)throw new Error(`Framebuffer not complete: ${e}`);return this.gl.bindFramebuffer(this.gl.FRAMEBUFFER,null),t}getReadTexture(){return this.doubleBuffered?this.currentBuffer===0?this.textureA:this.textureB:this.textureA}getWriteFramebuffer(){return this.doubleBuffered?this.currentBuffer===0?this.framebufferB:this.framebufferA:this.framebufferA}swap(){this.doubleBuffered&&(this.currentBuffer=1-this.currentBuffer)}resize(r,t){this.width===r&&this.height===t||(this.width=r,this.height=t,this.gl.deleteTexture(this.textureA),this.gl.deleteFramebuffer(this.framebufferA),this.textureA=this.createTexture(r,t),this.framebufferA=this.createFramebuffer(this.textureA),this.doubleBuffered&&(this.gl.deleteTexture(this.textureB),this.gl.deleteFramebuffer(this.framebufferB),this.textureB=this.createTexture(r,t),this.framebufferB=this.createFramebuffer(this.textureB)))}}function b(n){const r=window.devicePixelRatio||1,t=Math.floor(n.clientWidth*r),e=Math.floor(n.clientHeight*r);return n.width!==t||n.height!==e?(n.width=t,n.height=e,!0):!1}function j({canvas:n,shaderSources:r,passes:t}){const e=n.getContext("webgl2");if(!e)throw new Error("WebGL2 not supported in this browser.");e.getExtension("EXT_color_buffer_float")||console.warn("EXT_color_buffer_float not supported, falling back to RGBA16F");const i=T(e,e.VERTEX_SHADER,N),l=Q(e),d=new V(e),f=Y(n),h={},S={};Object.entries(r).forEach(([a,s])=>{const u=T(e,e.FRAGMENT_SHADER,s);h[a]=W(e,i,u),S[a]=q(e,h[a])});const H=Array.from(new Map(t.filter(a=>a.targetId).map(a=>[a.targetId,{id:a.targetId,doubleBuffered:a.doubleBuffered}])).values());b(n);const v={};H.forEach(({id:a,doubleBuffered:s})=>{v[a]=new Z(e,n.width,n.height,s)});function G(a,s){a.iResolution&&e.uniform3f(a.iResolution,n.width,n.height,1),a.iTime&&e.uniform1f(a.iTime,s.time),a.iTimeDelta&&e.uniform1f(a.iTimeDelta,s.timeDelta),a.iFrame&&e.uniform1i(a.iFrame,s.frameCount),a.iMouse&&e.uniform4f(a.iMouse,f.x,f.y,f.isDown?f.clickX:0,f.isDown?f.clickY:0)}function F(a){if(!a)return null;if(a==="keyboard")return d.getTexture();if(a.endsWith(".read")){const s=a.replace(".read","");return v[s].getReadTexture()}throw new Error(`Unknown channel ref: ${a}`)}function O(a,s){const u=h[a.id],p=S[a.id],c=a.targetId?v[a.targetId]:null,M=c?c.getWriteFramebuffer():null;e.bindFramebuffer(e.FRAMEBUFFER,M),e.viewport(0,0,n.width,n.height),e.useProgram(u),K(e,u,l),G(p,s);for(let m=0;m<4;m++){const x=F(a.channels[m]),C=p[`iChannel${m}`];x&&C&&(e.activeTexture(e.TEXTURE0+m),e.bindTexture(e.TEXTURE_2D,x),e.uniform1i(C,m))}e.drawArrays(e.TRIANGLES,0,3),c&&c.doubleBuffered&&c.swap()}let y=0,_=0;function P(a){const s=a*.001,u=_>0?s-_:.016;_=s,b(n)&&Object.values(v).forEach(c=>{c.resize(n.width,n.height)}),d.update();const p={time:s,timeDelta:u,frameCount:y};t.forEach(c=>{O(c,p)}),y+=1,requestAnimationFrame(P)}return{start(){requestAnimationFrame(P)}}}const J=[{id:"scene-color",targetId:"scene-color",doubleBuffered:!0,channels:[null,null,"camera-state.read","scene-color.read"]},{id:"camera-state",targetId:"camera-state",doubleBuffered:!0,channels:["scene-color.read","camera-state.read",null,"keyboard"]},{id:"bloom-blur-horizontal",targetId:"bloom-blur-horizontal",doubleBuffered:!1,channels:["camera-state.read",null,null,null]},{id:"bloom-blur-vertical",targetId:"bloom-blur-vertical",doubleBuffered:!1,channels:["bloom-blur-horizontal.read",null,null,null]},{id:"image",targetId:null,doubleBuffered:!1,channels:["scene-color.read",null,null,"bloom-blur-vertical.read"]}],$=[{id:"scene-color",targetId:"scene-color",doubleBuffered:!0,channels:[null,null,null,"scene-color.read"]},{id:"image",targetId:null,doubleBuffered:!1,channels:["scene-color.read",null,null,null]}],rr=[{id:"image",targetId:null,doubleBuffered:!1,channels:[null,null,null,null]}],R={"bloom-chain":J,feedback:$,"single-pass":rr},g="bloom-chain";function nr(n=g){return R[n]??R[g]}const er=`// Shared 5-tap Gaussian blur kernel used by horizontal/vertical bloom passes.
 vec3 sampleBlurSource(vec2 coord)
 {
     return texture(iChannel0, coord).rgb;
@@ -72,7 +72,7 @@ vec3 applyGaussianBlur5Tap(vec2 uv, vec2 axisScale)
     return color / weightSum;
 }\r
 \r
-`,j=`// Downsample/oversample helpers for bloom pyramid construction.
+`,tr=`// Downsample/oversample helpers for bloom pyramid construction.
 vec3 ColorFetch(vec2 coord)
 {
 	return texture(iChannel0, coord).rgb;
@@ -157,7 +157,7 @@ vec2 CalcOffset(float octave)
 	return offset;
 }\r
 \r
-`,J=`// Packs camera basis/position/time into reserved texels for scene-color pass reads.
+`,or=`// Packs camera basis/position/time into reserved texels for scene-color pass reads.
 #define OFFSET_UP    1  
 #define OFFSET_RIGHT 2  
 #define OFFSET_POS   3  
@@ -257,7 +257,7 @@ void writeCameraStateTexel(out vec4 fragColor, in vec2 fragCoord)
     if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, uniSign, 0.0, 1.0);
 }\r
 \r
-`,$=`// Input constants and camera movement tuning.
+`,ar=`// Input constants and camera movement tuning.
 #define iSpin 0.99   
 const float CONST_M = 0.5;
 
@@ -292,7 +292,7 @@ mat3 rotAxis(vec3 axis, float angle) {
     );
 }\r
 \r
-`,rr=`// Cite:
+`,ir=`// Cite:
 // - "Gargantua With HDR Bloom" by sonicether (adapted bloom chain/composite logic).
 // Final composite helpers: bloom reconstruction + tone/color mapping.
 vec3 saturate(vec3 x)
@@ -394,7 +394,108 @@ vec3 GetBloom(vec2 coord)
 	return bloom;
 }\r
 \r
-`,nr=`// Volumetric accretion disk, jet lighting, and heat-haze sampling.
+`,D=`// Bloom blur pass: horizontal axis.
+#include "../blur/gaussian-blur-5tap.frag"
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
+{
+    vec2 uv = fragCoord.xy / iResolution.xy;
+    vec3 color = vec3(0.0);
+
+    if (uv.x < 0.52) {
+        color = applyGaussianBlur5Tap(uv, vec2(0.5, 0.0));
+    }
+
+    fragColor = vec4(color, 1.0);
+}\r
+\r
+`,E=`// Bloom blur pass: vertical axis.
+#include "../blur/gaussian-blur-5tap.frag"
+
+void mainImage(out vec4 fragColor, in vec2 fragCoord)
+{
+    vec2 uv = fragCoord.xy / iResolution.xy;
+    vec3 color = vec3(0.0);
+
+    if (uv.x < 0.52) {
+        color = applyGaussianBlur5Tap(uv, vec2(0.0, 0.5));
+    }
+
+    fragColor = vec4(color, 1.0);
+}\r
+\r
+`,A=`// Camera-state pass:
+// - Right-side bottom pixels store camera/state payload.
+// - Remaining pixels build bloom pyramid from scene-color input.
+#include "../camera-state/controls-input.frag"
+#include "../camera-state/bloom-pyramid-sampling.frag"
+#include "../camera-state/camera-state-packing.frag"
+\r
+\r
+void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
+{\r
+    
+    
+    bool isStateStoragePixel = (fragCoord.y < 1.0 && fragCoord.x > (iResolution.x - 8.5));
+
+    if (isStateStoragePixel) {
+        writeCameraStateTexel(fragColor, fragCoord);
+    } else {\r
+        
+        vec2 uv = fragCoord.xy / iResolution.xy;\r
+        vec3 color = vec3(0.0);\r
+        \r
+        color += Grab1(uv, 1.0, vec2(0.0,  0.0)   );\r
+        color += Grab4(uv, 2.0, vec2(CalcOffset(1.0))   );\r
+        color += Grab8(uv, 3.0, vec2(CalcOffset(2.0))   );\r
+        color += Grab16(uv, 4.0, vec2(CalcOffset(3.0))   );\r
+        color += Grab16(uv, 5.0, vec2(CalcOffset(4.0))   );\r
+        color += Grab16(uv, 6.0, vec2(CalcOffset(5.0))   );\r
+        color += Grab16(uv, 7.0, vec2(CalcOffset(6.0))   );\r
+        color += Grab16(uv, 8.0, vec2(CalcOffset(7.0))   );\r
+\r
+        fragColor = vec4(color, 1.0);\r
+    }\r
+}\r
+\r
+`,z=`// Final display pass: scene-color + bloom composite.
+#include "../image/bloom-composite-pass.frag"
+\r
+void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
+{    vec2 uv = fragCoord.xy / iResolution.xy;\r
+    \r
+    vec3 color = ColorFetch(uv);\r
+    \r
+    \r
+    color += GetBloom(uv) * 0.08;\r
+    \r
+\r
+    color = pow(color, vec3(1.5));\r
+    color = color / (1.0 + color);\r
+    color = pow(color, vec3(1.0 / 1.5));\r
+\r
+    \r
+    color = mix(color, color * color * (3.0 - 2.0 * color), vec3(1.0));\r
+    color = pow(color, vec3(1.3, 1.20, 1.0));    \r
+\r
+	color = saturate(color * 1.01);\r
+    \r
+    color = pow(color, vec3(0.7 / 2.2));\r
+\r
+    fragColor = vec4(color, 1.0);\r
+\r
+}\r
+\r
+`,k=`// Scene-color pass entrypoint.
+// Read order: params -> utils -> color -> relativity -> accretion -> main.
+#include "../scene-color/params-and-constants.frag"
+#include "../scene-color/noise-and-utils.frag"
+#include "../scene-color/color-and-post.frag"
+#include "../scene-color/relativity-core.frag"
+#include "../scene-color/accretion-and-jets.frag"
+#include "../scene-color/main.frag"
+\r
+`,sr=`// Volumetric accretion disk, jet lighting, and heat-haze sampling.
 float HazeNoise01(vec3 p) {
     return PerlinNoise(p) * 0.5 + 0.5;\r
 }\r
@@ -1463,7 +1564,7 @@ vec4 GridColorSimple(vec4 BaseColor, vec4 RayPos, vec4 LastRayPos,\r
     return CurrentResult;\r
 }\r
 \r
-`,er=`// Spectral mapping and post-process color helpers.
+`,lr=`// Spectral mapping and post-process color helpers.
 vec3 KelvinToRgb(float Kelvin)
 {
     if (Kelvin < 400.01) return vec3(0.0);\r
@@ -1779,7 +1880,7 @@ vec4 ApplyToneMapping(vec4 Result,float shift)\r
     return Mapped;\r
 }\r
 \r
-`,tr=`// Main ray-trace orchestration and final scene-color output.
+`,cr=`// Main ray-trace orchestration and final scene-color output.
 struct TraceResult {
     vec3  EscapeDir;      
     float FreqShift;      
@@ -2406,7 +2507,7 @@ void mainImage( out vec4 FragColor, in vec2 FragCoord )\r
     FragColor = (iBlendWeight) * FinalColor + (1.0 - iBlendWeight) * PrevColor;\r
 }\r
 \r
-`,or=`// Utility math/noise helpers used by accretion/jets and sampling jitter.
+`,fr=`// Utility math/noise helpers used by accretion/jets and sampling jitter.
 float RandomStep(vec2 Input, float Seed)
 {
     return fract(sin(dot(Input + fract(11.4514 * sin(Seed)), vec2(12.9898, 78.233))) * 43758.5453);\r
@@ -2493,7 +2594,7 @@ float Shape(float x, float Alpha, float Beta)\r
     return k * pow(x, Alpha) * pow(1.0 - x, Beta);\r
 }\r
 \r
-`,ar=`// Cite:
+`,dr=`// Cite:
 // - https://zhuanlan.zhihu.com/p/2003513260645830673
 // - https://github.com/baopinshui/NPGS/blob/master/NPGS/Sources/Engine/Shaders/BlackHole_common.glsl
 // This module is the central parameter/config surface used by scene-color.
@@ -2589,7 +2690,7 @@ const float kGravityConstant = 6.6743e-11;\r
 const float kSpeedOfLight    = 299792458.0;\r
 const float kSolarMass       = 1.9884e30;\r
 \r
-`,ir=`// Core spacetime math and geodesic stepping primitives.
+`,ur=`// Core spacetime math and geodesic stepping primitives.
 const float CONST_M = 0.5; 
 const float EPSILON = 1e-6;
 \r
@@ -3106,105 +3207,11 @@ void StepGeodesicRK4_Optimized(\r
     P = finalP;\r
 }\r
 \r
-`,lr=`// Scene-color pass entrypoint.
-// Read order: params -> utils -> color -> relativity -> accretion -> main.
-#include "./modules/scene-color/params-and-constants.frag"
-#include "./modules/scene-color/noise-and-utils.frag"
-#include "./modules/scene-color/color-and-post.frag"
-#include "./modules/scene-color/relativity-core.frag"
-#include "./modules/scene-color/accretion-and-jets.frag"
-#include "./modules/scene-color/main.frag"\r
-\r
-`,sr=`// Camera-state pass:
-// - Right-side bottom pixels store camera/state payload.
-// - Remaining pixels build bloom pyramid from scene-color input.
-#include "./modules/camera-state/controls-input.frag"
-#include "./modules/camera-state/bloom-pyramid-sampling.frag"
-#include "./modules/camera-state/camera-state-packing.frag"
-\r
-\r
-void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
-{\r
-    
-    
-    bool isStateStoragePixel = (fragCoord.y < 1.0 && fragCoord.x > (iResolution.x - 8.5));
-
-    if (isStateStoragePixel) {
-        writeCameraStateTexel(fragColor, fragCoord);
-    } else {\r
-        
-        vec2 uv = fragCoord.xy / iResolution.xy;\r
-        vec3 color = vec3(0.0);\r
-        \r
-        color += Grab1(uv, 1.0, vec2(0.0,  0.0)   );\r
-        color += Grab4(uv, 2.0, vec2(CalcOffset(1.0))   );\r
-        color += Grab8(uv, 3.0, vec2(CalcOffset(2.0))   );\r
-        color += Grab16(uv, 4.0, vec2(CalcOffset(3.0))   );\r
-        color += Grab16(uv, 5.0, vec2(CalcOffset(4.0))   );\r
-        color += Grab16(uv, 6.0, vec2(CalcOffset(5.0))   );\r
-        color += Grab16(uv, 7.0, vec2(CalcOffset(6.0))   );\r
-        color += Grab16(uv, 8.0, vec2(CalcOffset(7.0))   );\r
-\r
-        fragColor = vec4(color, 1.0);\r
-    }\r
-}\r
-\r
-`,cr=`// Bloom blur pass: horizontal axis.
-#include "./modules/blur/gaussian-blur-5tap.frag"
-
-void mainImage(out vec4 fragColor, in vec2 fragCoord)
-{
-    vec2 uv = fragCoord.xy / iResolution.xy;
-    vec3 color = vec3(0.0);
-
-    if (uv.x < 0.52) {
-        color = applyGaussianBlur5Tap(uv, vec2(0.5, 0.0));
-    }
-
-    fragColor = vec4(color, 1.0);
-}\r
-\r
-`,fr=`// Bloom blur pass: vertical axis.
-#include "./modules/blur/gaussian-blur-5tap.frag"
-
-void mainImage(out vec4 fragColor, in vec2 fragCoord)
-{
-    vec2 uv = fragCoord.xy / iResolution.xy;
-    vec3 color = vec3(0.0);
-
-    if (uv.x < 0.52) {
-        color = applyGaussianBlur5Tap(uv, vec2(0.0, 0.5));
-    }
-
-    fragColor = vec4(color, 1.0);
-}\r
-\r
-`,dr=`// Final display pass: scene-color + bloom composite.
-#include "./modules/image/bloom-composite-pass.frag"
-\r
-void mainImage( out vec4 fragColor, in vec2 fragCoord )\r
-{    vec2 uv = fragCoord.xy / iResolution.xy;\r
-    \r
-    vec3 color = ColorFetch(uv);\r
-    \r
-    \r
-    color += GetBloom(uv) * 0.08;\r
-    \r
-\r
-    color = pow(color, vec3(1.5));\r
-    color = color / (1.0 + color);\r
-    color = pow(color, vec3(1.0 / 1.5));\r
-\r
-    \r
-    color = mix(color, color * color * (3.0 - 2.0 * color), vec3(1.0));\r
-    color = pow(color, vec3(1.3, 1.20, 1.0));    \r
-\r
-	color = saturate(color * 1.01);\r
-    \r
-    color = pow(color, vec3(0.7 / 2.2));\r
-\r
-    fragColor = vec4(color, 1.0);\r
-\r
-}\r
-\r
-`,ur=Object.assign({"./modules/blur/gaussian-blur-5tap.frag":Z,"./modules/camera-state/bloom-pyramid-sampling.frag":j,"./modules/camera-state/camera-state-packing.frag":J,"./modules/camera-state/controls-input.frag":$,"./modules/image/bloom-composite-pass.frag":rr,"./modules/scene-color/accretion-and-jets.frag":nr,"./modules/scene-color/color-and-post.frag":er,"./modules/scene-color/main.frag":tr,"./modules/scene-color/noise-and-utils.frag":or,"./modules/scene-color/params-and-constants.frag":ar,"./modules/scene-color/relativity-core.frag":ir}),mr={"scene-color":{path:"./scene-color.frag",source:lr},"camera-state":{path:"./camera-state.frag",source:sr},"bloom-blur-horizontal":{path:"./bloom-blur-horizontal.frag",source:cr},"bloom-blur-vertical":{path:"./bloom-blur-vertical.frag",source:fr},image:{path:"./image.frag",source:dr}};function hr(n){const r=n.split("/"),t=[];for(const e of r)if(!(!e||e===".")){if(e===".."){t.pop();continue}t.push(e)}return`./${t.join("/")}`}function gr(n,r){const t=n.split("/").slice(0,-1).join("/")||".";return hr(`${t}/${r}`)}function D(n,r,t=[]){return n.replace(/^\s*#include\s+"([^"]+)"\s*$/gm,(e,o)=>{const i=gr(r,o);if(t.includes(i))throw new Error(`Circular shader include detected: ${[...t,i].join(" -> ")}`);const s=ur[i];if(!s)throw new Error(`Missing shader include "${i}" referenced from "${r}".`);return D(s,i,[...t,i])})}const vr=Object.fromEntries(Object.entries(mr).map(([n,r])=>[n,D(r.source,r.path)])),E=document.getElementById("gl-canvas");if(!E)throw new Error("Canvas element '#gl-canvas' not found.");function pr(){const t=new URLSearchParams(window.location.search).get("preset")||void 0||g;return R[t]?t:(console.warn(`Unknown pass preset "${t}". Falling back to "${g}".`),g)}const A=pr(),_r=q({canvas:E,passes:Y(A),shaderSources:vr});_r.start();console.log("✓ Multi-buffer rendering system initialized");console.log(`Pass preset: ${A}`);console.log("Controls: WASD = Move, Mouse = Look, Q/E = Roll, R/F = Up/Down");
+`,mr=`// Shader orchestration manifest.
+// Format: @pass <id> <relative-path>
+@pass scene-color ./modules/passes/scene-color.frag
+@pass camera-state ./modules/passes/camera-state.frag
+@pass bloom-blur-horizontal ./modules/passes/bloom-blur-horizontal.frag
+@pass bloom-blur-vertical ./modules/passes/bloom-blur-vertical.frag
+@pass image ./modules/passes/image.frag
+`,hr=Object.assign({"./modules/blur/gaussian-blur-5tap.frag":er,"./modules/camera-state/bloom-pyramid-sampling.frag":tr,"./modules/camera-state/camera-state-packing.frag":or,"./modules/camera-state/controls-input.frag":ar,"./modules/image/bloom-composite-pass.frag":ir,"./modules/passes/bloom-blur-horizontal.frag":D,"./modules/passes/bloom-blur-vertical.frag":E,"./modules/passes/camera-state.frag":A,"./modules/passes/image.frag":z,"./modules/passes/scene-color.frag":k,"./modules/scene-color/accretion-and-jets.frag":sr,"./modules/scene-color/color-and-post.frag":lr,"./modules/scene-color/main.frag":cr,"./modules/scene-color/noise-and-utils.frag":fr,"./modules/scene-color/params-and-constants.frag":dr,"./modules/scene-color/relativity-core.frag":ur}),gr=Object.assign({"./modules/passes/bloom-blur-horizontal.frag":D,"./modules/passes/bloom-blur-vertical.frag":E,"./modules/passes/camera-state.frag":A,"./modules/passes/image.frag":z,"./modules/passes/scene-color.frag":k});function I(n){const r=n.split("/"),t=[];for(const e of r)if(!(!e||e===".")){if(e===".."){t.pop();continue}t.push(e)}return`./${t.join("/")}`}function vr(n,r){const t=n.split("/").slice(0,-1).join("/")||".";return I(`${t}/${r}`)}function pr(n){const r={},t=/^\s*@pass\s+([a-z0-9-]+)\s+(\.\/[^\s]+)\s*$/gim;for(const e of n.matchAll(t)){const o=e[1],i=I(e[2]);if(r[o])throw new Error(`Duplicate pass "${o}" in shader.frag manifest.`);r[o]=i}if(Object.keys(r).length===0)throw new Error("No passes declared in shader.frag manifest.");return r}function w(n,r,t=[]){return n.replace(/^\s*#include\s+"([^"]+)"\s*$/gm,(e,o)=>{const i=vr(r,o);if(t.includes(i))throw new Error(`Circular shader include detected: ${[...t,i].join(" -> ")}`);const l=hr[i];if(!l)throw new Error(`Missing shader include "${i}" referenced from "${r}".`);return w(l,i,[...t,i])})}const _r=pr(mr),Rr=Object.fromEntries(Object.entries(_r).map(([n,r])=>{const t=gr[r];if(!t)throw new Error(`Manifest pass "${n}" points to missing shader file "${r}".`);return[n,w(t,r)]})),B=document.getElementById("gl-canvas");if(!B)throw new Error("Canvas element '#gl-canvas' not found.");function Sr(){const t=new URLSearchParams(window.location.search).get("preset")||void 0||g;return R[t]?t:(console.warn(`Unknown pass preset "${t}". Falling back to "${g}".`),g)}const L=Sr(),yr=j({canvas:B,passes:nr(L),shaderSources:Rr});yr.start();console.log("✓ Multi-buffer rendering system initialized");console.log(`Pass preset: ${L}`);console.log("Controls: WASD = Move, Mouse = Look, Q/E = Roll, R/F = Up/Down");

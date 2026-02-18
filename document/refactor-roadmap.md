@@ -112,7 +112,7 @@ export const passes = [
 - Centralize uniform binding (`iResolution`, `iTime`, `iTimeDelta`, `iFrame`, `iMouse`, channels).
 
 ### Phase 4: Template-First Project Structure
-- Rename `src/*.frag` to `src/shaders/*.frag`.
+- Rename `src/*.frag` to `src/shader/*.frag`.
 - Add `pipeline/resources.config.js` for non-pass inputs (keyboard, future noise LUTs, env maps).
 - Add an app factory (`createRendererApp`) that receives:
   - shader source map
@@ -166,3 +166,4 @@ Create a reusable starter contract:
 1. Create module folders and move existing logic with no behavior change.
 2. Add pass descriptors and swap manual pass calls for config iteration.
 3. Add shader validation script and run build parity check.
+

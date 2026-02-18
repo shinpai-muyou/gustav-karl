@@ -7,7 +7,8 @@ import { preprocessShaderSource } from "../src/engine/gl/shaderCompiler.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
-const shadersDir = path.join(rootDir, "src", "shaders");
+const shadersDir = path.join(rootDir, "src", "shader");
+const shaderManifestPath = path.join(shadersDir, "shader.frag");
 
 const errors = [];
 
@@ -68,6 +69,27 @@ function normalizePath(filePath) {
   return resolved.join("/");
 }
 
+function parseShaderManifest(source) {
+  const manifest = {};
+  const passRegex = /^\s*@pass\s+([a-z0-9-]+)\s+(\.\/[^\s]+)\s*$/gim;
+
+  for (const match of source.matchAll(passRegex)) {
+    const id = match[1];
+    const relPath = match[2];
+    if (manifest[id]) {
+      errors.push(`Duplicate pass "${id}" in shader manifest.`);
+      continue;
+    }
+    manifest[id] = relPath;
+  }
+
+  if (Object.keys(manifest).length === 0) {
+    errors.push("No pass declarations found in src/shader/shader.frag.");
+  }
+
+  return manifest;
+}
+
 async function validateIncludes(filePath, source, stack = []) {
   const includeRegex = /^\s*#include\s+"([^"]+)"\s*$/gm;
   const dirPath = path.dirname(filePath);
@@ -125,8 +147,14 @@ async function expandIncludes(filePath, source, stack = []) {
   return expanded;
 }
 
-async function validateShaderSource(passId, usedByPreset) {
-  const shaderPath = path.join(shadersDir, `${passId}.frag`);
+async function validateShaderSource(passId, usedByPreset, manifest) {
+  const relPath = manifest[passId];
+  if (!relPath) {
+    errors.push(`Pass "${passId}" (preset "${usedByPreset}") not declared in shader manifest.`);
+    return;
+  }
+
+  const shaderPath = path.resolve(shadersDir, relPath);
 
   try {
     await access(shaderPath);
@@ -154,6 +182,9 @@ async function validateShaderSource(passId, usedByPreset) {
 }
 
 async function run() {
+  const manifestSource = await readFile(shaderManifestPath, "utf8");
+  const manifest = parseShaderManifest(manifestSource);
+
   const uniquePassIds = new Map();
 
   for (const [presetName, passes] of Object.entries(PASS_PRESETS)) {
@@ -168,7 +199,7 @@ async function run() {
 
   await Promise.all(
     Array.from(uniquePassIds.entries()).map(([passId, presetName]) =>
-      validateShaderSource(passId, presetName)
+      validateShaderSource(passId, presetName, manifest)
     )
   );
 

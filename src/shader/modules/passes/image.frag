@@ -1,5 +1,5 @@
 // Final display pass: scene-color + bloom composite.
-#include "./modules/image/bloom-composite-pass.frag"
+#include "../image/bloom-composite-pass.frag"
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {    vec2 uv = fragCoord.xy / iResolution.xy;

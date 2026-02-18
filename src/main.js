@@ -5,7 +5,7 @@ import {
   PASS_PRESETS,
   resolvePassConfig
 } from "./pipeline/passes.config.js";
-import { SHADER_SOURCES } from "./shaders/index.js";
+import { SHADER_SOURCES } from "./shader/index.js";
 
 const canvas = document.getElementById("gl-canvas");
 

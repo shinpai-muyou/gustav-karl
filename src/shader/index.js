@@ -1,8 +1,4 @@
-import sceneColorSource from "./scene-color.frag?raw";
-import cameraStateSource from "./camera-state.frag?raw";
-import bloomBlurHorizontalSource from "./bloom-blur-horizontal.frag?raw";
-import bloomBlurVerticalSource from "./bloom-blur-vertical.frag?raw";
-import imageSource from "./image.frag?raw";
+import shaderManifestSource from "./shader.frag?raw";
 
 const MODULE_SOURCES = import.meta.glob("./modules/**/*.frag", {
   eager: true,
@@ -10,19 +6,11 @@ const MODULE_SOURCES = import.meta.glob("./modules/**/*.frag", {
   import: "default"
 });
 
-const RAW_SHADER_SOURCES = {
-  "scene-color": { path: "./scene-color.frag", source: sceneColorSource },
-  "camera-state": { path: "./camera-state.frag", source: cameraStateSource },
-  "bloom-blur-horizontal": {
-    path: "./bloom-blur-horizontal.frag",
-    source: bloomBlurHorizontalSource
-  },
-  "bloom-blur-vertical": {
-    path: "./bloom-blur-vertical.frag",
-    source: bloomBlurVerticalSource
-  },
-  image: { path: "./image.frag", source: imageSource }
-};
+const PASS_SOURCES = import.meta.glob("./modules/passes/*.frag", {
+  eager: true,
+  query: "?raw",
+  import: "default"
+});
 
 function normalizePath(path) {
   const segments = path.split("/");
@@ -47,6 +35,26 @@ function resolveIncludePath(fromPath, includePath) {
   return normalizePath(`${fromDir}/${includePath}`);
 }
 
+function parseShaderManifest(source) {
+  const manifest = {};
+  const passRegex = /^\s*@pass\s+([a-z0-9-]+)\s+(\.\/[^\s]+)\s*$/gim;
+
+  for (const match of source.matchAll(passRegex)) {
+    const id = match[1];
+    const path = normalizePath(match[2]);
+    if (manifest[id]) {
+      throw new Error(`Duplicate pass "${id}" in shader.frag manifest.`);
+    }
+    manifest[id] = path;
+  }
+
+  if (Object.keys(manifest).length === 0) {
+    throw new Error("No passes declared in shader.frag manifest.");
+  }
+
+  return manifest;
+}
+
 function expandIncludes(source, sourcePath, stack = []) {
   return source.replace(/^\s*#include\s+"([^"]+)"\s*$/gm, (_match, includePath) => {
     const resolvedPath = resolveIncludePath(sourcePath, includePath);
@@ -66,9 +74,15 @@ function expandIncludes(source, sourcePath, stack = []) {
   });
 }
 
+const manifest = parseShaderManifest(shaderManifestSource);
+
 export const SHADER_SOURCES = Object.fromEntries(
-  Object.entries(RAW_SHADER_SOURCES).map(([id, entry]) => [
-    id,
-    expandIncludes(entry.source, entry.path)
-  ])
+  Object.entries(manifest).map(([id, path]) => {
+    const source = PASS_SOURCES[path];
+    if (!source) {
+      throw new Error(`Manifest pass "${id}" points to missing shader file "${path}".`);
+    }
+    return [id, expandIncludes(source, path)];
+  })
 );
+
