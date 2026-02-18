@@ -2598,7 +2598,6 @@ float Shape(float x, float Alpha, float Beta)\r
 // - https://github.com/baopinshui/NPGS/blob/master/NPGS/Sources/Engine/Shaders/BlackHole_common.glsl
 // This module is the central parameter/config surface used by scene-color.
 #define iHistoryTex iChannel3
-#define textureQueryLod(s, d) vec2(0.0)
 \r
 \r
 #define iFovRadians  60.0 * 0.01745329\r
@@ -2694,13 +2693,6 @@ const float CONST_M = 0.5;
 const float EPSILON = 1e-6;
 \r
 
-const mat4 MINKOWSKI_METRIC = mat4(\r
-    1, 0, 0, 0,\r
-    0, 1, 0, 0,\r
-    0, 0, 1, 0,\r
-    0, 0, 0, -1\r
-);\r
-\r
 \r
 float GetKeplerianAngularVelocity(float Radius, float Rs, float PhysicalSpinA, float PhysicalQ) \r
 {\r
@@ -3064,48 +3056,7 @@ void ApplyHamiltonianCorrection(inout vec4 P, vec4 X, float E, float PhysicalSpi
     }\r
 }\r
 
-void ApplyHamiltonianCorrectionFORTEST(inout vec4 P, vec4 X, float E, float PhysicalSpinA, float PhysicalQ, float fade, float r_sign) {\r
-    
-\r
-    P.w = -E; \r
-    vec3 p = P.xyz;    \r
-    \r
-    KerrGeometry geo;\r
-    ComputeGeometryScalars(X.xyz, PhysicalSpinA, PhysicalQ, fade, r_sign, geo);\r
-    \r
-    \r
-    float L_dot_p_s = dot(geo.l_up.xyz, p);\r
-    float Pt = P.w; \r
-    \r
-    float p2 = dot(p, p);\r
-    float Coeff_A = p2 - geo.f * L_dot_p_s * L_dot_p_s;\r
-    \r
-    float Coeff_B = 2.0 * geo.f * L_dot_p_s * Pt;\r
-    \r
-    float Coeff_C = -Pt * Pt * (1.0 + geo.f);\r
-    \r
-    float disc = Coeff_B * Coeff_B - 4.0 * Coeff_A * Coeff_C;\r
-    \r
-    if (disc >= 0.0) {\r
-        float sqrtDisc = sqrt(disc);\r
-        float denom = 2.0 * Coeff_A;\r
-        \r
-        if (abs(denom) > 1e-9) {\r
-            float k1 = (-Coeff_B + sqrtDisc) / denom;\r
-            float k2 = (-Coeff_B - sqrtDisc) / denom;\r
-            \r
-\r
-            float dist1 = abs(k1 - 1.0);\r
-            float dist2 = abs(k2 - 1.0);\r
-            \r
-            float k = (dist1 < dist2) ? k1 : k2;\r
-            \r
-            P.xyz *= k1;\r
-        }\r
-    }\r
-}\r
-
-State GetDerivativesAnalytic(State S, float PhysicalSpinA, float PhysicalQ, float fade, inout KerrGeometry geo) {\r
+State GetDerivativesAnalytic(State S, float PhysicalSpinA, float PhysicalQ, float fade, inout KerrGeometry geo) {
     State deriv;\r
     \r
     ComputeGeometryGradients(S.X.xyz, PhysicalSpinA, PhysicalQ, fade, geo);\r

@@ -3,13 +3,6 @@ const float CONST_M = 0.5;
 const float EPSILON = 1e-6;
 
 
-const mat4 MINKOWSKI_METRIC = mat4(
-    1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 1, 0,
-    0, 0, 0, -1
-);
-
 
 float GetKeplerianAngularVelocity(float Radius, float Rs, float PhysicalSpinA, float PhysicalQ) 
 {
@@ -369,47 +362,6 @@ void ApplyHamiltonianCorrection(inout vec4 P, vec4 X, float E, float PhysicalSpi
             float k = (dist1 < dist2) ? k1 : k2;
             
             P.xyz *= mix(k,1.0,clamp(abs(k-1.0)/0.1-1.0,0.0,1.0));
-        }
-    }
-}
-
-void ApplyHamiltonianCorrectionFORTEST(inout vec4 P, vec4 X, float E, float PhysicalSpinA, float PhysicalQ, float fade, float r_sign) {
-    
-
-    P.w = -E; 
-    vec3 p = P.xyz;    
-    
-    KerrGeometry geo;
-    ComputeGeometryScalars(X.xyz, PhysicalSpinA, PhysicalQ, fade, r_sign, geo);
-    
-    
-    float L_dot_p_s = dot(geo.l_up.xyz, p);
-    float Pt = P.w; 
-    
-    float p2 = dot(p, p);
-    float Coeff_A = p2 - geo.f * L_dot_p_s * L_dot_p_s;
-    
-    float Coeff_B = 2.0 * geo.f * L_dot_p_s * Pt;
-    
-    float Coeff_C = -Pt * Pt * (1.0 + geo.f);
-    
-    float disc = Coeff_B * Coeff_B - 4.0 * Coeff_A * Coeff_C;
-    
-    if (disc >= 0.0) {
-        float sqrtDisc = sqrt(disc);
-        float denom = 2.0 * Coeff_A;
-        
-        if (abs(denom) > 1e-9) {
-            float k1 = (-Coeff_B + sqrtDisc) / denom;
-            float k2 = (-Coeff_B - sqrtDisc) / denom;
-            
-
-            float dist1 = abs(k1 - 1.0);
-            float dist2 = abs(k2 - 1.0);
-            
-            float k = (dist1 < dist2) ? k1 : k2;
-            
-            P.xyz *= k1;
         }
     }
 }

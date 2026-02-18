@@ -3,7 +3,6 @@
 // - https://github.com/baopinshui/NPGS/blob/master/NPGS/Sources/Engine/Shaders/BlackHole_common.glsl
 // This module is the central parameter/config surface used by scene-color.
 #define iHistoryTex iChannel3
-#define textureQueryLod(s, d) vec2(0.0)
 
 
 #define iFovRadians  60.0 * 0.01745329

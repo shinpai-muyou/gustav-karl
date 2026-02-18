@@ -13,5 +13,3 @@ export const DEFAULT_PASS_PRESET = "bloom-chain";
 export function resolvePassConfig(presetName = DEFAULT_PASS_PRESET) {
   return PASS_PRESETS[presetName] ?? PASS_PRESETS[DEFAULT_PASS_PRESET];
 }
-
-export const PASS_CONFIG = resolvePassConfig(DEFAULT_PASS_PRESET);
