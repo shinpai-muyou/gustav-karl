@@ -1,13 +1,10 @@
-// =============================================================================
-// Camera & State Logic
-// =============================================================================
-
-#define OFFSET_UP    1  // W-1: Up Vector (Buffer A reads this)
-#define OFFSET_RIGHT 2  // W-2: Right Vector (Buffer A reads this)
-#define OFFSET_POS   3  // W-3: Position (Buffer A reads this)
-#define OFFSET_FWD   4  // W-4: Forward Vector (Internal State)
-#define OFFSET_MOUSE 5  // W-5: Last Mouse (Internal State)
-#define OFFSET_TIME  6  // W-6: Game Time
+// Packs camera basis/position/time into reserved texels for scene-color pass reads.
+#define OFFSET_UP    1  
+#define OFFSET_RIGHT 2  
+#define OFFSET_POS   3  
+#define OFFSET_FWD   4  
+#define OFFSET_MOUSE 5  
+#define OFFSET_TIME  6  
 
 void writeCameraStateTexel(out vec4 fragColor, in vec2 fragCoord)
 {
@@ -33,29 +30,29 @@ void writeCameraStateTexel(out vec4 fragColor, in vec2 fragCoord)
         uniSign = 1.0;
     }
 
-    // 3. 处理鼠标旋转
+    
     if (iMouse.z > 0.0) {
         vec2 mouseDelta = iMouse.xy - lastMouse.xy;
 
-        // 防止点击瞬间跳变
+        
         if (lastMouse.z < 0.0) mouseDelta = vec2(0.0);
 
         float yaw = -mouseDelta.x * MOUSE_SENSITIVITY;
         float pitch = mouseDelta.y * MOUSE_SENSITIVITY;
 
-        // 绕 Up 轴偏航 (Yaw)
+        
         fwd = rotAxis(up, yaw) * fwd;
         right = rotAxis(up, yaw) * right;
 
-        // 绕 Right 轴俯仰 (Pitch)
+        
         fwd = rotAxis(right, pitch) * fwd;
 
-        // 重新正交化，消除误差
+        
         up = normalize(cross(right, fwd));
         right = normalize(cross(fwd, up));
     }
 
-    // 4. 处理滚转 (Roll Q/E)
+    
     float roll = 0.0;
     if (isKeyPressed(KEY_Q)) roll -= ROLL_SPEED * iTimeDelta;
     if (isKeyPressed(KEY_E)) roll += ROLL_SPEED * iTimeDelta;
@@ -65,14 +62,14 @@ void writeCameraStateTexel(out vec4 fragColor, in vec2 fragCoord)
         up = normalize(cross(right, fwd));
     }
 
-    // 5. 处理位移 (WSAD RF)
+    
     vec3 moveDir = vec3(0.0);
     if (isKeyPressed(KEY_W)) moveDir += fwd;
     if (isKeyPressed(KEY_S)) moveDir -= fwd;
     if (isKeyPressed(KEY_A)) moveDir -= right;
     if (isKeyPressed(KEY_D)) moveDir += right;
-    if (isKeyPressed(KEY_R)) moveDir += up; // 上浮
-    if (isKeyPressed(KEY_F)) moveDir -= up; // 下沉
+    if (isKeyPressed(KEY_R)) moveDir += up; 
+    if (isKeyPressed(KEY_F)) moveDir -= up; 
 
     pos += moveDir * MOVE_SPEED * iTimeDelta;
 
@@ -86,17 +83,18 @@ void writeCameraStateTexel(out vec4 fragColor, in vec2 fragCoord)
             uniSign *= -1.0;
         }
     }
-    // 6. 更新时间
+    
     gTime += iTimeDelta;
 
-    // 7. 写入数据 (根据 pxIndex 匹配 Buffer A 的读取位置)
+    
     fragColor = vec4(0.0);
 
-    if (pxIndex == OFFSET_UP)    fragColor = vec4(up, 1.0);     // W-1 -> Up
-    if (pxIndex == OFFSET_RIGHT) fragColor = vec4(right, 1.0);  // W-2 -> Right
-    if (pxIndex == OFFSET_POS)   fragColor = vec4(pos, 1.0);    // W-3 -> Pos
-    if (pxIndex == OFFSET_FWD)   fragColor = vec4(fwd, 1.0);    // W-4 -> Fwd (Internal)
-    if (pxIndex == OFFSET_MOUSE) fragColor = iMouse;            // W-5 -> Mouse
-    if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, 0.0, 0.0, 1.0); // W-6 -> Time
+    if (pxIndex == OFFSET_UP)    fragColor = vec4(up, 1.0);     
+    if (pxIndex == OFFSET_RIGHT) fragColor = vec4(right, 1.0);  
+    if (pxIndex == OFFSET_POS)   fragColor = vec4(pos, 1.0);    
+    if (pxIndex == OFFSET_FWD)   fragColor = vec4(fwd, 1.0);    
+    if (pxIndex == OFFSET_MOUSE) fragColor = iMouse;            
+    if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, 0.0, 0.0, 1.0); 
     if (pxIndex == OFFSET_TIME)  fragColor = vec4(gTime, uniSign, 0.0, 1.0);
 }
+

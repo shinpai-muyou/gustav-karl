@@ -1,4 +1,4 @@
-// Horizontal gaussian blur leveraging hardware filtering for fewer texture lookups.
+// Bloom blur pass: horizontal axis.
 #include "./modules/blur/gaussian-blur-5tap.frag"
 
 void mainImage(out vec4 fragColor, in vec2 fragCoord)
@@ -12,3 +12,4 @@ void mainImage(out vec4 fragColor, in vec2 fragCoord)
 
     fragColor = vec4(color, 1.0);
 }
+

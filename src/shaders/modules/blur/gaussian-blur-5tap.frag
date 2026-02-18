@@ -1,3 +1,4 @@
+// Shared 5-tap Gaussian blur kernel used by horizontal/vertical bloom passes.
 vec3 sampleBlurSource(vec2 coord)
 {
     return texture(iChannel0, coord).rgb;
@@ -39,3 +40,4 @@ vec3 applyGaussianBlur5Tap(vec2 uv, vec2 axisScale)
 
     return color / weightSum;
 }
+

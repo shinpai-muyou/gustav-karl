@@ -1,3 +1,4 @@
+// Final display pass: scene-color + bloom composite.
 #include "./modules/image/bloom-composite-pass.frag"
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
@@ -24,3 +25,4 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
     fragColor = vec4(color, 1.0);
 
 }
+

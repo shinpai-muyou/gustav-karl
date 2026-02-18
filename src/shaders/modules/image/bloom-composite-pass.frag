@@ -1,9 +1,6 @@
-// 核心渲染逻辑请查看Buffer A。
-// Please check Buffer A for the core rendering logic.
-
-// Buffer B/C/D 与 Image 来自 sonicether 的作品 "Gargantua With HDR Bloom"。
-// Buffer B/C/D and Image are adapted from sonicether's "Gargantua With HDR Bloom".
-
+// Cite:
+// - "Gargantua With HDR Bloom" by sonicether (adapted bloom chain/composite logic).
+// Final composite helpers: bloom reconstruction + tone/color mapping.
 vec3 saturate(vec3 x)
 {
     return clamp(x, vec3(0.0), vec3(1.0));
@@ -90,7 +87,7 @@ vec3 GetBloom(vec2 coord)
 {
 	vec3 bloom = vec3(0.0);
 
-    // Reconstruct bloom from multiple blurred images.
+    
     bloom += Grab(coord, 1.0, vec2(CalcOffset(0.0))) * 1.0;
     bloom += Grab(coord, 2.0, vec2(CalcOffset(1.0))) * 1.5;
 	bloom += Grab(coord, 3.0, vec2(CalcOffset(2.0))) * 1.0;
@@ -102,3 +99,4 @@ vec3 GetBloom(vec2 coord)
 
 	return bloom;
 }
+

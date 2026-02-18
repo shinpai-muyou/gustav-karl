@@ -1,7 +1,4 @@
-// =============================================================================
-// Original Bloom Functions (Unchanged Logic)
-// =============================================================================
-
+// Downsample/oversample helpers for bloom pyramid construction.
 vec3 ColorFetch(vec2 coord)
 {
 	return texture(iChannel0, coord).rgb;
@@ -85,3 +82,4 @@ vec2 CalcOffset(float octave)
 	offset.y += min(1.0, floor(octave / 3.0)) * 0.35;
 	return offset;
 }
+

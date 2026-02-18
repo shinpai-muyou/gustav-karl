@@ -1,21 +1,21 @@
+// Camera-state pass:
+// - Right-side bottom pixels store camera/state payload.
+// - Remaining pixels build bloom pyramid from scene-color input.
 #include "./modules/camera-state/controls-input.frag"
 #include "./modules/camera-state/bloom-pyramid-sampling.frag"
 #include "./modules/camera-state/camera-state-packing.frag"
 
-// =============================================================================
-// Main Image
-// =============================================================================
 
 void mainImage( out vec4 fragColor, in vec2 fragCoord )
 {
-    // 定义数据存储区：底行 (y=0)，最右侧 8 个像素
-    // 稍微放宽范围以防万一
+    
+    
     bool isStateStoragePixel = (fragCoord.y < 1.0 && fragCoord.x > (iResolution.x - 8.5));
 
     if (isStateStoragePixel) {
         writeCameraStateTexel(fragColor, fragCoord);
     } else {
-        // 执行原始 Bloom/Mipmap 逻辑 (读取 iChannel0 = Buffer A)
+        
         vec2 uv = fragCoord.xy / iResolution.xy;
         vec3 color = vec3(0.0);
         
@@ -31,3 +31,4 @@ void mainImage( out vec4 fragColor, in vec2 fragCoord )
         fragColor = vec4(color, 1.0);
     }
 }
+

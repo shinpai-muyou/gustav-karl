@@ -100,6 +100,31 @@ async function validateIncludes(filePath, source, stack = []) {
   }
 }
 
+async function expandIncludes(filePath, source, stack = []) {
+  const includeRegex = /^\s*#include\s+"([^"]+)"\s*$/gm;
+  const dirPath = path.dirname(filePath);
+  const normalizedFilePath = normalizePath(filePath);
+  let expanded = source;
+
+  for (const match of source.matchAll(includeRegex)) {
+    const includePath = match[1];
+    const resolvedInclude = normalizePath(path.resolve(dirPath, includePath));
+
+    if (stack.includes(resolvedInclude)) {
+      continue;
+    }
+
+    const includeSource = await readFile(resolvedInclude, "utf8");
+    const expandedInclude = await expandIncludes(resolvedInclude, includeSource, [
+      ...stack,
+      normalizedFilePath
+    ]);
+    expanded = expanded.replace(match[0], expandedInclude);
+  }
+
+  return expanded;
+}
+
 async function validateShaderSource(passId, usedByPreset) {
   const shaderPath = path.join(shadersDir, `${passId}.frag`);
 
@@ -115,7 +140,8 @@ async function validateShaderSource(passId, usedByPreset) {
   const rawSource = await readFile(shaderPath, "utf8");
   await validateIncludes(shaderPath, rawSource);
 
-  const processed = preprocessShaderSource(rawSource);
+  const expandedSource = await expandIncludes(shaderPath, rawSource);
+  const processed = preprocessShaderSource(expandedSource);
 
   if (!/void\s+main\s*\(/.test(processed)) {
     errors.push(`Shader "${passId}" does not produce a valid main() after preprocessing.`);
